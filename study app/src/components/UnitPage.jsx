@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useParams, Navigate, Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { useParams, Navigate, Link, useSearchParams } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import TopicView from './TopicView';
 import { SUBJECTS } from '../data/subjects';
@@ -28,7 +28,9 @@ const unitsMetaModules = {
 
 export default function UnitPage({ onOpenSearch }) {
   const { subjectId, unitId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const idNum = parseInt(unitId, 10);
+  const mainContentRef = useRef(null);
 
   const subject = SUBJECTS.find(s => s.id === subjectId);
 
@@ -60,8 +62,17 @@ export default function UnitPage({ onOpenSearch }) {
       .then(module => {
         setData(module);
 
-        // Auto-open first group and select first topic
-        if (module.groups && module.groups.length > 0) {
+        const topicIdFromUrl = searchParams.get('topic');
+        
+        if (topicIdFromUrl && module.topics[topicIdFromUrl]) {
+          // If topic is in URL, select it and open its group
+          setSelectedTopicId(topicIdFromUrl);
+          const parentGroup = module.groups?.find(g => g.ids.includes(topicIdFromUrl));
+          if (parentGroup) {
+            setOpenGroups(new Set([parentGroup.name || parentGroup.group]));
+          }
+        } else if (module.groups && module.groups.length > 0) {
+          // Default to first topic
           const firstGroup = module.groups[0];
           const groupName = firstGroup.name || firstGroup.group;
           setOpenGroups(new Set([groupName]));
@@ -78,6 +89,26 @@ export default function UnitPage({ onOpenSearch }) {
       });
   }, [subjectId, idNum, subject]);
 
+  // Handle URL changes (when search result is clicked)
+  useEffect(() => {
+    const topicIdFromUrl = searchParams.get('topic');
+    if (topicIdFromUrl && data && data.topics[topicIdFromUrl]) {
+      setSelectedTopicId(topicIdFromUrl);
+      const parentGroup = data.groups?.find(g => g.ids.includes(topicIdFromUrl));
+      if (parentGroup) {
+        setOpenGroups(prev => {
+          const next = new Set(prev);
+          next.add(parentGroup.name || parentGroup.group);
+          return next;
+        });
+      }
+      // Scroll main content to top
+      if (mainContentRef.current) {
+        mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }, [searchParams, data]);
+
   const toggleGroup = (name) => {
     setOpenGroups(prev => {
       const next = new Set(prev);
@@ -85,6 +116,16 @@ export default function UnitPage({ onOpenSearch }) {
       else next.add(name);
       return next;
     });
+  };
+
+  const handleSelectTopic = (id) => {
+    setSelectedTopicId(id);
+    setIsSidebarOpen(false);
+    // Update URL without full navigation
+    setSearchParams({ topic: id }, { replace: true });
+    if (mainContentRef.current) {
+      mainContentRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   if (!subject || !subject.available) return <Navigate to="/" />;
@@ -202,10 +243,7 @@ export default function UnitPage({ onOpenSearch }) {
           groups={data.groups || []}
           topics={data.topics || {}}
           selectedTopicId={selectedTopicId}
-          onSelectTopic={(id) => {
-            setSelectedTopicId(id);
-            setIsSidebarOpen(false);
-          }}
+          onSelectTopic={handleSelectTopic}
           openGroups={openGroups}
           toggleGroup={toggleGroup}
           unitId={idNum}
@@ -215,7 +253,7 @@ export default function UnitPage({ onOpenSearch }) {
         />
 
         {/* Main Content Area */}
-        <div className="main-content">
+        <div className="main-content" ref={mainContentRef}>
           <TopicView topic={selectedTopic} />
         </div>
       </div>
