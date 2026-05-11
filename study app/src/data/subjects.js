@@ -49,7 +49,7 @@ export const SUBJECTS = [
     accentColor: '#bc8cff',
     glowColor: 'rgba(188, 140, 255, 0.15)',
     description: 'Divide & conquer, dynamic programming, greedy algorithms, and NP-completeness.',
-    unitCount: 0,
-    available: false,
+    unitCount: 1,
+    available: true,
   },
 ];

@@ -18,12 +18,16 @@ const unitModules = {
     3: () => import('../data/os/unit3.js'),
     4: () => import('../data/os/unit4.js'),
   },
+  daa: {
+    1: () => import('../data/daa/unit1.js'),
+  },
 };
 
 // Dynamic import for units metadata
 const unitsMetaModules = {
   mpca: () => import('../data/mpca/units.js'),
   os: () => import('../data/os/units.js'),
+  daa: () => import('../data/daa/units.js'),
 };
 
 export default function UnitPage({ onOpenSearch }) {

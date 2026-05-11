@@ -21,6 +21,9 @@ const loadSubjectTopics = async (subjectId) => {
       () => import('../data/os/unit3.js'),
       () => import('../data/os/unit4.js'),
     ],
+    daa: [
+      () => import('../data/daa/unit1.js'),
+    ],
   };
 
   const importers = unitImporters[subjectId];
@@ -30,6 +33,7 @@ const loadSubjectTopics = async (subjectId) => {
   const unitsMetaModules = {
     mpca: () => import('../data/mpca/units.js'),
     os: () => import('../data/os/units.js'),
+    daa: () => import('../data/daa/units.js'),
   };
 
   try {

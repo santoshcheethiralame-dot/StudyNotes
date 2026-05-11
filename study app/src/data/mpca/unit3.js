@@ -11,6 +11,7 @@ export const groups = [
   { name: "⚡ Optimizations 4–5 (Miss Penalty)", ids: ["opt4-multilevel", "opt5-reads-priority"] },
   { name: "🎯 Optimization 6 (Hit Time / VIPT)", ids: ["opt6-vipt", "pipt", "vipt", "case-study-1", "case-study-2"] },
   { name: "📝 Quick Reference", ids: ["formula-sheet", "six-opt-summary", "three-cs-summary", "write-policy-summary"] },
+  { name: "🎓 PYQ Problems (ESA Style)", ids: ["pyq1", "pyq2", "pyq3", "pyq4", "pyq5", "pyq6", "pyq7", "pyq8", "pyq9", "pyq10", "pyq11", "pyq12"] },
 ];
 
 export const topics = {
@@ -106,6 +107,37 @@ The on-chip boundary (between L2/L1/Registers on one side and Main Memory/Disk/T
     ],
   },
 
+  "mem-hierarchy": {
+    title: "How the Hierarchy Works Together", emoji: "🔗",
+    tldr: "CPU checks L1 first, then L2, then memory. Data always moves between adjacent levels. The hierarchy makes the system appear to have the speed of the fastest level and the size of the largest level.",
+    explanation: `The memory hierarchy works as a chain. When the CPU needs data:
+
+1. It first checks L1 cache (fastest). If found (HIT) → done, very fast.
+2. If not in L1 (MISS), check L2 cache. If found → copy to L1, return to CPU.
+3. If not in L2, check L3 (if it exists). If found → copy up through L2 to L1.
+4. If nowhere in any cache → go to main memory. Fetch the block, copy it into L1 (and L2).
+5. If the data is on disk (virtual memory) → extremely slow page fault.
+
+Key principle: data always moves between adjacent levels — you never skip from disk directly into L1.
+
+The illusion the hierarchy creates: the programmer sees what looks like a single, large, fast memory. But underneath, the hardware is managing multiple levels automatically so the common case (recently-used data) is served from the fastest level.`,
+    keyPoints: [
+      "CPU looks for data top-down: L1 → L2 → L3 → Main Memory → Disk",
+      "On a miss at level N: fetch from level N+1, install into level N",
+      "Data always moves between ADJACENT levels — no skipping",
+      "The goal: give programmer the illusion of large + fast memory",
+      "Cache is an architectural arrangement — transparent to the programmer",
+      "Data transferred between levels in fixed-size block units",
+      "Each level is a strict subset of the level below it (inclusion property)",
+    ],
+    formula: null,
+    examTips: [
+      "Adjacent levels rule: miss at L1 → fetch from L2. Miss at L2 → fetch from main memory.",
+      "Cache is TRANSPARENT — the programmer does not manage it; hardware does.",
+    ],
+    questions: [],
+  },
+
   "cache-intro": {
     title: "What is Cache Memory?", emoji: "⚡",
     tldr: "Cache makes main memory appear faster than it really is. It sits between CPU and RAM. Transparent to the programmer.",
@@ -189,6 +221,8 @@ Together these two properties mean: we don't need to put all the program in fast
       "90/10 Rule: programs spend 90% of time in 10% of code — heavily used regions (loops, hot paths)",
       "Temporal Locality: recently accessed item will likely be accessed again soon",
       "Spatial Locality: if item X accessed, items near X in memory will likely be accessed soon",
+      "Temporal → keep recently used data in cache (exploited by caching itself)",
+      "Spatial → transfer whole blocks, not single words (exploited by block transfer)",
       "Loops → temporal locality (loop body executed repeatedly)",
       "Arrays accessed sequentially → spatial locality (adjacent elements in memory)",
       "Block transfer exploits spatial locality — fetching neighbors saves future misses",
@@ -220,6 +254,7 @@ for (j = 0; j < N; j++)
     ],
     questions: [
       { q: "Why does row-wise traversal of a 2D array have better cache behavior than column-wise?", a: "In C, 2D arrays are stored in row-major order: a[i][0], a[i][1], a[i][2],... are consecutive in memory. Row-wise traversal accesses consecutive addresses, so loading one block brings in multiple useful elements (spatial locality). Column-wise traversal accesses a[0][j], a[1][j], a[2][j]... which are N words apart — each access falls in a different block, causing a miss every time." },
+      { q: "Give one example of temporal locality and one example of spatial locality in a simple loop.", a: "Temporal: the loop counter variable 'i' is accessed and updated every single iteration — same memory location reused many times. Spatial: if iterating over array a[], each access a[i] is adjacent in memory to a[i+1], so loading one block brings in multiple consecutive elements that will be needed in the next iterations." },
     ],
   },
 
@@ -234,14 +269,22 @@ A Line is a slot in the cache that can hold exactly one block of data. The cache
 
 Block Size = Line Size — these two always match because a line holds one block.
 
-Important numbers: if main memory has 4096 blocks and the cache has 128 lines, then on average 32 different blocks compete for each cache line. This competition causes conflict misses.`,
+Important numbers: if main memory has 4096 blocks and the cache has 128 lines, then on average 32 different blocks compete for each cache line. This competition causes conflict misses.
+
+Valid Bit: each cache line has a 1-bit flag. When the system starts up, all valid bits = 0 (no meaningful data). When a block is loaded into a line, the valid bit is set to 1. A hit requires BOTH the tag to match AND the valid bit to be 1.
+
+Dirty Bit (write-back caches only): a 1-bit flag indicating the cache line has been modified (written to) but the change has NOT yet been written back to main memory. Dirty = 1 means cache and memory are out of sync.`,
     keyPoints: [
       "Block: fixed-size chunk of main memory (e.g., 16 words). All blocks same size.",
       "Line: one slot in the cache that can hold exactly one block",
       "Block Size = Line Size (these terms are interchangeable)",
       "Cache has MUCH fewer lines than memory has blocks (# lines << # blocks)",
       "Every cache line also stores a TAG (which block is here) and a VALID BIT (is data valid?)",
+      "Valid Bit = 0 → empty/invalid (e.g., at startup). Valid Bit = 1 → meaningful data present.",
+      "Dirty Bit = 1 → cache modified, memory stale (write-back only). Dirty Bit = 0 → cache = memory (clean).",
       "Block Transfer: on a miss, entire block is fetched from memory into one cache line",
+      "Hit Rate = Hits / Total Accesses. Miss Rate = 1 − Hit Rate = Misses / Total Accesses.",
+      "Hit Time = time for a cache hit. Miss Penalty = extra time to fetch from memory on a miss.",
       "Example: 4K blocks / 128 lines = 32 blocks compete per line → high conflict miss risk",
     ],
     formula: {
@@ -253,17 +296,22 @@ Important numbers: if main memory has 4096 blocks and the cache has 128 lines, t
   Cache capacity: 128 × 16 = 2K words
   Competition per line: 4096 / 128 = 32 blocks per line
 
-Cache Line Structure:
-  [ Valid Bit | Tag | Data (16 words) ]
-     1 bit       ?      block size`,
-      explanation: "The tag is needed to know WHICH of the 32 competing blocks is currently occupying a given line. On a lookup, we compare the incoming address's tag with the stored tag.",
+Cache Line Structure (Write-Through):
+  [ Valid Bit (1b) | Tag (n bits) | Data (block_size bits) ]
+
+Cache Line Structure (Write-Back):
+  [ Valid Bit (1b) | Dirty Bit (1b) | Tag (n bits) | Data (block_size bits) ]`,
+      explanation: "The tag is needed to know WHICH of the 32 competing blocks is currently occupying a given line. The valid bit tells us if the data is meaningful. The dirty bit (write-back only) tells us if the cache is ahead of memory.",
     },
     examTips: [
       "Block is in main memory. Line is in cache. A line HOLDS a block.",
       "Block size = Line size — always equal.",
       "Valid bit = 1 means the line has real data. 0 = empty/invalid (e.g., at startup).",
+      "Dirty bit is ONLY needed for write-back caches. Write-through does NOT need a dirty bit.",
     ],
-    questions: [],
+    questions: [
+      { q: "What is the dirty bit and when is it used?", a: "The dirty bit is a 1-bit flag in each cache line used only in write-back caches. When the CPU writes to a cache line, the dirty bit is set to 1, indicating the cached data has been modified but the corresponding main memory location has NOT yet been updated. When a dirty line is evicted, it must first be written back to memory. Write-through caches do not need a dirty bit because they always update memory immediately." },
+    ],
   },
 
   "four-questions": {
@@ -306,7 +354,9 @@ Direct Mapping: Each memory block maps to exactly one specific cache line. The m
 
 Fully Associative Mapping: A block can be placed in any cache line, whichever is free. Maximum flexibility — no conflict misses. But to find a block, you must search all cache lines simultaneously (parallel tag comparison needed). Very expensive hardware, slow. Address split: [Tag | Word].
 
-Set-Associative Mapping (n-way): The cache is divided into sets, each containing n lines. A block maps to exactly one set (by address mod number of sets) but can go into any of the n lines within that set. Best of both worlds — some placement freedom (reduces conflict misses) without searching the whole cache. Address split: [Tag | Set | Word].`,
+Set-Associative Mapping (n-way): The cache is divided into sets, each containing n lines. A block maps to exactly one set (by address mod number of sets) but can go into any of the n lines within that set. Best of both worlds — some placement freedom (reduces conflict misses) without searching the whole cache. Address split: [Tag | Set | Word].
+
+Note on terminology: the number of lines per set is called 'W' (ways) or 'n' interchangeably. "4-way set associative" means 4 lines per set.`,
     keyPoints: [
       "Direct Mapping: Block → exactly 1 line. Line = Block# mod #Lines. Fast but lots of conflict misses.",
       "Fully Associative: Block → any line. No conflict misses but requires searching ALL tags in parallel. Expensive.",
@@ -316,6 +366,7 @@ Set-Associative Mapping (n-way): The cache is divided into sets, each containing
       "Fully associative = n-way where n = total number of lines (all one big set).",
       "Direct: [Tag | Block Index | Word offset]. FA: [Tag | Word offset]. SA: [Tag | Set Index | Word offset].",
       "More associativity → fewer conflict misses but higher hardware cost and hit time",
+      "Number of sets S = Total cache lines / W (where W = ways/associativity)",
     ],
     formula: {
       code: `Address Breakdown:
@@ -367,6 +418,7 @@ Example with 4-bit addresses, 4 cache lines (2-bit index), 2-bit tag:
       "MISS: tag doesn't match OR valid bit = 0 → must fetch from main memory",
       "For fully associative: all tags compared simultaneously in parallel",
       "For set-associative: all n tags in the matched set compared simultaneously",
+      "Cache hit detection = compare tag field of incoming address with tag stored in indexed cache line",
     ],
     formula: {
       code: `4-bit address example (4 cache lines, block = 1 word):
@@ -451,13 +503,15 @@ There are two main strategies to handle write hits (when the written address IS 
     tldr: "Both cache AND main memory updated on every write. Always consistent. But every write hits slow memory.",
     explanation: `Write-Through: On every write (whether cache hit or miss), both the cache AND main memory are updated simultaneously.
 
-Advantage: Main memory is always up to date. No stale values. Simple to implement. The Valid Bit is the only extra bit needed in each cache line.
+Advantage: Main memory is always up to date. No stale values. Simple to implement. The Valid Bit is the only extra bit needed in each cache line — no dirty bit required.
 
 Disadvantage: Every single write goes to slow main memory, which partially defeats the purpose of caching. Writing is as slow as if there were no cache.
 
 To mitigate this, many designs use a Write Buffer: the processor writes to cache AND a small fast write buffer, then continues executing. The write buffer slowly drains into main memory in the background. This way the processor doesn't have to stall waiting for the slow DRAM write. The processor keeps running while the write buffer handles the memory update asynchronously.
 
-Data flow: Processor → Cache + Write Buffer → DRAM (asynchronously).`,
+Data flow: Processor → Cache + Write Buffer → DRAM (asynchronously).
+
+Write-through is commonly paired with Write-No-Allocate on misses (since memory is always up to date, there's no need to load the block into cache before writing).`,
     keyPoints: [
       "On EVERY write: both cache and main memory updated simultaneously",
       "Main memory is ALWAYS consistent with cache — no stale values ever",
@@ -507,7 +561,9 @@ Eviction of a dirty block (3 steps):
 
 Advantage: Much faster for write-heavy workloads — most writes stay in fast cache without touching slow DRAM. Fewer total memory write operations.
 
-Disadvantage: More complex. Cache Coherence Problem — in multi-processor systems, other CPUs or DMA devices may read stale data from main memory since the cache hasn't written back yet.`,
+Disadvantage: More complex. Cache Coherence Problem — in multi-processor systems, other CPUs or DMA devices may read stale data from main memory since the cache hasn't written back yet. A dirty bit is REQUIRED.
+
+Write-back is commonly paired with Write-Allocate on misses.`,
     keyPoints: [
       "On a write HIT: only cache updated. Memory NOT touched. Dirty Bit set to 1.",
       "Dirty Bit = 0 → cache line matches memory (clean). Dirty Bit = 1 → cache ahead of memory (dirty).",
@@ -553,7 +609,9 @@ Write-Allocate (Fetch-on-Write): On a write miss, the block is first fetched fro
 
 Write-No-Allocate (Write-Around): On a write miss, the write goes directly to main memory. The cache is NOT loaded with this block. The cache is unaffected. This is used with Write-Through policy because since write-through always updates memory anyway, there's no reason to clutter the cache with a block that might not be read soon.
 
-When to use Write-No-Allocate: when data is written once but not immediately re-read. For example, initializing a large array — each location is written exactly once and won't be re-read, so loading it into cache just wastes cache space (pollutes the cache).`,
+When to use Write-No-Allocate: when data is written once but not immediately re-read. For example, initializing a large array — each location is written exactly once and won't be re-read, so loading it into cache just wastes cache space (pollutes the cache).
+
+Standard pairings: Write-Back + Write-Allocate. Write-Through + Write-No-Allocate.`,
     keyPoints: [
       "Write-Allocate: on miss → load block into cache, then write to cache (dirty bit=1). Used with Write-Back.",
       "Write-No-Allocate: on miss → write directly to main memory, cache unchanged. Used with Write-Through.",
@@ -637,7 +695,7 @@ Address partitioning for direct mapping (given an n-bit address):
 
 To check for a hit: use the Block Index bits to find the cache line, then compare the incoming Tag with the stored Tag. If match AND valid bit = 1 → HIT. Otherwise → MISS.
 
-Advantage: Very simple and fast — only one tag comparison needed, one cache line to check.
+Advantage: Very simple and fast — only one tag comparison needed, one cache line to check. No replacement algorithm needed (only one possible slot per block).
 Disadvantage: If two blocks map to the same line and are used alternately (ping-pong), they evict each other on every access even though the rest of the cache is completely empty. This is a conflict miss — avoidable with more associativity.`,
     keyPoints: [
       "Mapping rule: Cache Line = Block# mod #Lines (mod = remainder division)",
@@ -727,6 +785,8 @@ Disadvantage: Very expensive hardware (many comparators). Slower clock rate beca
     explanation: `Set-associative mapping divides the cache into sets, each containing n lines (n-way set associativity). A block maps to exactly one set (using Set = Block# mod #Sets) but can go into any of the n lines within that set.
 
 Address partitioning: [Tag | Set Index | Word Offset]. Set Index selects which set. Within the set, all n tags are compared simultaneously (just like a tiny fully-associative sub-cache).
+
+Number of sets = Total cache lines / n. Set Index bits = log₂(#sets).
 
 Example — 2-way set associative (2 lines per set):
 - 16 KB cache, 2-way, 64-byte blocks: 16KB/(64×2) = 128 sets
@@ -875,14 +935,14 @@ Sets:
 
 FIFO replacement: when a set has both ways full and a new block arrives, evict whichever block was loaded first (arrived earliest).
 
-Result: 5 hits and 12 misses out of 17 accesses (hit ratio = 5/17). This is better than direct mapping (3 hits) because two blocks that previously conflicted (e.g., 3 and 19 both in Set 3) can now coexist in way 0 and way 1 simultaneously.`,
+Result: 5 hits and 12 misses out of 17 accesses (hit ratio = 5/17 ≈ 29.4%). This is better than direct mapping (3 hits) because two blocks that previously conflicted (e.g., 3 and 19 both in Set 3) can now coexist in way 0 and way 1 simultaneously.`,
     keyPoints: [
       "2-way SA: Set = Block# mod 4. Each set holds 2 blocks (way 0 and way 1).",
       "FIFO replacement: when set full, evict the block that was loaded first",
       "Blocks 3 and 19 can now coexist in Set 3 (way 0 and way 1) — no conflict!",
       "Blocks 4, 8, 16 all map to Set 0 — 3rd arrival must evict earliest arrival",
       "5 hits vs 3 hits in direct mapping — improvement due to reduced conflicts",
-      "Hit ratio = 5/17, Miss ratio = 12/17",
+      "Hit ratio = 5/17 ≈ 29.4%, Miss ratio = 12/17 ≈ 70.6%",
     ],
     formula: {
       code: `Set mapping:
@@ -1135,30 +1195,36 @@ The tradeoff: optimizing one often hurts another. For example, a larger cache re
 
   "amat": {
     title: "AMAT — Average Memory Access Time", emoji: "⏱️",
-    tldr: "AMAT = Hit Time + Miss Rate × Miss Penalty. Lower AMAT = better. CPU Time = (Base CPI + Mem Stall CPI) × Clock Cycle Time.",
+    tldr: "AMAT = Hit Time + Miss Rate × Miss Penalty. Lower AMAT = better. CPU Time = IC × (Base CPI + Mem Stall CPI) × Clock Cycle Time.",
     explanation: `Average Memory Access Time (AMAT) is the most important cache performance metric. It captures the average cost of every memory access.
 
 AMAT = Hit Time + Miss Rate × Miss Penalty
 
 Intuition: on a hit (fraction = Hit Rate), you pay Hit Time. On a miss (fraction = Miss Rate), you additionally pay the Miss Penalty. AMAT averages these out.
 
-CPU Time formula: CPU Time = [CPU Execution Clock Cycles + Memory Stall Clock Cycles] × Clock Cycle Time
+CPU Time formula (full form): CPU Time = IC × (CPU Execution Clock Cycles + Memory Stall Clock Cycles) × Clock Cycle Time
 
-Memory Stall Clock Cycles = Memory Accesses × Miss Rate × Miss Penalty
+Where IC = Instruction Count. This is important — many textbooks write it per-instruction, but IC is the scaling factor for the whole program.
+
+Memory Stall Clock Cycles (per instruction) = Memory Accesses per Instruction × Miss Rate × Miss Penalty
 
 Important: Clock cycles for a cache HIT are counted as CPU execution clock cycles, NOT memory stall cycles. Only misses cause stall cycles.
 
-Memory stalls can also be expressed per instruction:
-Memory Stall Cycles per instruction = (Mem Accesses per instruction) × Miss Rate × Miss Penalty`,
+For split (separate I-cache and D-cache): total stall per instruction = I-cache stall + D-cache stall.
+- I-cache stall = 1 × I-miss rate × miss penalty (every instruction must be fetched)
+- D-cache stall = data_access_fraction × D-miss rate × miss penalty
+
+For unified cache (shared I+D): total stall = (1 + data_access_fraction) × miss rate × miss penalty`,
     keyPoints: [
       "AMAT = Hit Time + Miss Rate × Miss Penalty (master formula)",
       "Lower AMAT is better — closer to Hit Time means few misses",
-      "CPU Time = (Base CPI + Mem Stall CPI) × Clock Cycle Time",
+      "CPU Time = IC × (Base CPI + Mem Stall CPI) × Clock Cycle Time",
       "Mem Stall CPI = (Mem Accesses/Instr) × Miss Rate × Miss Penalty",
       "Cache HIT cycles → CPU execution cycles (NOT stall cycles)",
       "Cache MISS cycles → memory stall cycles",
+      "Split cache stall = I-cache stall + D-cache stall (computed separately, then added)",
+      "Unified cache stall = (1 + data_fraction) × miss rate × miss penalty",
       "Miss penalty decomposed: Send address to RAM (1 cycle) + RAM access (e.g., 15 cycles) + Receive data (1 cycle) = 17 cycles",
-      "Separate instruction cache and data cache: stall = I-cache misses + D-cache misses",
     ],
     formula: {
       code: `Core formulas:
@@ -1166,11 +1232,17 @@ Memory Stall Cycles per instruction = (Mem Accesses per instruction) × Miss Rat
   Miss Rate = 1 − Hit Rate
   Hit Rate = Hits / Total Accesses
 
-  CPU Time = (CPI_base + CPI_stall) × Clock Cycle Time
+  CPU Time = IC × (CPI_base + CPI_stall) × Clock Cycle Time
   CPI_stall = Mem_Accesses/Instr × Miss Rate × Miss Penalty
 
+  Split cache stalls:
+    I-cache stall/instr = 1 × I_miss_rate × penalty
+    D-cache stall/instr = data_fraction × D_miss_rate × penalty
+    Total stall = I-stall + D-stall
+
+  Unified cache stall/instr = (1 + data_fraction) × miss_rate × penalty
+
   Miss Penalty (basic): Send addr (1) + RAM access (15) + Receive (1) = 17 cycles
-  Miss Penalty (4-word block, 1-word bus, banking): 1 + 15 + 4 = 20 cycles
 
 Example AMAT:
   Hit Time = 1 cycle, Miss Rate = 5%, Miss Penalty = 20 cycles
@@ -1181,16 +1253,18 @@ Example AMAT:
       "AMAT = HT + MR × MP — you will definitely need this formula in the exam.",
       "CPU stall cycles: don't confuse with hit cycles. Hits = execution CPI. Misses = stall CPI.",
       "Memory stall CPI = Accesses/Instr × Miss Rate × Penalty (could be separate for reads and writes).",
+      "For unified cache: accesses per instruction = 1 (instruction) + fraction (data) = e.g. 1.5 if 50% data access.",
     ],
     questions: [
       { q: "Why are cache hit clock cycles counted as CPU execution cycles, not memory stall cycles?", a: "Cache hits return data in a predictable, fast time that the CPU pipeline is designed to handle. The CPU doesn't actually stall on a hit — it keeps executing. Only cache misses cause the CPU to stall while waiting for the slow main memory fetch. Stall cycles are extra cycles beyond the base CPI caused by waiting for memory." },
       { q: "How do you calculate memory stall CPI?", a: "Memory Stall CPI = (Memory Accesses per Instruction) × Miss Rate × Miss Penalty. For split I-cache and D-cache: total stall = I-cache stall + D-cache stall = (1 × I-miss rate × penalty) + (Fraction_loads_stores × D-miss rate × penalty)." },
+      { q: "Why does the unified cache stall formula use (1 + data_fraction) instead of just 1?", a: "Because a unified cache must handle BOTH instruction fetches and data accesses. Every instruction causes one instruction fetch (the '1' part). If 50% of instructions also access data, that adds 0.5 more memory accesses per instruction. So total accesses per instruction = 1 + 0.5 = 1.5, and stall = 1.5 × miss_rate × penalty." },
     ],
   },
 
   "miss-penalty-steps": {
-    title: "Miss Penalty — Three Steps & Memory Banking", emoji: "🏦",
-    tldr: "Miss penalty = Send address + RAM access + Receive data. For multi-word blocks, use memory banking to overlap bank latencies.",
+    title: "Miss Penalty — Three Steps, Sequential vs. Banking", emoji: "🏦",
+    tldr: "Miss penalty = Send address + RAM access + Receive data. For multi-word blocks: Sequential (slow), Wide Bus (fast but costly), Banking/Interleaved (near-ideal, cheap).",
     explanation: `When a cache miss occurs, three steps happen to fetch the block from main memory:
 1. Send address to RAM: 1 cycle
 2. Access RAM (latency): e.g., 15 cycles
@@ -1198,43 +1272,56 @@ Example AMAT:
 
 For a 1-word block: total = 1 + 15 + 1 = 17 cycles.
 
-For a 4-word block with a 1-word bus, naive approach: 4 × (1 + 15 + 1) = 68 cycles — terrible.
+Three approaches for multi-word blocks (e.g., block = B words, bus = 1 word wide):
 
-Optimization — Widen the bus: make the bus 4 words wide → 1 + 15 + 1 = 17 cycles total. But this is expensive hardware.
+Sequential (Naive): Send address, wait for RAM, receive one word; repeat for every word. Total = B × (1 + L + 1) cycles. Very slow — for 4-word block: 4 × 17 = 68 cycles.
 
-Better optimization — Memory Banking (overlap latencies): Divide main memory into 4 banks, each holding one word of the block. After sending address to Bank 1, immediately send to Bank 2, then 3, then 4 — don't wait for Bank 1 to finish. Then receive one word from each bank sequentially. Timeline: 1 cycle (send addr) + 15 cycles (bank latency) + 4 cycles (receive 4 words) = 20 cycles. This is much better than 68 cycles, and close to the 17-cycle ideal, without needing a wide bus.`,
+Wide Bus (Widen the bus): Make the bus B words wide → transfer entire block in one go. Total = 1 + L + 1 = 17 cycles. Fast but expensive hardware — a wide bus is physically costly.
+
+Interleaved / Memory Banking (Overlap latencies): Divide main memory into B banks. Send address to all banks simultaneously (or sequentially start), then receive one word from each bank every cycle. Timeline: 1 cycle (send addr) + L cycles (bank latency, all banks run in parallel) + B cycles (receive B words one at a time). Total = 1 + L + B cycles. For 4-word block: 1 + 15 + 4 = 20 cycles. Near-ideal, much cheaper than wide bus.
+
+The formula for interleaved: Miss Penalty = 1 + mem_latency + (block_size_bytes / bus_width_bytes)`,
     keyPoints: [
       "3 steps: Send Address (1 cycle) + RAM Access Latency (e.g., 15 cycles) + Receive Data (1+ cycles)",
       "Single word block: Miss Penalty = 1 + 15 + 1 = 17 cycles",
-      "4-word block, naive: 4 × 17 = 68 cycles (terrible)",
-      "Wide bus (4-word): 17 cycles (fast but expensive hardware)",
-      "Memory Banking: 1 + 15 + 4 = 20 cycles (near-ideal, cheap — pipelining idea)",
-      "Banking overlaps address sending: bank 1 starts latency while bank 2 address is sent",
-      "Miss Penalty formula (with banking): 1 + Mem_Latency + Block_Size_in_words",
-      "Example (32B block, 8B bus, 15-cycle latency): 1 + 15 + 32/8 = 20 cycles",
+      "Sequential / Naive (B words, 1-word bus): B × (1 + L + 1) cycles — e.g., 4 × 17 = 68 (terrible)",
+      "Wide bus (B-word bus): 1 + L + 1 = 17 cycles — fast but expensive hardware",
+      "Interleaved / Banking: 1 + L + B = 20 cycles — near-ideal, cheap (overlap bank latencies)",
+      "Banking concept: all banks start accessing simultaneously, so you only pay the latency once",
+      "Miss Penalty with banking: 1 + mem_latency + (block_size / bus_width) cycles",
+      "Example (32B block, 8B bus, 15-cycle latency): 1 + 15 + 32/8 = 1 + 15 + 4 = 20 cycles",
     ],
     formula: {
       code: `Miss Penalty Calculation Examples:
   Single word block:
     1 (send addr) + 15 (RAM) + 1 (receive) = 17 cycles
 
-  4-word block, 1-word bus, naive:
-    4 × (1 + 15 + 1) = 68 cycles ← TERRIBLE
+  4-word block, 1-word bus, SEQUENTIAL (naive):
+    B × (1 + L + 1) = 4 × 17 = 68 cycles ← TERRIBLE
+    Each word costs a full send+latency+receive cycle
 
-  4-word block, 4-word bus (widen):
-    1 + 15 + 1 = 17 cycles ← FAST but expensive
+  4-word block, 4-word bus (WIDE BUS):
+    1 + 15 + 1 = 17 cycles ← FAST but expensive hardware
 
-  4-word block, memory banking (overlap):
-    1 + 15 + 4×1 = 20 cycles ← Near ideal, cheap
+  4-word block, INTERLEAVED BANKS (pipelined):
+    1 + 15 + 4×1 = 1 + L + B = 20 cycles ← Near ideal, cheap
 
-  From Example 1 (8B bus, 15-cycle latency):
-    Cache 1: 32B block → 1 + 15 + 32/8 = 1 + 15 + 4 = 20 cycles
-    Cache 2: 64B block → 1 + 15 + 64/8 = 1 + 15 + 8 = 24 cycles`,
+  General formula (banking):
+    Miss Penalty = 1 + mem_latency + (block_size_bytes / bus_width_bytes)
+
+  Examples:
+    Cache 1: block=32B, bus=8B, latency=15 → 1 + 15 + 32/8 = 20 cycles
+    Cache 2: block=64B, bus=8B, latency=15 → 1 + 15 + 64/8 = 24 cycles
+
+  From exam problem (16 bytes delivered per 2 cycles, 100-cycle overhead):
+    Miss penalty for 16B: 100 + (16/16)×2 = 102 CC
+    Miss penalty for 64B: 100 + (64/16)×2 = 108 CC`,
       explanation: "Memory banking is the same concept as pipelining — overlap latencies rather than waiting sequentially. The key insight: all banks can start accessing simultaneously, so you only pay the latency once (for the first bank), then get each subsequent word every cycle.",
     },
     examTips: [
-      "Memory banking formula: Miss Penalty = 1 + mem_latency + (block_size / bus_width) cycles",
+      "Sequential formula: B × (1 + L + 1). Interleaved/banking: 1 + L + B. Know both.",
       "Banking hides latency by overlapping multiple bank accesses in parallel.",
+      "Always check: does the exam specify sequential transfer or interleaved? The answer changes drastically.",
     ],
     questions: [],
   },
@@ -1250,12 +1337,14 @@ Example 2 (CPI with data accesses): 33% instructions are data accesses, 97% hit 
 
 Example 3 (Unified cache): CPI=1, unified cache, 50% instructions access data, 2% miss rate, 25-cycle penalty. Stall = (1+0.5) × 0.02 × 25 = 0.75. CPI = 1.75. No-miss machine is 1.75× faster.
 
-Example 4 (Split cache): I-cache miss=2%, D-cache miss=4%, 100-cycle penalty, 2 base CPI, 36% loads/stores. Stall = 0.02×100 + 0.36×0.04×100 = 2 + 1.44 = 3.44. Actual CPI = 5.44. Ideal is 5.44/2 = 2.72× faster.`,
+Example 4 (Split cache): I-cache miss=2%, D-cache miss=4%, 100-cycle penalty, 2 base CPI, 36% loads/stores. Stall = 0.02×100 + 0.36×0.04×100 = 2 + 1.44 = 3.44. Actual CPI = 5.44. Ideal is 5.44/2 = 2.72× faster.
+
+Example 5 (Pipelined with separate read/write penalties): See formula box.`,
     keyPoints: [
       "Example 1: Cache 2 (64B blocks, 4% miss) AMAT=1.96 beats Cache 1 (32B, 5%) AMAT=2.0",
       "Example 2: 3% miss rate × 20 cycles × 0.33 = 0.2 stall CPI. Small miss rate still hurts!",
       "Example 2 lesson: doubling CPU speed gives only 1.71× speedup (not 2×) because memory stall stays fixed",
-      "Example 3: Unified cache — stall = (instr accesses + data accesses) × miss rate × penalty",
+      "Example 3: Unified cache — stall = (1 + data_access_fraction) × miss rate × penalty",
       "Example 4: Split caches — compute instruction stall and data stall separately, then add",
       "Example 5 (pipelined): I-miss + D-read miss + D-write miss computed separately for reads/writes with different penalties",
     ],
@@ -1341,14 +1430,14 @@ Compulsory Misses (Cold Misses / First-Reference Misses): The very first access 
 
 Capacity Misses: Occur because the cache is too small to hold all the blocks a program needs during execution. If a block is evicted and later re-accessed, that's a capacity miss — it was in the cache earlier but had to be kicked out to make room. These appear in a fully-associative cache (so you know it's not a conflict issue). Reduced by larger cache.
 
-Conflict Misses (Collision Misses): Occur in direct-mapped or set-associative caches when too many blocks compete for the same set. A conflict miss is defined as a miss that would have been a hit in a fully-associative cache of the same size, but becomes a miss because more than n requests mapped to the same set. Reduced by higher associativity.
+Conflict Misses (Collision Misses): Occur in direct-mapped or set-associative caches when too many blocks compete for the same set. A conflict miss is defined as a miss that would have been a hit in a fully-associative cache of the same size, but becomes a miss because more than n requests mapped to the same set. Reduced by higher associativity. NOTE: Conflict misses do NOT occur in fully associative caches.
 
-4th C — Coherence Misses: In multiprocessor systems, a cache line may be invalidated to maintain consistency across multiple processor caches. These misses don't exist in single-processor systems.`,
+4th C — Coherence Misses: In multiprocessor systems, a cache line may be invalidated (flushed) to maintain consistency across multiple processor caches. These misses don't exist in single-processor systems.`,
     keyPoints: [
       "Compulsory: first access to any block ever. Would occur in infinite cache. Unavoidable without prefetch.",
       "Capacity: cache too small for working set. Occur in fully-associative cache. Fix: larger cache.",
       "Conflict: too many blocks map to same set/line. Occur only in direct/set-assoc. Fix: higher associativity.",
-      "Coherence (4th C): cache invalidated for cross-processor consistency. Multi-processor only.",
+      "Coherence (4th C): cache invalidated for cross-processor consistency. Multi-processor only — due to cache flushes to keep multiple caches consistent.",
       "Classification method: start with fully-associative → remaining misses = compulsory+capacity. Add direct mapping → extra misses = conflict.",
       "Larger block size reduces compulsory misses but can increase conflict and capacity misses.",
       "Fully associative eliminates ALL conflict misses — only compulsory and capacity remain.",
@@ -1367,18 +1456,21 @@ Conflict Misses (Collision Misses): Occur in direct-mapped or set-associative ca
 Three C's at a glance:
   Type        │ Appears in           │ Eliminated by
   ────────────┼──────────────────────┼───────────────────
-  Compulsory  │ All caches (even ∞)  │ Prefetching
+  Compulsory  │ All caches (even ∞)  │ Prefetching, larger blocks
   Capacity    │ Fully assoc. cache   │ Larger cache
-  Conflict    │ DM / n-way SA        │ More associativity`,
+  Conflict    │ DM / n-way SA only   │ More associativity
+  Coherence   │ Multi-processor only │ Coherence protocols (flush/invalidate)`,
       explanation: "The Three C's framework is a diagnostic tool. Once you identify which type of miss dominates, you know which optimization to apply.",
     },
     examTips: [
       "Compulsory = first access ever. Capacity = would be hit in ∞ cache. Conflict = would be hit in FA same-size cache.",
       "Fully associative cache has ZERO conflict misses — only compulsory and capacity.",
       "Direct-mapped cache has the most conflict misses of all mapping strategies.",
+      "Coherence misses ONLY in multiprocessor systems — due to flushing caches to keep them in sync.",
     ],
     questions: [
       { q: "What is the difference between a capacity miss and a conflict miss?", a: "Capacity miss: occurs because the cache simply cannot hold all the blocks the program needs — not enough total space. Would be a miss even in a fully-associative cache. Fix: larger cache. Conflict miss: occurs because two (or more) blocks that both need to be in cache at the same time are forced into the same line/set, even though other lines are empty. Would be a hit in a fully-associative cache. Fix: more associativity." },
+      { q: "Identify each miss type: (a) first access to a block, (b) cache cannot hold all needed blocks, (c) multiple blocks map to same set, (d) multiprocessor cache flush.", a: "(a) Compulsory / cold-start miss — first reference to a block, unavoidable. (b) Capacity miss — cache too small for the working set. (c) Conflict / collision miss — too many blocks compete for same cache line or set. (d) Coherence miss — cache line flushed/invalidated to keep multiple caches consistent in a multiprocessor system." },
     ],
   },
 
@@ -1561,7 +1653,7 @@ The 2-1 Rule:
 
   "opt4-multilevel": {
     title: "Optimization 4 — Multilevel Caches", emoji: "🏗️",
-    tldr: "L1 = small and fast (match CPU). L2 = large and slow (catch misses). AMAT = HT_L1 + MR_L1 × (HT_L2 + MR_L2 × MP_L2).",
+    tldr: "L1 = small and fast (match CPU). L2 = large and slow (catch misses). AMAT = HT_L1 + MR_L1 × (HT_L2 + MR_L2 × MP_L2). Warning: a bad L2 can actually worsen AMAT.",
     explanation: `Should the cache be fast (match CPU clock) or large (catch more misses)? The answer: add levels.
 
 L1 Cache: Small enough to match the processor's clock cycle time — minimizes hit time for the common case.
@@ -1569,6 +1661,8 @@ L2 Cache: Large enough to capture accesses that would otherwise go to main memor
 
 AMAT formula for two-level cache:
 AMAT = HitTime_L1 + MissRate_L1 × [HitTime_L2 + MissRate_L2 × MissPenalty_L2]
+
+WARNING — A bad L2 can WORSEN AMAT: If an L2 cache has a very high local miss rate (e.g., 98%), the L2 hit time is always paid when there's an L1 miss, but L2 rarely helps. In that case, AMAT with L2 can be HIGHER than AMAT without any L2. Always verify that adding L2 actually improves AMAT.
 
 Local vs. Global Miss Rates:
 - Local Miss Rate of L2 = Misses_L2 / Accesses_to_L2 (misses per access L2 sees). This is high because L1 already filtered out easy hits.
@@ -1585,12 +1679,12 @@ L2 design priorities: high associativity and large block size (emphasize low mis
       "Use GLOBAL miss rate for L2 evaluation — local is misleading",
       "L2 design: favor high associativity + large blocks (miss rate > hit time priority)",
       "Multi-level inclusion: everything in L1 should also be in L2",
+      "CRITICAL: A poorly sized L2 with high local miss rate can make AMAT WORSE than no L2 at all!",
     ],
     formula: {
       code: `Two-Level Cache Example:
   1000 memory references: 40 L1 misses, 20 L2 misses
   L1 hit time = 1, L2 hit time = 10, L2 miss penalty = 200 cycles
-  Memory refs per instruction = 1.5
 
   Miss rates:
     L1 local (= global) = 40/1000 = 4%
@@ -1599,25 +1693,29 @@ L2 design priorities: high associativity and large block size (emphasize low mis
 
   AMAT = 1 + 0.04 × (10 + 0.50 × 200) = 1 + 0.04 × 110 = 5.4 cycles
 
-  Instructions = 1000/1.5 = 667
-  L1 misses/instr = (40×1.5)/1000 = 0.06
-  L2 misses/instr = (20×1.5)/1000 = 0.03
-  Stalls/instr = 0.06×10 + 0.03×200 = 0.6 + 6 = 6.6 cycles
-  Verify: (AMAT - HT_L1) × refs/instr = (5.4-1)×1.5 = 6.6 ✓
+BAD L2 EXAMPLE (from exam ESA May 2023):
+  P1 alone:     AMAT = 0.96 + 0.043 × 70 = 3.97 ns
+  P1 + 512KB L2 (local miss rate 98%, hit time 3.22 ns):
+    AMAT = 0.96 + 0.043 × (3.22 + 0.98 × 70)
+         = 0.96 + 0.043 × 71.82 = 4.05 ns  ← WORSE than no L2!
+  P1 + 4MB L2 (local miss rate 73%, hit time 11.48 ns):
+    AMAT = 0.96 + 0.043 × (11.48 + 0.73 × 70)
+         = 0.96 + 0.043 × 62.58 = 3.65 ns  ← Better than no L2 ✓
 
 L2 Associativity Comparison:
-  L2 Direct-mapped:  HT=10, MR=25%, penalty=200 → L1 miss penalty = 10+50=60 cycles
-  L2 2-way:          HT=10.1, MR=20%, penalty=200 → L1 miss penalty = 10.1+40=50.1 cycles
+  L2 Direct-mapped:  HT=10, MR=25%, penalty=200 → L1 miss penalty = 60 cycles
+  L2 2-way:          HT=10.1, MR=20%, penalty=200 → L1 miss penalty = 50.1 cycles
   → 0.1 cycle hit time increase saves ~10 cycle miss penalty → clearly worth it`,
-      explanation: "The key insight from L2 associativity: a tiny increase in L2 hit time buys a significant reduction in L2 miss rate and hence L1 miss penalty. L2 is more forgiving of hit time increases than L1.",
+      explanation: "The bad L2 example is critically important: the 512KB L2 with 98% miss rate actually increases AMAT from 3.97 to 4.05 ns. L2 must be large enough to have a meaningfully low miss rate. A tiny L2 that rarely helps is worse than no L2.",
     },
     examTips: [
       "Use GLOBAL miss rate for L2 (= L1 MR × L2 local MR). Don't use L2 local miss rate alone.",
       "L2 hit time only affects L1 miss penalty — doesn't change the CPU clock rate.",
-      "L2 should be much larger than L1. Tiny L2 has very high local miss rate.",
+      "Always verify that adding L2 actually REDUCES AMAT — a poorly configured L2 can worsen it.",
     ],
     questions: [
       { q: "Why is the L2 local miss rate not a good performance metric?", a: "Because L2 only sees the accesses that L1 missed. L1 already filters out all the easy hits. So L2's local miss rate is always high (e.g., 50%) regardless of how good L2 is. A small L1 would send more accesses to L2 and make L2's local miss rate look lower, even if L2 is worse. The global miss rate (L2 misses / total processor accesses = L1_MR × L2_MR) correctly captures L2's contribution to overall performance." },
+      { q: "Can adding an L2 cache ever make performance worse? Why?", a: "Yes. If the L2 cache is too small (resulting in a very high local miss rate, e.g., 98%), the L2 hit time is always paid whenever L1 misses, but L2 rarely absorbs those misses. The extra hit time on every L1 miss outweighs the rare L2 hits. For example, if P1 alone has AMAT 3.97 ns but with a 512KB L2 at 98% miss rate it becomes 4.05 ns — the L2 made things worse. The L2 must be large enough to have a meaningfully low miss rate." },
     ],
   },
 
@@ -1642,22 +1740,21 @@ This optimization reduces effective miss penalty — both cases help avoid unnec
       "Both techniques reduce effective miss penalty by avoiding unnecessary sequential stalls",
     ],
     formula: {
-      code: `RAW Hazard Example:
-  SW R3, 512(R0)    ; Write R3 to address 512 → goes into write buffer
-  LW R1, 1024(R0)   ; Read from 1024 — causes miss (same block as 512 in DM!)
-  LW R2, 512(R0)    ; Read from 512 — causes miss → fetches OLD value from memory!
-                    ; R3's value is in write buffer but write buffer NOT checked
-                    ; → R2 ≠ R3 → DATA HAZARD!
+      code: `RAW Hazard Example (ARM-style code):
+  STR R3, 256(R0)    ; Write R3 to address 256 → into write buffer
+  LDR R1, 2048(R0)   ; Read from 2048 — miss (maps to same cache line as 256)
+                     ; Evicts cached copy of address 256
+  LDR R2, 256(R0)    ; Read from 256 — miss → reads from MEMORY
 
-  Without checking write buffer:
-    SW R3=7, 512 → WB=[512:7]  Main mem: 512=0
-    LW R1, 1024 → cache miss, block {512, 1024} loaded from memory
-    LW R2, 512  → HIT but cache has old value 0, not 7!
-    Result: R2 = 0 ≠ R3 = 7 → WRONG
+  WITHOUT checking write buffer:
+    STR R3=7, 256 → WB=[256:7];  Main mem: 256=0
+    LDR R1, 2048  → cache miss → block {256,2048} loaded from memory (old value)
+    LDR R2, 256   → HIT but cache has old value 0, not 7!
+    Result: R2 = 0 ≠ R3 = 7 → WRONG (data corruption!)
 
-  With checking write buffer:
-    LW R2, 512 miss → check WB → found 512:7 → return 7
-    Result: R2 = 7 = R3 → CORRECT`,
+  WITH checking write buffer:
+    LDR R2, 256 miss → check WB → found 256:7 → return 7
+    Result: R2 = 7 = R3 → CORRECT ✓`,
       explanation: "This is why the write buffer check is mandatory, not optional. Without it, write-through caches can silently corrupt computation. All modern processors check the write buffer before falling through to main memory.",
     },
     examTips: [
@@ -1832,7 +1929,7 @@ VIPT Check for Case Study 2 (L1):
 
   "case-study-1": {
     title: "Case Study 1 — PIPT Bit Calculation", emoji: "🔢",
-    tldr: "64-bit VA, 41-bit PA, 8KB pages. Calculate TLB, L1, L2 tag/index/offset fields step by step.",
+    tldr: "64-bit VA, 41-bit PA, 8KB pages. Calculate TLB, L1, L2 tag/index/offset fields step by step. Also compute total TLB storage size.",
     explanation: `Full PIPT case study: compute all bit fields for TLB, L1 cache, and L2 cache.
 
 Specification:
@@ -1845,13 +1942,17 @@ Specification:
 
 Calculation methodology: start from the right (offset), then index, then tag.
 
-Key insight: Block offset is determined by block size (64B → 6 bits) and stays the same across ALL levels. TLB works with virtual page numbers; caches work with physical addresses after TLB output.`,
+Key insight: Block offset is determined by block size (64B → 6 bits) and stays the same across ALL levels. TLB works with virtual page numbers; caches work with physical addresses after TLB output.
+
+TLB entry size: Each TLB entry stores a valid bit (1 bit) + TLB tag bits + PPN bits. The total storage for the TLB = number of entries × bits per entry.`,
     keyPoints: [
       "Page Offset = log₂(8KB) = 13 bits. VPN = 64 - 13 = 51 bits. PPN = 41 - 13 = 28 bits.",
       "TLB: 256 entries → Index = 8 bits. TLB Tag = VPN - TLB index = 51 - 8 = 43 bits.",
       "Block Offset = log₂(64) = 6 bits (same everywhere)",
       "L1: 8KB/64B = 128 blocks → Index = 7 bits. Tag (PA) = 41 - 7 - 6 = 28 bits.",
       "L2: 4MB/64B = 64K = 2^16 blocks → Index = 16 bits. Tag (PA) = 41 - 16 - 6 = 19 bits.",
+      "TLB entry size = valid(1) + tag(43) + PPN(28) = 72 bits per entry.",
+      "Total TLB storage = 256 entries × 72 bits = 18,432 bits.",
     ],
     formula: {
       code: `PIPT Case Study 1 — Full Bit Table:
@@ -1863,6 +1964,8 @@ Key insight: Block offset is determined by block size (64B → 6 bits) and stays
   ──────────┼──────────────┼─────────────────────────────┼──────
   TLB       │ Index        │ log₂(256) = 2^8             │ 8
   TLB       │ Tag          │ VPN - Index = 51 - 8        │ 43
+  TLB       │ Entry size   │ valid(1) + tag(43) + PPN(28)│ 72 bits/entry
+  TLB       │ Total size   │ 256 × 72                    │ 18,432 bits
   ──────────┼──────────────┼─────────────────────────────┼──────
   L1 Cache  │ Blocks       │ 2^13 / 2^6 = 2^7 = 128     │ —
   L1 Cache  │ Index        │ log₂(128) = 7               │ 7
@@ -1873,12 +1976,13 @@ Key insight: Block offset is determined by block size (64B → 6 bits) and stays
   L2 Cache  │ Index        │ log₂(65536) = 16            │ 16
   L2 Cache  │ Block Offset │ log₂(64)                    │ 6
   L2 Cache  │ Tag (PA)     │ 41 - 16 - 6                 │ 19`,
-      explanation: "Algorithm: (1) Page offset = log₂(page size). (2) VPN = VA - page offset. (3) PPN = PA - page offset. (4) TLB: index = log₂(entries), tag = VPN - index. (5) Cache: blocks = cache size/block size, index = log₂(blocks), tag = PA - index - offset.",
+      explanation: "Algorithm: (1) Page offset = log₂(page size). (2) VPN = VA - page offset. (3) PPN = PA - page offset. (4) TLB: index = log₂(entries), tag = VPN - index. TLB entry = valid + tag + PPN. (5) Cache: blocks = cache size/block size, index = log₂(blocks), tag = PA - index - offset.",
     },
     examTips: [
       "Block offset is ALWAYS log₂(block size) — same at every level, don't recalculate.",
       "TLB tag comes from VPN (virtual). Cache tag comes from PA (physical) — don't mix these up.",
       "For direct-mapped: number of sets = number of blocks = cache size / block size.",
+      "TLB entry size = valid bit + tag bits + PPN bits. Total TLB = entries × entry size.",
     ],
     questions: [],
   },
@@ -1946,8 +2050,10 @@ VIPT Correctness Check for L1:
     keyPoints: [
       "AMAT = Hit Time + Miss Rate × Miss Penalty",
       "AMAT (2-level) = HT_L1 + MR_L1 × [HT_L2 + MR_L2 × MP_L2]",
-      "CPU Time = (Base CPI + Mem Stall CPI) × Clock Cycle Time",
+      "CPU Time = IC × (Base CPI + Mem Stall CPI) × Clock Cycle Time",
       "Mem Stall CPI = Mem Accesses/Instr × Miss Rate × Miss Penalty",
+      "Split cache: stall = I-stall + D-stall (compute separately)",
+      "Unified cache: stall = (1 + data_fraction) × miss_rate × penalty",
       "Global MR_L2 = MR_L1 × MR_L2_local",
       "Tag bits (DM) = PA bits − Index bits − Offset bits",
       "Tag bits (FA) = PA bits − Offset bits (no index)",
@@ -1955,6 +2061,10 @@ VIPT Correctness Check for L1:
       "Offset bits = log₂(block size in bytes)",
       "Hit ratio = Hits / Total Accesses",
       "Miss ratio = 1 − Hit ratio",
+      "Miss Penalty (sequential): B × (1 + L + 1) cycles",
+      "Miss Penalty (interleaved/banking): 1 + L + (block_size / bus_width) cycles",
+      "TLB entry size = valid(1) + TLB_tag + PPN bits",
+      "Total TLB storage = entries × entry_size",
     ],
     formula: {
       code: `MASTER FORMULA SET — Unit 3:
@@ -1964,9 +2074,10 @@ AMAT formulas:
   AMAT (2-level) = HT_L1 + MR_L1 × (HT_L2 + MR_L2 × MP_L2)
 
 CPU performance:
-  CPU Time = (CPI_base + CPI_stall) × Clock Cycle Time
+  CPU Time = IC × (CPI_base + CPI_stall) × Clock Cycle Time
   CPI_stall = Mem_Accesses/Instr × Miss Rate × Miss Penalty
   CPI_stall (split) = I-cache_stall + D-cache_stall
+  Unified: CPI_stall = (1 + data_fraction) × miss_rate × penalty
 
 Miss rate relationships:
   Miss Rate = 1 − Hit Rate = Misses / Total Accesses
@@ -1979,8 +2090,19 @@ Address field calculations:
   Tag bits = PA bits − Index bits − Offset bits
   Tag bits (FA) = PA bits − Offset bits
 
-Miss penalty (with banking):
-  MP = 1 + mem_latency + (block_size / bus_width)
+TLB calculations:
+  Page offset = log₂(page size in bytes)
+  VPN = VA bits − page offset. PPN = PA bits − page offset.
+  TLB sets = TLB entries / ways
+  TLB index = log₂(TLB sets)
+  TLB tag = VPN − TLB index
+  TLB entry size = 1 (valid) + TLB_tag + PPN bits
+  Total TLB size = entries × entry_size
+
+Miss penalty:
+  Sequential (B words, 1-word bus): B × (1 + L + 1) cycles
+  Interleaved banks: 1 + L + (B × transfer_time) cycles
+  Wide bus: 1 + L + 1 cycles
 
 Hit/Miss rates:
   Hit Rate = Hits / Total Accesses
@@ -1991,6 +2113,7 @@ Hit/Miss rates:
       "AMAT = HT + MR × MP — this single formula covers most cache performance questions.",
       "For split caches: add I-cache stall and D-cache stall separately.",
       "Block offset is ALWAYS the same across all cache levels for a given system.",
+      "Don't forget: sequential miss penalty = B × (1+L+1), not just 1+L+B.",
     ],
     questions: [],
   },
@@ -2003,7 +2126,7 @@ Hit/Miss rates:
       "Opt 1 (Larger Block): Reduces compulsory miss rate via spatial locality. Trade-off: ↑ miss penalty, ↑ conflict misses.",
       "Opt 2 (Larger Cache): Reduces capacity miss rate. Trade-off: ↑ hit time, ↑ cost, ↑ power.",
       "Opt 3 (Higher Assoc): Reduces conflict miss rate. Trade-off: ↑ hit time, more hardware.",
-      "Opt 4 (Multilevel): Reduces miss penalty. L1=fast, L2=large. Trade-off: complex analysis.",
+      "Opt 4 (Multilevel): Reduces miss penalty. L1=fast, L2=large. Trade-off: complex analysis. Bad L2 can worsen AMAT.",
       "Opt 5 (Reads Priority): Reduces miss penalty. Check write buffer, victim buffer. Trade-off: complex write buffer.",
       "Opt 6 (VIPT): Reduces hit time. Index from VA, tag from PA in parallel. Trade-off: L1 size limited by page size × assoc.",
     ],
@@ -2014,7 +2137,7 @@ Hit/Miss rates:
   1  │ Larger Block Size     │ Miss Rate   │ More spatial locality per block  │ ↑ Miss penalty, ↑ conflict
   2  │ Larger Cache          │ Miss Rate   │ Fits more of working set         │ ↑ Hit time, cost, power
   3  │ Higher Associativity  │ Miss Rate   │ More placement flexibility       │ ↑ Hit time, hardware cost
-  4  │ Multilevel Caches     │ Miss Penalty│ L1 fast, L2 large                │ Complex performance analysis
+  4  │ Multilevel Caches     │ Miss Penalty│ L1 fast, L2 large                │ Complex; bad L2 worsens AMAT
   5  │ Reads Priority/Writes │ Miss Penalty│ Check write buf on read miss     │ More complex write buffer
   6  │ VIPT                  │ Hit Time    │ Index from VA while TLB runs     │ L1 size ≤ Page×Assoc`,
       explanation: "Quick classification: Opts 1-3 = reduce miss rate. Opts 4-5 = reduce miss penalty. Opt 6 = reduce hit time. Each addresses a different part of AMAT = HT + MR × MP.",
@@ -2034,7 +2157,7 @@ Hit/Miss rates:
       "Compulsory: first access to block. Occurs in ALL caches including infinite. Prefetching or larger blocks help.",
       "Capacity: cache too small for working set. Occurs in FA cache (no conflicts). Larger cache helps.",
       "Conflict: too many blocks in same set. Occurs only in DM/n-way. Higher associativity helps.",
-      "Coherence (4th C): multi-processor cache flush. Cache coherence protocols help.",
+      "Coherence (4th C): multi-processor cache flush to keep multiple caches consistent. Cache coherence protocols help.",
     ],
     formula: {
       code: `Three C's Quick Reference:
@@ -2094,5 +2217,671 @@ Hit/Miss rates:
     ],
     questions: [],
   },
-};
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // PYQ PROBLEMS (ESA STYLE)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  "pyq1": {
+    title: "PYQ 1 — Direct Mapped: Tag/Line/Word + Miss Rate (ESA May 2023, Q3c, 8 Marks)", emoji: "🎓",
+    tldr: "8-bit address, 4-byte blocks, 16 cache lines. Find TAG/Line/Word bits, then trace 11 accesses to compute miss rate.",
+    explanation: `QUESTION: A system uses 8-bit addresses. The cache is organized in a direct-mapped manner. Each block holds 4 words (1 word = 1 byte). The cache has 16 lines.
+(1) Identify the number of bits for TAG, Lines (Index), and Word (Offset).
+(2) Compute the miss rate for the sequence: 106, 76, 107, 171, 106, 79, 107, 106, 170, 76, 107.
+
+PART 1 — Bit Calculation:
+Total address = 8 bits.
+Block size = 4 bytes → Word/Offset = log₂(4) = 2 bits.
+Cache lines = 16 → Line/Index = log₂(16) = 4 bits.
+Tag = 8 − 4 − 2 = 2 bits.
+Address format: [TAG(2) | LINE(4) | WORD(2)]
+
+PART 2 — Miss Rate Trace:
+For each address: Block number = address / block_size. Cache line = block_number mod 16. Tag = block_number / 16.
+
+Step through: 106→block 26, line 10, tag 1 (MISS). 76→block 19, line 3, tag 1 (MISS). 107→block 26, line 10, tag 1 (HIT — same block as 106). 171→block 42, line 10, tag 2 (MISS — tag mismatch, evicts 106's block). 106→block 26, line 10, tag 1 (MISS — evicted). 79→block 19, line 3, tag 1 (HIT — 76's block still there). 107→block 26, line 10, tag 1 (HIT). 106→block 26, line 10, tag 1 (HIT). 170→block 42, line 10, tag 2 (MISS — evicts again). 76→block 19, line 3, tag 1 (HIT). 107→block 26, line 10, tag 1 (MISS — evicted by 170).
+
+Hits = 5, Misses = 6. Miss Rate = 6/11 ≈ 54.5%.`,
+    keyPoints: [
+      "Step 1: Offset bits = log₂(block size). Index bits = log₂(cache lines). Tag = total - index - offset.",
+      "Step 2: For each address, find block# = floor(address / block_size). Line = block# mod #lines. Tag = block# / #lines (or upper bits).",
+      "Conflict at line 10: blocks 26 (tag=1) and 42 (tag=2) keep evicting each other → repeated misses.",
+      "76's block (block 19) → line 3 — no conflict at this line, so those hits are preserved.",
+      "Result: Hits=5, Misses=6, Miss Rate = 6/11 ≈ 54.5%.",
+    ],
+    formula: {
+      code: `PART 1 — Bit fields:
+  Total bits = 8
+  Offset = log₂(4) = 2 bits   (4 bytes per block)
+  Index  = log₂(16) = 4 bits  (16 cache lines)
+  Tag    = 8 - 4 - 2 = 2 bits
+
+  Address = [TAG(2) | INDEX(4) | OFFSET(2)]
+
+PART 2 — Trace:
+  Address │ Block# │ Line  │ Tag │ Result
+  ────────┼────────┼───────┼─────┼───────────────────────────────
+  106     │ 26     │ 10    │ 1   │ MISS (cold)
+  76      │ 19     │ 3     │ 1   │ MISS (cold)
+  107     │ 26     │ 10    │ 1   │ HIT  (same block as 106)
+  171     │ 42     │ 10    │ 2   │ MISS (tag 2≠1, evicts block 26)
+  106     │ 26     │ 10    │ 1   │ MISS (was evicted)
+  79      │ 19     │ 3     │ 1   │ HIT  (block 19 still in line 3)
+  107     │ 26     │ 10    │ 1   │ HIT  (block 26 back in line 10)
+  106     │ 26     │ 10    │ 1   │ HIT  (still in line 10)
+  170     │ 42     │ 10    │ 2   │ MISS (tag 2≠1, evicts again)
+  76      │ 19     │ 3     │ 1   │ HIT  (block 19 untouched)
+  107     │ 26     │ 10    │ 1   │ MISS (evicted by 170)
+  ─────────────────────────────────────────────────────────
+  Hits=5, Misses=6, Miss Rate = 6/11 ≈ 54.5%`,
+      explanation: "Key insight: blocks 26 and 42 both map to line 10 (26 mod 16 = 10; 42 mod 16 = 10). Every time 171/170 is accessed, it evicts 107/106, and vice versa. This is a classic direct-mapping conflict miss scenario.",
+    },
+    examTips: [
+      "Always compute block# = floor(address / block_size) FIRST, then line = block# mod lines.",
+      "Tag is the upper bits — you can compute it as block# / #lines (integer division) or by taking upper tag bits of the address.",
+      "Identify conflict pairs early (blocks that share a line) — they're responsible for most misses.",
+    ],
+    questions: [
+      { q: "In this problem, what is the cache address format and why does miss rate reach 54.5%?", a: "Format: [TAG(2) | INDEX(4) | OFFSET(2)]. Miss rate is high (54.5%) because blocks 26 and 42 both map to line 10 (both have 10 as remainder when divided by 16). Every alternating access between addresses 106/107 (block 26) and 170/171 (block 42) causes a conflict miss — each evicts the other, even though the rest of the cache is mostly empty." },
+    ],
+  },
+
+  "pyq2": {
+    title: "PYQ 2 — 4-Way SA: Tag/Set/Word + Direct Mapped Storage (ESA May 2023 & 2024, Q3c/Q3a, 6 Marks)", emoji: "🎓",
+    tldr: "4GB memory, 256KB 4-way SA cache, 8192B blocks. Find address 546888's block/set/tag. Then compute total direct-mapped cache storage.",
+    explanation: `QUESTION: A computer system (word = 4 bytes) has 4GB byte-addressable main memory and a 256KB, 4-way set associative cache with block size 8192 bytes.
+(i) Determine the block number of address (546888)₁₀, its set number, and tag bits.
+(ii) Compute the total number of bits required for a direct-mapped version of this cache.
+
+SOLUTION:
+
+Main memory = 4GB = 2³² bytes → 32-bit address.
+Block size = 8192 = 2¹³ bytes → Offset = 13 bits.
+Cache = 256KB = 2¹⁸ bytes.
+Total cache blocks = 2¹⁸ / 2¹³ = 2⁵ = 32 blocks.
+Sets = 32 / 4 = 8 sets → Set Index = log₂(8) = 3 bits.
+Tag = 32 − 3 − 13 = 16 bits.
+
+PART (i): Address 546888
+Block number = floor(546888 / 8192) = floor(66.77) = 66.
+Set = 66 mod 8 = 2.
+Tag = floor(66 / 8) = 8. (This is the upper portion of the block number.)
+
+PART (ii): Direct Mapped storage
+32 lines. Each line stores: tag(16) + valid(1) + data(8192 × 8 = 65536 bits).
+Bits per line = 16 + 1 + 65536 = 65553 bits.
+Total = 32 × 65553 = 2,097,696 bits.`,
+    keyPoints: [
+      "Block number = floor(address / block_size). Set = block# mod #sets. Tag = block# / #sets.",
+      "For 4-way SA: sets = total_blocks / 4 = 32/4 = 8. Index bits = log₂(8) = 3.",
+      "Tag bits = 32 − 3 − 13 = 16 bits.",
+      "Direct-mapped total storage includes: tag bits + valid bit + data bits, multiplied by number of lines.",
+      "Data bits per line = block_size_in_bytes × 8 (converting bytes to bits).",
+    ],
+    formula: {
+      code: `Bit field calculation:
+  Address = 32 bits (4GB = 2^32)
+  Offset = 13 bits (block = 8192 = 2^13)
+  Total cache blocks = 256KB / 8192B = 2^18 / 2^13 = 32
+  Sets (4-way) = 32 / 4 = 8 → Index = 3 bits
+  Tag = 32 - 13 - 3 = 16 bits
+
+Part (i):
+  Block# = 546888 / 8192 = 66 (floor)
+  Set    = 66 mod 8 = 2
+  Tag    = 66 / 8 = 8 (floor, i.e., 66 div 8)
+
+Part (ii): Direct Mapped total storage:
+  Lines = 32 (same as total blocks for DM)
+  Per line = tag(16) + valid(1) + data(8192 × 8) = 65553 bits
+  Total = 32 × 65553 = 2,097,696 bits`,
+      explanation: "The data portion dominates: 8192 bytes × 8 bits/byte = 65536 bits per line. The tag and valid bit overhead (17 bits) is tiny in comparison. This shows why cache is so expensive in terms of storage — each line needs the full data block.",
+    },
+    examTips: [
+      "Always verify: total_blocks × block_size = cache_size (sanity check).",
+      "For the total storage question, data = block_size_in_bytes × 8. Don't forget to convert to bits.",
+      "Tag here uses the block number directly. Tag = block# / #sets = upper bits of block number.",
+    ],
+    questions: [],
+  },
+
+  "pyq3": {
+    title: "PYQ 3 — Block-Set Associative: Address Bits (ESA July 2023, Q3a, 6 Marks)", emoji: "🎓",
+    tldr: "64 cache blocks in 4-block sets. Main memory has 4096 blocks of 128 words each. Find total address bits, TAG, SET, and WORD fields.",
+    explanation: `QUESTION: A block-set-associative cache consists of a total of 64 blocks divided into 4-block sets. The main memory contains 4096 blocks, each consisting of 128 words.
+(a) How many bits are there in a main memory address?
+(b) How many bits are in each of the TAG, SET, and WORD fields?
+
+NOTE: "Block-set associative" is the same as "set-associative." 4-block sets means 4-way (W=4).
+
+SOLUTION:
+
+Total words in main memory = number of blocks × words per block = 4096 × 128 = 524,288 = 2¹⁹ words.
+Since each address points to one word, the address has 19 bits.
+
+Bit fields:
+Word offset = log₂(128) = 7 bits (selects word within a block).
+Number of sets in cache = 64 blocks / 4 blocks per set = 16 sets → Set Index = log₂(16) = 4 bits.
+Tag = 19 − 4 − 7 = 8 bits.`,
+    keyPoints: [
+      "Total addressable locations = total_blocks × words_per_block = 4096 × 128 = 2¹⁹ → 19-bit address.",
+      "Word offset = log₂(words_per_block) = log₂(128) = 7 bits.",
+      "Number of sets in cache = 64 blocks / 4 (ways) = 16 sets → Set index = 4 bits.",
+      "Tag = 19 − 7 − 4 = 8 bits.",
+      "'Block-set associative' = 'set-associative'. '4-block sets' = '4-way' (4 lines per set).",
+    ],
+    formula: {
+      code: `Address bit calculation:
+  Total words = 4096 blocks × 128 words/block = 524,288 = 2^19
+  → Address = 19 bits
+
+  WORD offset = log₂(128) = 7 bits
+  Sets = 64 cache blocks / 4 ways = 16 → SET index = log₂(16) = 4 bits
+  TAG = 19 - 7 - 4 = 8 bits
+
+  Address format: [ TAG(8) | SET(4) | WORD(7) ]
+  Verify: 8 + 4 + 7 = 19 ✓`,
+      explanation: "When the problem says 'main memory contains 4096 blocks of 128 words', compute total words FIRST to get address bits. Total addressable space = 4096 × 128 = 2^19 words → 19-bit address.",
+    },
+    examTips: [
+      "If memory is described as 'X blocks of Y words', total words = X × Y. Take log₂ for address size.",
+      "'Block-set associative with W-block sets' = W-way set associative. Don't be confused by the terminology.",
+      "Work from right to left: Word offset first, then set index, then tag = remainder.",
+    ],
+    questions: [],
+  },
+
+  "pyq4": {
+    title: "PYQ 4 — AMAT with CPI: Speedup from Perfect Cache (ESA July 2023, Q3c, 6 Marks)", emoji: "🎓",
+    tldr: "CPI=1.0, 50% data accesses, miss penalty=25 cycles, miss rate=2%. How much faster with a perfect (zero-miss) cache?",
+    explanation: `QUESTION: Assume CPI = 1.0 when all memory accesses hit in cache. The only data accesses are loads and stores, totalling 50% of instructions. Miss penalty = 25 clock cycles. Miss rate = 2%. How much faster would the computer be if all instructions were cache hits?
+
+SOLUTION:
+
+Perfect cache CPU time = IC × 1.0 × Clock cycle (no stalls).
+
+Real cache memory stalls: memory accesses per instruction = 1 (instruction fetch) + 0.5 (data load/store) = 1.5 total memory accesses per instruction.
+
+Memory stall cycles per instruction = 1.5 × 0.02 × 25 = 0.75 cycles/instruction.
+
+Actual CPI = 1.0 (base) + 0.75 (stall) = 1.75.
+
+Speedup of perfect cache over real cache = 1.75 / 1.0 = 1.75×.
+
+The computer with a perfect cache would be 1.75× faster.`,
+    keyPoints: [
+      "Memory accesses/instruction = 1 (instruction fetch) + 0.5 (50% data access) = 1.5.",
+      "Memory stall CPI = 1.5 × 0.02 (miss rate) × 25 (penalty) = 0.75 cycles/instr.",
+      "Actual CPI = base CPI + stall CPI = 1.0 + 0.75 = 1.75.",
+      "Speedup = Actual_CPI / Perfect_CPI = 1.75 / 1.0 = 1.75×.",
+      "Even with a small 2% miss rate, performance degrades by 75% — the miss penalty multiplier is key.",
+    ],
+    formula: {
+      code: `Perfect cache CPI:
+  CPI_perfect = 1.0 (given — no stalls)
+
+Real cache stall:
+  Memory accesses/instr = 1 (I-fetch) + 0.5 (50% data) = 1.5
+  Stall CPI = 1.5 × 0.02 × 25 = 0.75 cycles/instr
+
+Real CPI:
+  CPI_real = 1.0 + 0.75 = 1.75
+
+Speedup:
+  Speedup = CPI_real / CPI_perfect = 1.75 / 1.0 = 1.75×
+
+Answer: The computer would be 1.75× faster with a perfect cache.`,
+      explanation: "The 2% miss rate sounds small, but 0.02 × 25 = 0.5 extra cycles per memory access. With 1.5 memory accesses per instruction, that's 0.75 extra cycles per instruction — 75% slowdown over ideal. This is why cache miss rate is so critical.",
+    },
+    examTips: [
+      "When memory accesses per instruction is not stated, count: 1 (instruction fetch) + data_fraction.",
+      "Speedup = old_CPI / new_CPI (where old = real, new = perfect).",
+      "For 50% data accesses: accesses/instr = 1 + 0.5 = 1.5. For 36%: = 1 + 0.36 = 1.36.",
+    ],
+    questions: [],
+  },
+
+  "pyq5": {
+    title: "PYQ 5 — 2-Way SA FIFO: Hit/Miss Trace (ESA July 2023 & May 2023, Q3c, 6 Marks)", emoji: "🎓",
+    tldr: "2-way SA, 8 cache blocks, FIFO. Trace 17 accesses. Find final cache state, hit ratio, and miss ratio.",
+    explanation: `QUESTION: Consider a 2-way set associative cache with 8 cache blocks (numbered 0–7) and the following sequence: 4, 3, 25, 8, 19, 6, 25, 8, 16, 35, 45, 22, 8, 3, 16, 25, 7. FIFO replacement. Find final cache state, hit ratio, and miss ratio.
+
+SOLUTION:
+
+8 cache blocks, 2-way → 4 sets. Set = Block# mod 4.
+
+Set assignments: Set 0: {4,8,16,...}. Set 1: {25,45,...}. Set 2: {6,22,...}. Set 3: {3,7,19,35,...}.
+
+Trace (FIFO, evict oldest in set when full):
+4→MISS, 3→MISS, 25→MISS, 8→MISS, 19→MISS, 6→MISS, 25→HIT, 8→HIT, 16→MISS(set 0 full, evict 4 FIFO), 35→MISS(set 3 full, evict 3 FIFO), 45→MISS(set 1 full, evict 25 FIFO), 22→MISS(set 2 full, evict 6 FIFO), 8→HIT, 3→MISS(set 3: evict 19), 16→HIT, 25→HIT, 7→MISS(set 3: evict 35).
+
+Hits=5, Misses=12. Hit ratio=5/17≈29.4%. Miss ratio=12/17≈70.6%.
+
+Final cache state: Set0={16,8}, Set1={45,25}, Set2={22}, Set3={3,7}.`,
+    keyPoints: [
+      "8 blocks / 2 ways = 4 sets. Set = block# mod 4.",
+      "FIFO: within each set, track load order. Evict the block that entered the set earliest.",
+      "Hits: access 7 (block 25 is still in set 1), access 8 (block 8 in set 0), access 13 (block 8), access 15 (block 16 in set 0), access 16 (block 25 back in set 1).",
+      "Result: Hits=5, Misses=12. Hit ratio = 5/17 ≈ 29.4%. Miss ratio = 12/17 ≈ 70.6%.",
+    ],
+    formula: {
+      code: `Set mapping (mod 4):
+  Block→Set: 4→S0, 3→S3, 25→S1, 8→S0, 19→S3, 6→S2,
+             16→S0, 35→S3, 45→S1, 22→S2, 7→S3
+
+Trace (2-way FIFO, 4 sets):
+  #   Block  Set  Set state after           Result
+  ──  ─────  ───  ─────────────────────     ──────
+  1   4      S0   {4}                       MISS
+  2   3      S3   {3}                       MISS
+  3   25     S1   {25}                      MISS
+  4   8      S0   {4,8}                     MISS
+  5   19     S3   {3,19}                    MISS
+  6   6      S2   {6}                       MISS
+  7   25     S1   25 present → HIT          HIT ✓
+  8   8      S0   8 present → HIT           HIT ✓
+  9   16     S0   full{4,8}; FIFO evict 4   MISS → {16,8}
+  10  35     S3   full{3,19}; FIFO evict 3  MISS → {35,19}
+  11  45     S1   full{25}; load 45         MISS → {25,45} (only 1 was present)
+             (wait — set 1 had only 25, so 45 fits as way 2 → {25,45})
+  12  22     S2   full{6}; load 22 → {6,22} MISS
+  13  8      S0   8 in {16,8} → HIT         HIT ✓
+  14  3      S3   {35,19}: FIFO evict 35? wait, 35 loaded at step 10, 19 at step 5
+             19 is older → evict 19: {35,3} MISS
+  15  16     S0   {16,8}: 16 present → HIT  HIT ✓
+  16  25     S1   {25,45}: 25 present → HIT HIT ✓
+  17  7      S3   {35,3}: both full; evict 35 (loaded step 10 > 3 loaded step 14)
+             Wait: 3 loaded at step 14, 35 loaded at step 10. 35 is older → evict 35.
+             {3,7}                          MISS
+
+  Hits=5, Misses=12. Hit ratio=5/17≈29.4%, Miss ratio=12/17≈70.6%`,
+      explanation: "In FIFO, track WHEN each block was loaded into its set. The block with the earliest load time gets evicted when the set is full and a new block must enter.",
+    },
+    examTips: [
+      "FIFO evicts by LOAD ORDER (oldest loaded), not access order. Keep a timestamp per way per set.",
+      "Verify final state: Set0={16,8}, Set1={45,25}, Set2={22,6→{6,22}}, Set3={3,7}.",
+    ],
+    questions: [],
+  },
+
+  "pyq6": {
+    title: "PYQ 6 — Multi-Level Cache AMAT (ESA May 2023 & 2024, Q4c/Q3c, 8 Marks)", emoji: "🎓",
+    tldr: "P1 vs P2 comparison. Then add L2 to P1. Demonstrates that a bad L2 can WORSEN AMAT compared to no L2.",
+    explanation: `QUESTION: Main memory = 70 ns. P1: 8KB L1, miss rate 4.3%, hit time 0.96 ns. P2: 16KB L1, miss rate 3.4%, hit time 1.08 ns.
+(a) Which processor has better AMAT?
+(b) Add L2 to P1: Option (a) 512KB L2, local miss rate 98%, hit time 3.22 ns. Option (b) 4MB L2, local miss rate 73%, hit time 11.48 ns. Evaluate each.
+
+SOLUTION:
+
+P1 AMAT = 0.96 + 0.043 × 70 = 0.96 + 3.01 = 3.97 ns.
+P2 AMAT = 1.08 + 0.034 × 70 = 1.08 + 2.38 = 3.46 ns.
+P2 is better (3.46 < 3.97).
+
+P1 + L2(a): AMAT = 0.96 + 0.043 × (3.22 + 0.98 × 70) = 0.96 + 0.043 × (3.22 + 68.6) = 0.96 + 0.043 × 71.82 = 0.96 + 3.09 = 4.05 ns. WORSE than P1 alone (3.97 ns)!
+
+P1 + L2(b): AMAT = 0.96 + 0.043 × (11.48 + 0.73 × 70) = 0.96 + 0.043 × (11.48 + 51.1) = 0.96 + 0.043 × 62.58 = 0.96 + 2.69 = 3.65 ns. Better than P1 alone, but still worse than P2 alone.
+
+KEY INSIGHT: L2(a) with 98% local miss rate makes things WORSE because the L2 hit time (3.22 ns) is always paid on every L1 miss, but L2 only helps 2% of the time. A bad L2 is worse than no L2.`,
+    keyPoints: [
+      "P1 AMAT = 3.97 ns. P2 AMAT = 3.46 ns. P2 wins (larger L1, lower miss rate).",
+      "P1 + L2(a) with 98% miss rate: AMAT = 4.05 ns — WORSE than P1 alone (3.97 ns)!",
+      "P1 + L2(b) with 73% miss rate: AMAT = 3.65 ns — better than P1 alone, still worse than P2.",
+      "Critical lesson: A poorly sized L2 cache can actually INCREASE AMAT. L2 must be large enough to have a meaningfully low miss rate.",
+      "Use GLOBAL miss rate for performance analysis: L2 global MR = L1_MR × L2_local_MR.",
+    ],
+    formula: {
+      code: `Single level AMAT:
+  P1: AMAT = 0.96 + 0.043 × 70 = 3.97 ns
+  P2: AMAT = 1.08 + 0.034 × 70 = 3.46 ns → P2 is BETTER
+
+Two-level AMAT formula:
+  AMAT = HT_L1 + MR_L1 × (HT_L2 + MR_L2_local × MP_main)
+
+P1 + L2(a): 512KB, miss_rate=98%, HT=3.22ns
+  AMAT = 0.96 + 0.043 × (3.22 + 0.98 × 70)
+       = 0.96 + 0.043 × 71.82 = 4.05 ns  ← WORSE than P1 alone!
+
+P1 + L2(b): 4MB, miss_rate=73%, HT=11.48ns
+  AMAT = 0.96 + 0.043 × (11.48 + 0.73 × 70)
+       = 0.96 + 0.043 × 62.58 = 3.65 ns  ← Better than P1 alone ✓
+
+Summary:
+  P1 alone:    3.97 ns
+  P1 + L2(a): 4.05 ns  ← BAD (too small L2, 98% miss rate)
+  P1 + L2(b): 3.65 ns  ← Good (large L2, 73% miss rate)
+  P2 alone:    3.46 ns  ← BEST in this comparison`,
+      explanation: "This is a classic exam trap. L2(a) with 98% miss rate means: every L1 miss pays 3.22 ns for L2 hit time, and 98% of those still have to go to main memory anyway. The L2 adds cost without adding much benefit. L2(b)'s larger size brings 73% absorption — much better.",
+    },
+    examTips: [
+      "Always compute the two-level AMAT and COMPARE to single-level. Don't assume L2 always helps.",
+      "If L2 local miss rate is very high (e.g., 98%), the L2 is too small — L2 hit time adds overhead.",
+      "This problem type (compare processors, add L2) is a PYQ favourite.",
+    ],
+    questions: [
+      { q: "Why does adding L2(a) make P1's AMAT worse in this problem?", a: "L2(a) has a 98% local miss rate, meaning 98% of the time it goes all the way to main memory anyway. On every L1 miss, the processor always pays L2's hit time (3.22 ns). But since L2 only actually helps 2% of the time (local hit rate = 2%), this overhead exceeds the benefit. AMAT increases from 3.97 to 4.05 ns. The lesson: L2 must be large enough to have a meaningfully low miss rate to be beneficial." },
+    ],
+  },
+
+  "pyq7": {
+    title: "PYQ 7 — Miss Penalty with Interleaved Memory (ESA July 2023 UE20CS252, Q4d, 6 Marks)", emoji: "🎓",
+    tldr: "100-cycle overhead, 16 bytes delivered every 2 cycles. Calculate AMAT for two cache configurations using the interleaved miss penalty formula.",
+    explanation: `QUESTION: Memory system: 100 clock cycle overhead, then delivers 16 bytes every 2 clock cycles (so 16B in 102 CC, 32B in 104 CC, etc.). Hit time = 1 CC.
+(i) Cache 4K, block size 16 bytes, miss rate 8.57%.
+(ii) Cache 256K, block size 64 bytes, miss rate 0.51%.
+
+SOLUTION:
+
+The memory delivers 16 bytes every 2 cycles — this means the effective transfer rate is 16B per 2 CC.
+
+Miss Penalty formula: 100 (overhead) + (block_size / 16) × 2
+
+(i) Block size = 16 bytes:
+Miss penalty = 100 + (16/16) × 2 = 100 + 2 = 102 CC.
+AMAT = 1 + 0.0857 × 102 = 1 + 8.74 = 9.74 CC.
+
+(ii) Block size = 64 bytes:
+Miss penalty = 100 + (64/16) × 2 = 100 + 8 = 108 CC.
+AMAT = 1 + 0.0051 × 108 = 1 + 0.55 = 1.55 CC.
+
+256K/64B has far better AMAT (1.55 vs 9.74) despite a slightly higher miss penalty, because the miss rate is dramatically lower (0.51% vs 8.57%).`,
+    keyPoints: [
+      "Miss penalty = overhead + (block_size / bytes_per_transfer) × cycles_per_transfer",
+      "For this problem: Miss Penalty = 100 + (block_size / 16) × 2",
+      "Case (i): Miss penalty = 102 CC. AMAT = 1 + 0.0857 × 102 = 9.74 CC.",
+      "Case (ii): Miss penalty = 108 CC. AMAT = 1 + 0.0051 × 108 = 1.55 CC.",
+      "256K cache wins overwhelmingly: 1.55 vs 9.74 CC. Lower miss rate dominates.",
+    ],
+    formula: {
+      code: `Miss Penalty (interleaved transfer):
+  Formula: overhead + (block_bytes / transfer_bytes) × cycles_per_transfer
+  
+  Here: 100 CC overhead, 16 bytes/transfer, 2 CC/transfer
+
+(i) 4K cache, 16B block:
+  Miss Penalty = 100 + (16/16) × 2 = 100 + 2 = 102 CC
+  AMAT = 1 + 0.0857 × 102 = 1 + 8.74 = 9.74 CC
+
+(ii) 256K cache, 64B block:
+  Miss Penalty = 100 + (64/16) × 2 = 100 + 8 = 108 CC
+  AMAT = 1 + 0.0051 × 108 = 1 + 0.55 = 1.55 CC
+
+Comparison:
+  Case (i): AMAT = 9.74 CC (terrible — high miss rate dominates)
+  Case (ii): AMAT = 1.55 CC (excellent — very low miss rate)`,
+      explanation: "Case (i) has a lower miss penalty (102 vs 108) but much higher miss rate (8.57% vs 0.51%). The miss rate × penalty product is what matters: (i) = 8.74 cycles; (ii) = 0.55 cycles. Miss rate is by far the dominant factor here.",
+    },
+    examTips: [
+      "When memory delivers X bytes every Y cycles: miss penalty = overhead + (block_size/X) × Y.",
+      "Always check: miss_rate × penalty. A slightly higher miss penalty with a much lower miss rate almost always wins.",
+    ],
+    questions: [],
+  },
+
+  "pyq8": {
+    title: "PYQ 8 — Fully Associative Tag Bits (ESA Jan-May 2024 UE18CS253, Q3a, 5 Marks)", emoji: "🎓",
+    tldr: "Fully associative cache, 16KB cache, 256B blocks, 128KB main memory. Find number of tag bits.",
+    explanation: `QUESTION: Consider a fully associative mapped cache of size 16 KB with block size 256 bytes. The size of main memory is 128 KB. Find the number of tag bits.
+
+SOLUTION:
+
+Main memory = 128 KB = 2¹⁷ bytes → Physical address = 17 bits.
+Block offset = log₂(256) = 8 bits.
+Fully associative → no index bits.
+Tag bits = 17 − 8 = 9 bits.
+
+That's it — for fully associative, tag = address bits − offset bits. There is no index field.`,
+    keyPoints: [
+      "Main memory = 128KB = 2¹⁷ → 17-bit address.",
+      "Block offset = log₂(256) = 8 bits.",
+      "Fully associative: NO index field.",
+      "Tag = 17 − 8 = 9 bits.",
+      "Cache size (16KB) does not affect the address bit calculation for fully associative — the tag spans the entire block number.",
+    ],
+    formula: {
+      code: `Fully Associative Tag Bits:
+  Main memory = 128KB = 2^17 bytes → 17-bit address
+  Block offset = log₂(256 bytes) = 8 bits
+  Fully Associative: no index bits
+  Tag = 17 - 8 = 9 bits
+
+  Cache size = 16KB = 2^14 / 256 = 2^6 = 64 cache lines
+  (64 lines, but tag is same 9 bits regardless of cache size)
+  
+  Number of blocks in main memory = 128K/256 = 512 = 2^9
+  Each block needs a 9-bit tag to distinguish it ✓`,
+      explanation: "For fully associative: tag = PA bits − offset. The cache size only affects how many lines exist (how many different blocks can be held simultaneously), but it doesn't change the tag width. The tag must distinguish among all possible main memory blocks.",
+    },
+    examTips: [
+      "Fully associative: Tag = address_bits − offset_bits. No index to subtract.",
+      "Main memory size → address bits. Block size → offset bits. Tag = address − offset.",
+    ],
+    questions: [],
+  },
+
+  "pyq9": {
+    title: "PYQ 9 — Split vs Unified Cache Comparison (ESA May 2023 UE21CS251B, Q3b style, 6 Marks)", emoji: "🎓",
+    tldr: "Split cache: I-miss=2%, D-miss=10%, 35% data access. Unified: miss=3%. Same 9-cycle penalty. Which is better?",
+    explanation: `QUESTION: Compare memory stall time for:
+Version 1 (Split cache): I-cache miss rate = 2%, D-cache miss rate = 10%, 35% instructions access data, miss penalty = 9 CC.
+Version 2 (Unified cache): miss rate = 3%, miss penalty = 9 CC.
+
+SOLUTION:
+
+V1 (Split cache): compute I-stall and D-stall separately.
+I-cache stall = 1 × 0.02 × 9 = 0.18 CC/instruction.
+D-cache stall = 0.35 × 0.10 × 9 = 0.315 CC/instruction.
+Total stall V1 = 0.18 + 0.315 = 0.495 CC/instruction.
+
+V2 (Unified cache): total memory accesses per instruction = 1 (I-fetch) + 0.35 (data) = 1.35.
+Total stall V2 = 1.35 × 0.03 × 9 = 0.3645 CC/instruction.
+
+V2 (unified) is better: 0.3645 < 0.495 CC/instr. Unified is 0.495/0.3645 = 1.36× better.`,
+    keyPoints: [
+      "Split cache stall = I-cache_stall + D-cache_stall (compute separately and add).",
+      "I-cache stall = 1 × I-miss_rate × penalty (every instruction is fetched).",
+      "D-cache stall = data_fraction × D-miss_rate × penalty.",
+      "Unified cache stall = (1 + data_fraction) × miss_rate × penalty.",
+      "V1 stall = 0.495 CC/instr. V2 stall = 0.3645 CC/instr. Unified (V2) wins by 1.36×.",
+      "Key: even though unified miss rate (3%) is higher than I-cache (2%), the D-cache in split has 10% miss rate — that's the killer.",
+    ],
+    formula: {
+      code: `V1 (Split Cache):
+  I-cache stall = 1 × 0.02 × 9 = 0.18 CC/instr
+  D-cache stall = 0.35 × 0.10 × 9 = 0.315 CC/instr
+  Total stall V1 = 0.18 + 0.315 = 0.495 CC/instr
+
+V2 (Unified Cache):
+  Accesses/instr = 1 (I) + 0.35 (D) = 1.35
+  Total stall V2 = 1.35 × 0.03 × 9 = 0.3645 CC/instr
+
+Comparison:
+  V2 is better: 0.3645 < 0.495
+  Speedup = 0.495 / 0.3645 = 1.36×
+  → Unified cache is 1.36× less stall time`,
+      explanation: "The split cache has a D-cache miss rate of 10%, which is much worse than the unified 3%. Even though the unified cache's slightly higher miss rate handles both I and D references, the combined effect is still better than the split cache's high D-cache miss rate.",
+    },
+    examTips: [
+      "Unified formula: (1 + data_fraction) × miss_rate × penalty. The '1' represents instruction fetches.",
+      "Split formula: I-stall + D-stall. I-stall uses fraction = 1 (all instructions are fetched).",
+      "This is a PYQ favourite — know both formulas cold.",
+    ],
+    questions: [],
+  },
+
+  "pyq10": {
+    title: "PYQ 10 — TLB and Cache Bit Calculations (ESA 2024, Q3b, 6 Marks)", emoji: "🎓",
+    tldr: "64-bit LA, 256GB PA, 32KB pages, 2-way TLB 512 entries. Find tag bits for L1, L2, and TLB. Also compute TLB total size.",
+    explanation: `QUESTION: System: 64-bit logical address, 256GB physical address, page size = 32KB. TLB: 2-way with 512 entries total. Find:
+(i) L1 cache tag bits (64KB, block size = 256 words).
+(ii) L2 cache tag bits (128MB, block size = 256 words).
+(iii) TLB bits (index + tag). Also compute total TLB size.
+
+SOLUTION:
+
+Physical address size = log₂(256GB) = log₂(2³⁸) = 38 bits.
+Page size = 32KB = 2¹⁵ → Page offset = 15 bits.
+VPN = 64 − 15 = 49 bits. PPN = 38 − 15 = 23 bits.
+
+Block size = 256 words × 4 bytes/word = 1024 bytes = 2¹⁰ → Block offset = 10 bits.
+
+(i) L1 cache (64KB, direct-mapped):
+Total blocks = 2¹⁶ / 2¹⁰ = 2⁶ = 64 → Index = 6 bits.
+Tag = 38 − 6 − 10 = 22 bits.
+
+(ii) L2 cache (128MB, direct-mapped):
+Total blocks = 2²⁷ / 2¹⁰ = 2¹⁷ → Index = 17 bits.
+Tag = 38 − 17 − 10 = 11 bits.
+
+(iii) TLB (2-way, 512 entries):
+Sets = 512 / 2 = 256 = 2⁸ → TLB Index = 8 bits.
+TLB Tag = VPN − Index = 49 − 8 = 41 bits.
+TLB entry size = valid(1) + tag(41) + PPN(23) = 65 bits/entry.
+Total TLB size = 512 entries × 65 bits = 33,280 bits.`,
+    keyPoints: [
+      "Physical address = log₂(256GB) = 38 bits. Page offset = log₂(32KB) = 15 bits.",
+      "Block size = 256 words × 4 bytes = 1024 = 2¹⁰ → offset = 10 bits.",
+      "L1 (64KB DM): index = 6, tag = 38−6−10 = 22 bits.",
+      "L2 (128MB DM): index = 17, tag = 38−17−10 = 11 bits.",
+      "TLB (2-way, 512 entries): sets = 256, index = 8, tag = 49−8 = 41 bits.",
+      "TLB entry = valid(1) + tag(41) + PPN(23) = 65 bits. Total TLB = 512 × 65 = 33,280 bits.",
+    ],
+    formula: {
+      code: `System parameters:
+  PA = log₂(256GB) = log₂(2^38) = 38 bits
+  Page offset = log₂(32KB) = log₂(2^15) = 15 bits
+  VPN = 64 - 15 = 49 bits
+  PPN = 38 - 15 = 23 bits
+  Block offset = log₂(256 words × 4 bytes) = log₂(1024) = 10 bits
+
+(i) L1 Cache (64KB, Direct Mapped):
+  Total blocks = 2^16 / 2^10 = 2^6 = 64 → Index = 6 bits
+  Tag = 38 - 6 - 10 = 22 bits
+
+(ii) L2 Cache (128MB, Direct Mapped):
+  Total blocks = 2^27 / 2^10 = 2^17 → Index = 17 bits
+  Tag = 38 - 17 - 10 = 11 bits
+
+(iii) TLB (2-way, 512 entries):
+  Sets = 512 / 2 = 256 = 2^8 → Index = 8 bits
+  Tag = VPN - Index = 49 - 8 = 41 bits
+  Entry = valid(1) + tag(41) + PPN(23) = 65 bits
+  Total TLB storage = 512 × 65 = 33,280 bits`,
+      explanation: "Note the key conversion: '256 words' → must convert to bytes first (256 × 4 = 1024 bytes). Also note 256GB = 2³⁸, not 2³²! 1GB = 2³⁰, so 256GB = 2⁸ × 2³⁰ = 2³⁸.",
+    },
+    examTips: [
+      "When block size is in words, always convert to bytes: block_bytes = words × bytes_per_word.",
+      "256GB = 2^38 bytes (since 1GB = 2^30, 256 = 2^8, so 256×1GB = 2^38). Don't confuse with 2^32.",
+      "TLB entry size = valid + tag + PPN. Total TLB = entries × entry_size.",
+    ],
+    questions: [],
+  },
+
+  "pyq11": {
+    title: "PYQ 11 — Write Buffer RAW Hazard (ESA May 2023, Q4a, 6 Marks)", emoji: "🎓",
+    tldr: "STR R3 to 256, then LDR from 2048 (same cache line), then LDR from 256. Without write buffer check: R2 ≠ R3. This is a RAW data hazard.",
+    explanation: `QUESTION: Consider the code sequence. Direct-mapped write-through cache. Addresses 256 and 2048 map to the same cache block. A 4-word write buffer is NOT checked on a read miss.
+
+STR R3, 256(R0)   ; Store R3 to address 256
+LDR R1, 2048(R0)  ; Load R1 from address 2048
+LDR R2, 256(R0)   ; Load R2 from address 256
+
+Will R2 always equal R3? Discuss.
+
+ANSWER: No, R2 will NOT always equal R3. This is a Read-After-Write (RAW) data hazard.
+
+Step-by-step:
+1. STR R3, 256: Writes R3's value to the write buffer (write-through: will go to cache AND memory, but takes time via buffer). Write buffer = [256: R3's value].
+2. LDR R1, 2048: 2048 maps to SAME cache line as 256 → cache MISS. Loading 2048's block evicts the cached version of address 256.
+3. LDR R2, 256: Now 256 is not in cache (evicted). Another MISS → fetches from main memory. BUT if the write buffer hasn't finished draining, main memory still has the OLD value of 256. R2 gets the old (stale) value.
+Result: R2 = old value ≠ R3.
+
+FIX: Before servicing any read miss from main memory, check the write buffer. If the requested address is in the buffer, use the buffered value. Otherwise, proceed to memory.`,
+    keyPoints: [
+      "STR writes to write buffer (not immediately to memory). Memory still has old value.",
+      "LDR 2048 causes a miss — loads 2048's block, evicting the cached copy of 256.",
+      "LDR 256 causes another miss — fetches from main memory — gets OLD value if write buffer not yet drained.",
+      "R2 gets stale value → R2 ≠ R3 → data corruption. This is a RAW hazard.",
+      "Fix: check write buffer on every read miss. If address found in buffer, use buffer value.",
+    ],
+    formula: {
+      code: `Code Sequence:
+  STR R3, 256(R0)   // R3 = 7 (for example)
+  LDR R1, 2048(R0)  // 2048 maps to same line as 256
+  LDR R2, 256(R0)   // Read from 256
+
+Without write buffer check:
+  Step 1: STR R3=7, addr=256 → write buffer = [256:7]
+          Main memory: mem[256] = 0 (old, not yet updated)
+  Step 2: LDR R1, 2048 → MISS (same cache line as 256)
+          Evicts cached block containing 256
+          Loads block for 2048 from memory
+  Step 3: LDR R2, 256 → MISS (256 was evicted)
+          Fetches from main memory: mem[256] = 0 (stale!)
+          R2 = 0
+
+  But R3 = 7, so R2 (0) ≠ R3 (7) → INCORRECT!
+
+With write buffer check:
+  Step 3: LDR R2, 256 → MISS → CHECK write buffer
+          Write buffer has [256:7] → use this value
+          R2 = 7
+
+  R2 = R3 = 7 → CORRECT ✓`,
+      explanation: "The key insight: write-through caches send writes to a buffer first, and the buffer drains to memory asynchronously. If you read the same address before the buffer drains, you can get the old value from memory. This is a classic RAW (Read-After-Write) hazard.",
+    },
+    examTips: [
+      "Direct-mapped: addresses 256 and 2048 that map to the same line means 2048 mod #lines = 256 mod #lines.",
+      "Write buffer RAW hazard always involves: STR (store) followed by LDR (load) to same address (possibly after an eviction step).",
+      "Fix = check write buffer on read misses. This question tests whether you understand WHY this check is mandatory.",
+    ],
+    questions: [
+      { q: "In this RAW hazard scenario, why does LDR R2, 256 get the stale value even though STR R3, 256 happened before it?", a: "Because write-through uses a write buffer for performance. STR writes R3 to the write buffer, not immediately to main memory. LDR 2048 misses, evicting the cache block that contained 256. LDR 256 then also misses and fetches from main memory — but the write buffer hasn't drained yet, so memory still has the old value. Without checking the write buffer, R2 gets the stale value. Solution: always check write buffer on read misses." },
+    ],
+  },
+
+  "pyq12": {
+    title: "PYQ 12 — Identify Miss Types (ESA July 2023 UE20CS252, Q3d, 4 Marks)", emoji: "🎓",
+    tldr: "Identify each of four described miss scenarios as Compulsory, Capacity, Conflict, or Coherence.",
+    explanation: `QUESTION: Identify the type of cache miss:
+(i) The cache cannot contain all the blocks needed during execution.
+(ii) Misses due to flushes to keep multiple caches in sync in a multiprocessor system.
+(iii) The very first access to a block cannot be in the cache.
+(iv) A block may be discarded and later retrieved if too many blocks map to its set.
+
+ANSWERS:
+(i) Capacity miss — The cache is simply too small to hold the entire working set. These occur even in a fully-associative cache.
+(ii) Coherence miss (4th C) — In multiprocessor systems, caches must be kept consistent. When one processor modifies data, other processors' caches may be invalidated (flushed), causing misses when they access that data again.
+(iii) Compulsory miss (Cold-start miss) — The very first access to any block is always a miss because the block has never been loaded. Would occur even in an infinitely large cache.
+(iv) Conflict miss (Collision miss) — Too many blocks compete for the same cache set or line in a direct-mapped or set-associative cache. Would be a hit in a fully-associative cache of the same size.`,
+    keyPoints: [
+      "(i) Cache cannot hold all needed blocks → CAPACITY MISS",
+      "(ii) Multiprocessor cache flush/invalidation → COHERENCE MISS (4th C)",
+      "(iii) Very first access to a block → COMPULSORY MISS (cold-start)",
+      "(iv) Too many blocks map to same set → CONFLICT MISS (collision)",
+    ],
+    formula: {
+      code: `Miss Type Identification:
+  Scenario                              │ Type
+  ──────────────────────────────────────┼──────────────────────────
+  First ever access to a block          │ Compulsory (cold-start)
+  Cache too small for working set       │ Capacity
+  Too many blocks compete for same set  │ Conflict (collision)
+  Multiprocessor cache flush/invalidate │ Coherence (4th C)
+
+  Quick rules:
+  • Would it miss in an INFINITE cache?    → Compulsory
+  • Would it miss in a FULLY-ASSOC cache   → Capacity
+    of the same size?
+  • Would it HIT in a FA cache same size?  → Conflict
+  • Only in MULTIPROCESSOR systems?        → Coherence`,
+      explanation: "These four descriptions directly map to the Four C's. The key is matching the physical description to the underlying cause. 'Cannot contain all needed blocks' = too small = Capacity. 'Too many map to same set' = conflicts in placement = Conflict.",
+    },
+    examTips: [
+      "This is a definition/recognition question — memorize the four descriptions and their miss types.",
+      "Coherence is ONLY in multiprocessor systems. Single-processor = only 3 C's.",
+      "Conflict: 'discarded and retrieved' is the clue — evicted due to mapping constraints, not size.",
+    ],
+    questions: [],
+  },
+
+};
