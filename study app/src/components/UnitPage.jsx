@@ -20,6 +20,7 @@ const unitModules = {
   },
   daa: {
     1: () => import('../data/daa/unit1.js'),
+    2: () => import('../data/daa/unit2.js'),
   },
 };
 
