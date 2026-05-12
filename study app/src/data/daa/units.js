@@ -18,13 +18,13 @@
 // See src/data/mpca/units.js or src/data/os/units.js for reference.
 
 export const UNITS = [
-  {
-    id: 1,
-    title: 'Algorithm Analysis & Brute Force',
-    shortTitle: 'Basics & Brute Force',
-    emoji: '🧠',
-    gradient: 'linear-gradient(135deg, #1a1a2f 0%, #161b22 100%)',
-    accentColor: '#bc8cff',
-    description: 'Algorithm fundamentals, asymptotic notations, recursive/non-recursive analysis, and brute force techniques.',
-  },
+    {
+      id: 1,
+      title: 'Algorithm Analysis & Brute Force',
+      shortTitle: 'Basics & Brute Force',
+      emoji: '🧠',
+      gradient: 'linear-gradient(135deg, #1a1a2f 0%, #161b22 100%)',
+      accentColor: '#bc8cff',
+      description: 'Algorithm fundamentals, asymptotic notations, recursive/non-recursive analysis, and brute force techniques.',
+    },
 ];
