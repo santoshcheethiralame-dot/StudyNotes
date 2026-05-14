@@ -7,6 +7,7 @@ const subjectUnitsModules = {
   mpca: () => import('../data/mpca/units.js'),
   os: () => import('../data/os/units.js'),
   daa: () => import('../data/daa/units.js'),
+  cn: () => import('../data/cn/units.js'),
 };
 
 export default function SubjectHome({ onOpenSearch }) {

@@ -36,8 +36,8 @@ export const SUBJECTS = [
     accentColor: '#f59e0b',
     glowColor: 'rgba(245, 158, 11, 0.15)',
     description: 'OSI model, TCP/IP, routing, network security, and protocol analysis.',
-    unitCount: 0,
-    available: false,
+    unitCount: 1,
+    available: true,
   },
   {
     id: 'daa',

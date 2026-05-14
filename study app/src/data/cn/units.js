@@ -18,14 +18,13 @@
 // See src/data/mpca/units.js or src/data/os/units.js for reference.
 
 export const UNITS = [
-  // Example:
-  // {
-  //   id: 1,
-  //   title: 'Introduction to Computer Networks',
-  //   shortTitle: 'Intro & OSI',
-  //   emoji: '🌐',
-  //   gradient: 'linear-gradient(135deg, #2a1a2a 0%, #161b22 100%)',
-  //   accentColor: '#f59e0b',
-  //   description: 'Network fundamentals, OSI model, TCP/IP stack, and network topologies.',
-  // },
+  {
+    id: 1,
+    title: 'Introduction & Application Layer',
+    shortTitle: 'Intro & App Layer',
+    emoji: '🌐',
+    gradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+    accentColor: '#38bdf8',
+    description: 'Network fundamentals, physical media, switching, delay/loss, and Application layer protocols like HTTP.',
+  },
 ];
