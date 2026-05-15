@@ -59,7 +59,7 @@ export default function HubPage() {
           <div className="hub-search-hint" style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 6,
+            gap: 12,
             background: 'var(--surface)',
             border: '1px solid var(--border)',
             borderRadius: 8,
@@ -68,8 +68,34 @@ export default function HubPage() {
             color: 'var(--muted)',
             fontFamily: 'var(--font-mono)',
           }}>
-            <span style={{ opacity: 0.6 }}>⌘</span>
-            <span>Ctrl + K to search</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <span style={{ opacity: 0.6 }}>⌘</span>
+              <span>Ctrl + K to search</span>
+            </div>
+            <div style={{ width: 1, height: 12, background: 'var(--border)' }} />
+            <button 
+              onClick={() => {
+                sessionStorage.removeItem('orbit_session');
+                window.location.reload();
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--muted)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+                padding: 0,
+                fontSize: 11,
+                fontWeight: 600,
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--gold)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+            >
+              🔒 LOCK SESSION
+            </button>
           </div>
         </header>
 
