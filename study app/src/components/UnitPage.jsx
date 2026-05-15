@@ -24,6 +24,7 @@ const unitModules = {
   },
   cn: {
     1: () => import('../data/cn/unit1.js'),
+    2: () => import('../data/cn/unit2.js'),
   },
 };
 

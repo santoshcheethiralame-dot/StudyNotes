@@ -23,9 +23,11 @@ const loadSubjectTopics = async (subjectId) => {
     ],
     daa: [
       () => import('../data/daa/unit1.js'),
+      () => import('../data/daa/unit2.js'),
     ],
     cn: [
       () => import('../data/cn/unit1.js'),
+      () => import('../data/cn/unit2.js'),
     ],
   };
 

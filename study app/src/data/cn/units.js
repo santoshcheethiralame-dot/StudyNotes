@@ -27,4 +27,13 @@ export const UNITS = [
     accentColor: '#38bdf8',
     description: 'Network fundamentals, physical media, switching, delay/loss, and Application layer protocols like HTTP.',
   },
+  {
+    id: 2,
+    title: 'Application Layer + Transport Layer',
+    shortTitle: 'App & Transport Layer',
+    emoji: '🏗️',
+    gradient: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
+    accentColor: '#fbbf24',
+    description: 'Deep dive into HTTP, DNS, Video Streaming, CDNs, Socket Programming, and the fundamentals of the Transport Layer (UDP/RDT).',
+  },
 ];
