@@ -4,6 +4,7 @@ import HubPage from './components/HubPage';
 import SubjectHome from './components/SubjectHome';
 import UnitPage from './components/UnitPage';
 import SearchModal from './components/SearchModal';
+import { BookmarkProvider } from './components/BookmarkContext';
 
 /**
  * AuthGate Component
@@ -169,18 +170,20 @@ export default function App() {
 
   return (
     <AuthGate>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HubPage />} />
-          <Route path="/:subjectId" element={<SubjectHome onOpenSearch={(subId) => { setSearchSubject(subId); setIsSearchOpen(true); }} />} />
-          <Route path="/:subjectId/unit/:unitId" element={<UnitPage onOpenSearch={(subId) => { setSearchSubject(subId); setIsSearchOpen(true); }} />} />
-        </Routes>
-        <SearchModal 
-          isOpen={isSearchOpen} 
-          onClose={() => { setIsSearchOpen(false); setSearchSubject(null); }} 
-          subjectId={searchSubject}
-        />
-      </BrowserRouter>
+      <BookmarkProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HubPage />} />
+            <Route path="/:subjectId" element={<SubjectHome onOpenSearch={(subId) => { setSearchSubject(subId); setIsSearchOpen(true); }} />} />
+            <Route path="/:subjectId/unit/:unitId" element={<UnitPage onOpenSearch={(subId) => { setSearchSubject(subId); setIsSearchOpen(true); }} />} />
+          </Routes>
+          <SearchModal 
+            isOpen={isSearchOpen} 
+            onClose={() => { setIsSearchOpen(false); setSearchSubject(null); }} 
+            subjectId={searchSubject}
+          />
+        </BrowserRouter>
+      </BookmarkProvider>
     </AuthGate>
   );
 }

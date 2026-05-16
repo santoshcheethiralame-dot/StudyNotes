@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { useBookmarks } from './BookmarkContext';
 
 export default function Sidebar({ groups, topics, selectedTopicId, onSelectTopic, openGroups, toggleGroup, unitId, subjectId, isOpen, closeSidebar }) {
+  const { isBookmarked } = useBookmarks();
   return (
     <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <div style={{
@@ -104,9 +106,13 @@ export default function Sidebar({ groups, topics, selectedTopicId, onSelectTopic
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
+                    flex: 1,
                   }}>
                     {topic.title}
                   </span>
+                  {isBookmarked(`${subjectId}__unit${unitId}__${id}`) && (
+                    <span style={{ fontSize: 12, opacity: 0.7, flexShrink: 0 }} title="Bookmarked">🔖</span>
+                  )}
                 </button>
               );
             })}

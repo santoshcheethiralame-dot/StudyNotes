@@ -264,7 +264,14 @@ export default function UnitPage({ onOpenSearch }) {
 
         {/* Main Content Area */}
         <div className="main-content" ref={mainContentRef}>
-          <TopicView topic={selectedTopic} />
+          <TopicView
+            topic={selectedTopic}
+            subjectId={subjectId}
+            unitId={idNum}
+            unitTitle={unitMeta?.title}
+            subjectTitle={subject?.shortTitle}
+            topicId={selectedTopicId}
+          />
         </div>
       </div>
 

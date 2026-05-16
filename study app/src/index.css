@@ -371,6 +371,14 @@ details > summary::-webkit-details-marker {
   .search-subject-badge {
     display: none !important;
   }
+
+  /* Bookmark button - icon only on mobile */
+  .bookmark-btn-text {
+    display: none !important;
+  }
+  .bookmark-btn {
+    padding: 6px 8px !important;
+  }
 }
 
 /* Small phone breakpoint */

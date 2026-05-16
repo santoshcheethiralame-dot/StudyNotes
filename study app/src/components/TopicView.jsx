@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBookmarks } from './BookmarkContext';
 
 function Section({ label, children }) {
   return (
@@ -18,8 +19,9 @@ function Section({ label, children }) {
   );
 }
 
-export default function TopicView({ topic }) {
+export default function TopicView({ topic, subjectId, unitId, unitTitle, subjectTitle, topicId }) {
   const [reveal, setReveal] = useState({});
+  const { isBookmarked, toggleBookmark } = useBookmarks();
 
   if (!topic) {
     return (
@@ -39,6 +41,22 @@ export default function TopicView({ topic }) {
     setReveal(prev => ({ ...prev, [index]: !prev[index] }));
   };
 
+  const bookmarkId = `${subjectId}__unit${unitId}__${topicId}`;
+  const saved = isBookmarked(bookmarkId);
+
+  const handleBookmark = () => {
+    toggleBookmark({
+      id: bookmarkId,
+      subjectId,
+      unitId,
+      topicId,
+      topicTitle: topic.title,
+      topicEmoji: topic.emoji,
+      subjectTitle,
+      unitTitle,
+    });
+  };
+
   return (
     <div className="fade-in" style={{ maxWidth: 800, margin: '0 auto' }}>
       {/* Title */}
@@ -52,9 +70,50 @@ export default function TopicView({ topic }) {
             fontWeight: 800,
             fontFamily: 'var(--font-sans)',
             letterSpacing: '-0.5px',
+            flex: 1,
           }}>
             {topic.title}
           </h1>
+          {/* Bookmark / Read Later button */}
+          <button
+            onClick={handleBookmark}
+            title={saved ? 'Remove from Read Later' : 'Save for Read Later'}
+            className="bookmark-btn"
+            style={{
+              background: saved ? 'var(--gold)' : 'var(--surface)',
+              border: saved ? '1px solid var(--gold)' : '1px solid var(--border)',
+              color: saved ? '#000' : 'var(--muted)',
+              borderRadius: 8,
+              padding: '6px 12px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 13,
+              fontWeight: 600,
+              fontFamily: 'var(--font-mono)',
+              transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={e => {
+              if (!saved) {
+                e.currentTarget.style.borderColor = 'var(--gold)';
+                e.currentTarget.style.color = 'var(--gold)';
+                e.currentTarget.style.background = 'var(--surface-hover)';
+              }
+            }}
+            onMouseLeave={e => {
+              if (!saved) {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.color = 'var(--muted)';
+                e.currentTarget.style.background = 'var(--surface)';
+              }
+            }}
+          >
+            <span style={{ fontSize: 16 }}>{saved ? '🔖' : '📑'}</span>
+            <span className="bookmark-btn-text">{saved ? 'Saved' : 'Read Later'}</span>
+          </button>
         </div>
 
         {topic.tldr && (

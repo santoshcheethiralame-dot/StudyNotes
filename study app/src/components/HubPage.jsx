@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { SUBJECTS } from '../data/subjects';
+import BookmarksPanel from './BookmarksPanel';
 
 export default function HubPage() {
   return (
@@ -98,6 +99,9 @@ export default function HubPage() {
             </button>
           </div>
         </header>
+
+        {/* Bookmarked / Read Later Topics */}
+        <BookmarksPanel />
 
         {/* Subject Cards Grid */}
         <div className="hub-grid" style={{
