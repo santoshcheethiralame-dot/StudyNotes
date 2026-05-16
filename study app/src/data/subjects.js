@@ -36,7 +36,7 @@ export const SUBJECTS = [
     accentColor: '#f59e0b',
     glowColor: 'rgba(245, 158, 11, 0.15)',
     description: 'OSI model, TCP/IP, routing, network security, and protocol analysis.',
-    unitCount: 1,
+    unitCount: 2,
     available: true,
   },
   {
@@ -49,7 +49,7 @@ export const SUBJECTS = [
     accentColor: '#bc8cff',
     glowColor: 'rgba(188, 140, 255, 0.15)',
     description: 'Divide & conquer, dynamic programming, greedy algorithms, and NP-completeness.',
-    unitCount: 1,
+    unitCount: 2,
     available: true,
   },
 ];
