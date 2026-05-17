@@ -36,4 +36,14 @@ export const UNITS = [
     accentColor: '#fbbf24',
     description: 'Deep dive into HTTP, DNS, Video Streaming, CDNs, Socket Programming, and the fundamentals of the Transport Layer (UDP/RDT).',
   },
+  {
+    id: 3,
+    title: 'Transport Layer + Network Layer',
+    shortTitle: 'Transport & Network',
+    emoji: '🧭',
+    gradient: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
+    accentColor: '#a855f7',
+    description: 'Go-Back-N, Selective Repeat, TCP internals (flow/congestion control, connection handshake), IP protocol, IP addressing/services, and Routing Algorithms (Link-State/Distance-Vector).',
+  },
 ];
+

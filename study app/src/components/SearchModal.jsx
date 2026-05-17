@@ -28,6 +28,7 @@ const loadSubjectTopics = async (subjectId) => {
     cn: [
       () => import('../data/cn/unit1.js'),
       () => import('../data/cn/unit2.js'),
+      () => import('../data/cn/unit3.js'),
     ],
   };
 
