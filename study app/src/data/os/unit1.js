@@ -1,43 +1,47 @@
-// Auto-extracted from unit1.jsx
+// Auto-extracted from unit1.jsx — COMPREHENSIVE UPDATE with all PYQs, solved problems, IPC, deeper explanations
 export const groups = [
-  { name: "🖥️ OS Fundamentals", ids: ["os-overview","os-goals","os-definition"] },
-  { name: "🔌 Computer Organization", ids: ["bootstrap-interrupts","storage-struct","io-dma"] },
-  { name: "🏗️ System Architecture", ids: ["multiprocessor","multicore-cluster","dual-mode-timer"] },
-  { name: "⚙️ OS Structure", ids: ["multiprog-multitask","os-services","syscalls","policy-mechanism"] },
-  { name: "📊 Kernel Data Structures", ids: ["arrays-lists","stacks-queues-trees","hash-bitmap"] },
-  { name: "🌐 Computing Environments", ids: ["trad-mobile","client-server-p2p","virt-cloud"] },
-  { name: "🔄 Process Concept", ids: ["process-concept","pcb-states","schedulers-types","context-switch"] },
-  { name: "🛠️ Process Operations", ids: ["process-creation","process-termination","io-lifecycle"] },
-  { name: "📅 CPU Scheduling Basics", ids: ["sched-criteria","preemptive-dispatcher"] },
-  { name: "🗓️ Scheduling Algorithms", ids: ["fcfs-sched","sjf-srtf","priority-sched","round-robin","multilevel-q"] },
-  { name: "🖧 Advanced Scheduling", ids: ["multiproc-sched","affinity-loadbal","linux-cfs","windows-sched"] },
-  { name: "🐚 Shell & Cron", ids: ["shell-intro","env-vars","shell-basics","cron"] },
+  { name: "🖥️ OS Fundamentals", ids: ["os-overview", "os-goals", "os-definition"] },
+  { name: "🔌 Computer Organization", ids: ["bootstrap-interrupts", "storage-struct", "io-dma"] },
+  { name: "🏗️ System Architecture", ids: ["multiprocessor", "multicore-cluster", "dual-mode-timer"] },
+  { name: "⚙️ OS Structure", ids: ["multiprog-multitask", "os-services", "syscalls", "policy-mechanism"] },
+  { name: "📊 Kernel Data Structures", ids: ["arrays-lists", "stacks-queues-trees", "hash-bitmap"] },
+  { name: "🌐 Computing Environments", ids: ["trad-mobile", "client-server-p2p", "virt-cloud"] },
+  { name: "🔄 Process Concept", ids: ["process-concept", "pcb-states", "schedulers-types", "context-switch"] },
+  { name: "🛠️ Process Operations", ids: ["process-creation", "process-termination", "ipc-models", "io-lifecycle"] },
+  { name: "📅 CPU Scheduling Basics", ids: ["sched-criteria", "preemptive-dispatcher"] },
+  { name: "🗓️ Scheduling Algorithms", ids: ["fcfs-sched", "sjf-srtf", "priority-sched", "round-robin", "multilevel-q"] },
+  { name: "🖧 Advanced Scheduling", ids: ["multiproc-sched", "affinity-loadbal", "linux-cfs", "windows-sched"] },
+  { name: "🐚 Shell & Cron", ids: ["shell-intro", "env-vars", "shell-basics", "cron"] },
 ];
 
 export const topics = {
   "os-overview": {
     title: "Need for OS & Overview", emoji: "🖥️",
     tldr: "OS = intermediary between user and hardware. Without it, programmers would need hardware knowledge to run any program.",
-    explanation: `Without an OS, every application developer would need to directly program hardware — writing low-level code to control the CPU, memory, disk, and I/O devices manually. This is impractical and error-prone.
+    explanation: `Without an OS, every application developer would need to directly program hardware — writing low-level code to control the CPU, memory, disk, and I/O devices manually. That's impractical and dangerous.
 
-The OS solves this by acting as an intermediary — it sits between the user/application and the raw hardware, providing a clean, safe, and convenient interface.
+The OS solves this by acting as an intermediary — sitting between the user/application and the raw hardware, providing a clean, safe, and convenient interface.
 
-4 components of a Computer System (abstract view):
+4 Components of a Computer System (layered from bottom to top):
 1. Hardware — provides basic computing resources (CPU, memory, I/O devices)
-2. Operating System — controls and coordinates hardware use among applications and users
+2. Operating System — controls and coordinates hardware use among applications/users
 3. Application Programs — use system resources to solve user problems (word processors, browsers, games)
 4. Users — people, machines, or other computers
 
-The OS has two perspectives: User View (convenience, ease of use, performance) and System View (resource allocator, control program, efficiency).`,
+Two Perspectives:
+• User view: convenience, ease of use, performance. Don't care how resources are managed.
+• System view: resource allocator + control program. Manages CPU time, memory space, I/O devices. Prevents errors and improper use.
+
+Think of the OS like a mall manager — users are shoppers, applications are stores, and the OS makes sure everyone gets their fair share of the space (resources) without stepping on each other's feet.`,
     keyPoints: [
       "OS = intermediary between user and hardware",
       "Without OS: hardware knowledge mandatory for any programming",
-      "4 components: Hardware → OS → Application Programs → Users",
+      "4 components (bottom to top): Hardware → OS → Application Programs → Users",
       "User view: convenience, ease of use, performance",
       "System view: OS is a resource allocator AND a control program",
       "Resource allocator: manages CPU, memory, I/O; decides conflicting requests",
       "Control program: controls execution to prevent errors and improper use",
-      "Mainframe/shared systems: maximize resource utilization (keep all users happy)",
+      "Mainframe/shared systems: maximize resource utilization",
       "Embedded systems: little or no user interface, optimized for specific task",
     ],
     formula: null,
@@ -48,39 +52,54 @@ The OS has two perspectives: User View (convenience, ease of use, performance) a
       "Shared system goal = maximize utilization. Personal system goal = maximize convenience",
     ],
     questions: [
+      { q: "What are the three main purposes of an OS? (PYQ)", a: "1. Convenience — Provides an environment that makes the computer convenient to use. Abstracts hardware complexity away from users and applications. 2. Efficiency — Manages and allocates hardware resources (CPU, memory, I/O) fairly and efficiently among competing users/processes. 3. Ability to Evolve — The OS must be structured so new system functions can be introduced without disrupting existing services." },
       { q: "What are the two main roles of an OS from the system's perspective?", a: "1. Resource Allocator: manages all hardware resources (CPU, memory, I/O), decides between conflicting requests for efficient and fair use. 2. Control Program: controls execution of programs to prevent errors and improper/unauthorized use of the computer." },
       { q: "Why do we need an OS at all?", a: "Without an OS, every programmer would need direct hardware knowledge to write programs. The OS abstracts hardware complexity, provides a convenient interface, ensures security, and manages resources so applications can run without worrying about hardware details." },
     ],
   },
 
   "os-goals": {
-    title: "OS Goals & Why Study It", emoji: "🎯",
-    tldr: "OS goals: execute programs, convenient to use, efficient hardware use. Study it because ALL code runs on top of an OS.",
+    title: "OS Goals & Types of OS", emoji: "🎯",
+    tldr: "OS goals: execute programs, convenient to use, efficient hardware use. 5 types: Batch, Time-sharing, Real-time, Distributed, Embedded.",
     explanation: `Operating System Goals:
 1. Execute user programs and make solving user problems easier
 2. Make the computer system convenient to use
 3. Use the computer hardware in an efficient manner
 4. Manage resources: Memory, Processor(s), I/O Devices
 
-Why Study OS?
-Only a small percentage of people will create or modify operating systems. However, ALMOST ALL CODE runs on top of an OS — so understanding how OSes work is crucial for proper, efficient, effective, and secure programming.
+Need for Different Types of OS — each exists because different environments have different priorities:
 
-Understanding the fundamentals helps you write better programs, debug system-level issues, understand performance bottlenecks, and work with concurrency and security correctly.`,
+1. Batch OS: No user interaction during execution. Jobs collected, submitted in batches. Example: payroll processing, scientific computation. Goal: maximize throughput.
+
+2. Time-sharing OS (Multitasking): CPU switches so fast between users that each feels they have dedicated machine. Response time < 1 second. Example: Unix, Linux. Goal: quick response time.
+
+3. Real-time OS: Strict timing constraints — must respond within a guaranteed deadline. Two types: Hard real-time (miss deadline = disaster, e.g., missile guidance), Soft real-time (miss deadline = degraded but OK, e.g., video streaming).
+
+4. Distributed OS: Multiple computers networked together, appearing as one system to the user. Resources shared across machines. Example: Google's cluster OS.
+
+5. Embedded OS: Designed for devices with limited resources and fixed purpose. Little or no UI. Example: washing machine controller, car ECU, microwave.`,
     keyPoints: [
       "Goal 1: Execute user programs, make problem-solving easier",
       "Goal 2: Make the computer convenient to use",
       "Goal 3: Use hardware efficiently",
       "Goal 4: Manage resources (Memory, CPU, I/O)",
-      "Why study: all code runs ON TOP of an OS — understanding it = better programming",
-      "OS knowledge → proper, efficient, effective, and secure programming",
+      "Batch OS: no interaction, maximize throughput (payroll, science)",
+      "Time-sharing OS: interactive, response < 1 sec (Unix, Linux)",
+      "Real-time OS: guaranteed deadlines (missile guidance, medical)",
+      "Hard real-time: missing deadline = system failure",
+      "Soft real-time: missing deadline = degraded performance",
+      "Distributed OS: multiple computers as one system",
+      "Embedded OS: minimal resources, fixed function (microwaves, cars)",
     ],
     formula: null,
     examTips: [
       "OS Goals: Execute programs, Convenience, Efficiency, Resource management — all 4",
-      "'All code runs on top of an OS' — classic exam justification for studying OS",
-      "Efficiency + convenience are often in conflict — OS must balance both",
+      "Know all 5 types of OS with examples — PYQ standard question",
+      "Hard real-time vs Soft real-time: hard = deadline miss = failure",
+      "Embedded OS: most prevalent form of computing today",
     ],
     questions: [
+      { q: "What is privileged mode of operation? What is the need for different types of OS? (PYQ)", a: "Privileged mode (kernel mode) is a CPU execution mode where all instructions can execute, including privileged ones (I/O, setting timer, modifying interrupt vectors, halting CPU). User programs run in user mode where these are blocked. Dual-mode protects the OS from errant/malicious user code.\n\nNeed for different types: 1. Batch OS: No interaction needed (payroll, scientific). Maximizes throughput. 2. Time-sharing OS: Interactive multi-user (Unix). Quick response. 3. Real-time OS: Strict timing (industrial control, medical). Guaranteed deadline. 4. Distributed OS: Networks as one system. Resource sharing. 5. Embedded OS: Specialized devices (microwaves, cars). Minimal resources, fixed functions." },
       { q: "List the 4 main goals of an Operating System.", a: "1. Execute user programs and make solving user problems easier. 2. Make the computer system convenient to use. 3. Use computer hardware in an efficient manner. 4. Manage resources: Memory, Processor(s), I/O Devices." },
     ],
   },
@@ -88,18 +107,19 @@ Understanding the fundamentals helps you write better programs, debug system-lev
   "os-definition": {
     title: "Defining OS — Kernel, System Programs", emoji: "🧠",
     tldr: "Kernel = the ONE program always running. System programs ship WITH the OS. Everything else = application programs.",
-    explanation: `The OS has many roles and functions, making it hard to define precisely. The common functions of controlling and allocating resources are brought together into one piece of software.
+    explanation: `The OS is hard to define precisely because it does so many things. The common thread: controlling and allocating resources.
 
-The KERNEL is the core of the OS — it is the one program running at all times on the computer. Everything else is either:
-- A system program: ships with the OS (shells, compilers, utilities like ls, cp, grep)
-- An application program: installed by the user (browsers, games, word processors)
+The KERNEL is the core of the OS — it is the ONE program running at ALL times. Everything else is either:
+• System program: ships with the OS (shells, compilers, ls, cp, grep, gcc)
+• Application program: installed by the user (Chrome, VS Code, games)
 
-The OS serves as the foundation — all other software runs on top of it.
+Analogy: kernel = the engine of a car. System programs = the dashboard, wheels, steering (come with the car). Applications = what you choose to load in the trunk.
 
-Key OS concept: Policy vs Mechanism
-Policy: WHAT will be done (e.g., which process gets CPU next)
-Mechanism: HOW to do it (e.g., the timer, the ready queue)
-Separating them allows maximum flexibility — you can change the policy without changing the mechanism.`,
+Key OS Principle: Policy vs Mechanism
+• Policy: WHAT will be done (e.g., "user gets at most 30 minutes of CPU")
+• Mechanism: HOW to do it (e.g., the timer hardware + counter)
+
+Separating them = maximum flexibility. You can change the policy without changing the mechanism. Example: the timer (mechanism) works the same whether the policy is "10ms quantum" or "100ms quantum". You just change the setting, not the hardware.`,
     keyPoints: [
       "Kernel = 'the one program running at all times' — heart of the OS",
       "System programs: ship with OS (ls, cp, shells, compilers)",
@@ -142,28 +162,39 @@ Policy vs Mechanism Example:
 
   "bootstrap-interrupts": {
     title: "Bootstrap, Interrupts & I/O Operation", emoji: "🔌",
-    tldr: "Bootstrap = first program at boot, stored in ROM/EEPROM. Interrupts = OS is interrupt-driven. Interrupt vector = lookup table for ISRs.",
+    tldr: "Bootstrap = first program at boot, stored in ROM. Interrupts = OS is event-driven. Interrupt vector = lookup table for ISRs. DMA = block transfer without per-byte CPU.",
     explanation: `Bootstrap Program:
-When the system is powered on or rebooted, the first program that runs is the Bootstrap (also called firmware). It is stored in ROM (Read-Only Memory) or EEPROM — non-volatile memory, so it survives power-off. It initializes all system components (CPU registers, device controllers, memory) and loads the OS kernel into memory. After the OS loads, the first process created is init (in Linux).
+When the system is powered on or rebooted, the very first program that runs is the Bootstrap (also called firmware). It lives in ROM (Read-Only Memory) or EEPROM — non-volatile memory that survives power-off. It initializes all system components (CPU registers, device controllers, memory) and then loads the OS kernel from disk into RAM. After loading, the OS starts the first process: init (PID 1 on Linux).
 
-Computer System Operation:
-I/O devices and the CPU can execute concurrently. Each device has its own controller with a local buffer. The CPU moves data between main memory and device buffers. I/O is from device to controller's local buffer. The device controller tells the CPU it finished by raising an interrupt.
+Think of it like: your phone's bootloader. Before Android or iOS, a small program wakes the phone up and loads the main OS.
 
-Interrupts:
-The OS is interrupt-driven — it reacts to events (interrupts) rather than polling. An interrupt transfers control to an Interrupt Service Routine (ISR) via the interrupt vector (a table of ISR addresses). The OS saves CPU state (registers + PC) before handling the interrupt, then restores it after.
+Interrupts — How devices talk to the CPU:
+The OS is interrupt-driven — it reacts to events rather than constantly polling. When a device finishes its job (e.g., disk read complete), it raises an interrupt signal on the system bus. The CPU:
+1. Completes its current instruction
+2. Saves current state (registers + PC)
+3. Looks up the interrupt number in the interrupt vector (a table mapping interrupt numbers → ISR addresses)
+4. Jumps to the ISR (Interrupt Service Routine) — the handler code
+5. After ISR completes, restores state and resumes the original program
 
-Trap/Exception = a software-generated interrupt caused by an error (divide by zero) or a system call.`,
+Hardware interrupt: device sends signal via system bus (e.g., disk done, key pressed)
+Software interrupt (trap/exception): triggered by a system call OR an error (divide by zero, invalid memory access)
+
+I/O Structure:
+Each device has a controller with a local buffer. CPU moves data between main memory and these local buffers. The controller signals completion via interrupt.
+
+DMA (Direct Memory Access): For high-speed I/O (disks, network), making the CPU transfer data byte-by-byte is wasteful. Instead, the DMA controller transfers entire blocks between the device buffer and main memory directly — the CPU only gets ONE interrupt per block (not one per byte). This frees the CPU to do real work while data is being transferred.`,
     keyPoints: [
       "Bootstrap: first program at boot, stored in ROM/EEPROM (firmware)",
       "Bootstrap: initializes CPU registers, device controllers, memory",
       "Bootstrap: locates and loads OS kernel into memory",
-      "First process after OS boot: init (Linux)",
+      "First process after OS boot: init (PID 1 on Linux)",
       "OS is interrupt-driven (reacts to events, doesn't poll)",
       "Interrupt vector: table containing addresses of all ISRs",
       "ISR (Interrupt Service Routine): the code that handles each interrupt type",
       "OS must save CPU state (registers + PC) before handling interrupt",
       "Trap/Exception: software-generated interrupt (error or system call)",
       "Device controller notifies CPU via interrupt when I/O completes",
+      "DMA: block transfer from device to RAM, ONE interrupt per block (not per byte)",
     ],
     formula: {
       code: `Boot Sequence:
@@ -171,14 +202,14 @@ Trap/Exception = a software-generated interrupt caused by an error (divide by ze
     → ROM Bootstrap program executes
     → Initializes CPU registers, memory, device controllers
     → Loads OS Kernel from disk into RAM
-    → OS starts; creates 'init' process
+    → OS starts; creates 'init' process (PID=1)
     → System ready for use
 
 Interrupt Flow:
   Device finishes I/O
-    → Device controller raises interrupt signal
+    → Device controller raises interrupt signal on bus
     → CPU completes current instruction
-    → CPU saves state (registers + PC) to stack/PCB
+    → CPU saves state (registers + PC)
     → CPU reads interrupt vector → gets ISR address
     → Jumps to ISR → handles interrupt
     → Restores CPU state → resumes original program
@@ -186,80 +217,94 @@ Interrupt Flow:
 Interrupt Vector (conceptual):
   [0] → ISR for timer interrupt
   [1] → ISR for keyboard interrupt
-  [2] → ISR for disk interrupt
-  [14] → ISR for page fault (x86)`,
-      explanation: "Interrupt vector = lookup table. Interrupt number → ISR address. Saves context first, always.",
+  [2] → ISR for disk completion
+  [14] → ISR for page fault (x86)
+
+DMA vs Programmed I/O:
+  Programmed I/O: CPU reads 1 byte → stores → reads next byte... (1 interrupt per byte)
+  DMA:            Controller transfers entire block → CPU gets 1 interrupt per block ✓`,
+      explanation: "Interrupt vector = lookup table. Interrupt number → ISR address. DMA frees CPU for useful work during large transfers.",
     },
     examTips: [
-      "Bootstrap stored in ROM/EEPROM — NOT on hard disk (it survives power-off)",
+      "Bootstrap stored in ROM/EEPROM — NOT on hard disk (survives power-off)",
       "Interrupt vector = table of ISR addresses (NOT the ISR itself)",
       "Trap = software interrupt. Hardware interrupt = from device.",
       "OS saves state BEFORE handling interrupt (otherwise current process is corrupted)",
       "'The OS is interrupt-driven' — this exact phrase is exam material",
+      "DMA = ONE interrupt per BLOCK (not per byte) — huge efficiency gain",
     ],
     questions: [
-      { q: "Why is the bootstrap program stored in ROM/EEPROM?", a: "ROM/EEPROM is non-volatile — it retains its contents even when power is off. The bootstrap must be available immediately at power-on before any disk I/O can occur, so it can't be on the hard drive." },
-      { q: "What is the difference between an interrupt and a trap?", a: "An interrupt is a hardware signal from a device (e.g., I/O completion, timer expiry). A trap (or exception) is a software-generated interrupt caused by a program error (divide by zero, invalid memory access) or an explicit system call request." },
+      { q: "Why is the bootstrap program stored in ROM/EEPROM?", a: "ROM/EEPROM is non-volatile — it retains its contents even when power is off. The bootstrap must be available immediately at power-on before any disk I/O can occur, so it can't be on the hard drive. It must be in a location the CPU can read instantly after reset." },
+      { q: "What is the difference between an interrupt and a trap?", a: "An interrupt is a hardware signal from a device (e.g., I/O completion, timer expiry). A trap (or exception) is a software-generated interrupt caused by a program error (divide by zero, invalid memory access) or an explicit system call request. Both are handled similarly — CPU saves state, consults interrupt vector, jumps to ISR." },
+      { q: "What is DMA and why is it needed?", a: "DMA (Direct Memory Access) allows a device controller to transfer entire blocks of data directly between the device buffer and main memory WITHOUT the CPU being involved for each byte. The CPU only receives ONE interrupt per block (not per byte). This is critical for high-speed devices like disks — without DMA, the CPU would waste nearly all its time moving individual bytes." },
     ],
   },
 
   "storage-struct": {
-    title: "Storage Structure & Caching", emoji: "💾",
-    tldr: "Storage hierarchy: Registers → Cache → RAM → SSD → HDD → Tape. Faster = smaller + costlier. Caching = copy to faster storage temporarily.",
-    explanation: `Main Memory: The only large storage the CPU can directly access. Implemented with DRAM — volatile (loses content on power off). Also uses ROM and EEPROM for firmware.
+    title: "Storage Structure & Hierarchy", emoji: "💾",
+    tldr: "Storage hierarchy: Registers → Cache → RAM → SSD → HDD → Tape. Faster = smaller + costlier. Caching = copy data to faster storage temporarily.",
+    explanation: `Main Memory: The only large storage the CPU can directly access. Implemented with DRAM — volatile (loses content on power off). ROM and EEPROM are non-volatile but small (used for firmware).
 
 Von Neumann Model: Fetch instruction from memory → Decode → Execute → repeat. This fetch-decode-execute cycle is the fundamental operation of all modern computers.
 
 Storage Hierarchy (from fastest/smallest/most expensive to slowest/largest/cheapest):
-Registers → Cache → Main Memory (RAM) → SSD → Hard Disk → Magnetic Tape
+Registers → Cache (L1/L2/L3) → Main Memory (RAM) → SSD → Hard Disk → Optical Disk → Magnetic Tape
 
-Secondary Storage: Extension of main memory. Provides large non-volatile storage. HDDs use magnetic platters (tracks → sectors). SSDs use flash memory. Disk controller manages interaction between disk and computer.
+The Rule: higher up = faster, smaller, costlier, and more volatile.
 
-Caching: Copying frequently used data from slower to faster storage temporarily. The cache is always checked first — if data is there (cache hit), use it directly. If not (cache miss), copy from slower storage to cache, then use it. Cache management (size and replacement policy) is a critical design problem.`,
+Real-world analogy: it's like how you work. What you're actively thinking about = registers (instant access). Sticky notes on your desk = cache (fast, small). Your desk drawer = RAM. Filing cabinet = SSD/HDD. Offsite storage = tape.
+
+Caching: Copy frequently used data from slower storage to faster storage. Check cache first:
+• Cache hit: data found → use it directly (fast!)
+• Cache miss: fetch from slower storage → put in cache → use it
+
+Cache management (size + replacement policy like LRU) is a critical OS design problem. Cache coherence is also a challenge in multiprocessor systems — if two CPUs cache the same data and one modifies it, the other's cache is now stale.`,
     keyPoints: [
       "Main memory = only storage CPU accesses directly. DRAM = volatile.",
       "Von Neumann: Fetch → Decode → Execute → repeat (instruction cycle)",
-      "Storage hierarchy: Registers > Cache > RAM > SSD > HDD > Tape",
+      "Storage hierarchy: Registers > Cache > RAM > SSD > HDD > Optical > Tape",
       "Hierarchy tradeoff: faster = smaller, more expensive, more volatile",
       "Cache: copy of data from slower storage in faster storage",
       "Cache hit: data found in cache → fast. Cache miss: go to slower storage.",
       "Secondary storage: non-volatile, large capacity (HDD/SSD)",
-      "HDD: platters → tracks → sectors. Disk controller manages access.",
+      "Cache coherence: multiprocessor challenge — stale cache after write by other CPU",
     ],
     formula: {
       code: `Storage Hierarchy (fastest → slowest):
-  ┌────────────────────────────────────────────┐
-  │ Registers    │ < 1ns  │ KBs     │ Volatile │
-  │ Cache (L1-3) │ 1-10ns │ MBs     │ Volatile │
-  │ Main Memory  │ 50-100ns│ GBs    │ Volatile │
-  │ SSD          │ 0.1ms  │ GBs-TBs │ Non-vol  │
-  │ Hard Disk    │ 5-20ms │ TBs     │ Non-vol  │
-  │ Magnetic Tape│ minutes│ PBs     │ Non-vol  │
-  └────────────────────────────────────────────┘
-
-Von Neumann Cycle:
-  PC → fetch instruction from memory
-       → decode instruction
-       → execute instruction
-       → update PC
-       → repeat
+  ┌────────────────────────────────────────────────┐
+  │ Registers    │ < 1ns    │ KBs      │ Volatile  │
+  │ Cache L1     │ ~1ns     │ 32KB     │ Volatile  │
+  │ Cache L2/L3  │ ~10ns    │ MBs      │ Volatile  │
+  │ Main Memory  │ ~100ns   │ GBs      │ Volatile  │
+  │ SSD          │ ~0.1ms   │ GBs-TBs  │ Non-vol   │
+  │ Hard Disk    │ ~10ms    │ TBs      │ Non-vol   │
+  │ Magnetic Tape│ minutes  │ PBs      │ Non-vol   │
+  └────────────────────────────────────────────────┘
 
 Caching Strategy:
   1. Check cache for data X
-  2. Hit? → Use it (fast!)
-  3. Miss? → Load from RAM/disk into cache → use it`,
-      explanation: "Cache is smaller than storage being cached. Always a subset of slower storage.",
+  2. Hit? → Use it directly (fast!)
+  3. Miss? → Load from RAM/disk into cache → use it
+
+Cache Coherence Problem (multiprocessor):
+  CPU1 caches value A = 5
+  CPU2 caches value A = 5
+  CPU1 writes A = 10 (to its cache)
+  CPU2 still reads A = 5 (STALE! Wrong!)
+  Solution: cache coherence protocol (e.g., MESI)`,
+      explanation: "Main memory is cached by CPU cache. Cache is a smaller, faster copy of what's in RAM. Coherence is tricky in multi-CPU systems.",
     },
     examTips: [
       "DRAM = main memory = volatile. ROM/EEPROM = non-volatile (firmware)",
       "Registers → Cache → RAM → SSD → HDD → Tape: know this order cold",
       "Von Neumann: Fetch, Decode, Execute — the instruction cycle",
       "Cache hit = data found in fast storage. Cache miss = must go to slow storage.",
-      "Cache management = size + replacement policy (LRU, FIFO, etc.)",
+      "Cache coherence = major challenge in multiprocessor systems",
     ],
     questions: [
       { q: "Why is main memory described as volatile?", a: "Main memory (DRAM) loses all its contents when power is removed. Data must be saved to non-volatile secondary storage (HDD/SSD) to persist across power cycles." },
       { q: "What is the Von Neumann model?", a: "The fundamental instruction execution cycle: the processor fetches an instruction from memory, decodes it, executes it, then repeats. This Fetch-Decode-Execute cycle continues until the program terminates. It is the basis of modern computer operation." },
+      { q: "What is cache coherence and why is it challenging?", a: "Cache coherence means ensuring that when multiple CPUs each have their own cache of shared data, all caches see the same (consistent) value. It's challenging because one CPU can modify its cache copy without the other CPU knowing. Solutions like the MESI protocol use messages between CPUs to invalidate stale copies when data is modified." },
     ],
   },
 
@@ -270,337 +315,404 @@ Caching Strategy:
 A large portion of OS code manages I/O. A computer has CPUs + multiple device controllers connected via a common bus. Each device controller manages a specific device type (disk, keyboard, printer) and has local buffer storage + registers. A device driver provides a uniform interface between the controller and the OS kernel.
 
 Two modes of I/O:
-Synchronous I/O: after I/O starts, control returns to user only after I/O completes. CPU waits (idles) — only one I/O at a time.
-Asynchronous I/O: after I/O starts, control returns to user WITHOUT waiting. System call lets user wait for I/O completion if needed. Device-status table tracks all I/O devices and their states.
+Synchronous I/O: after I/O starts, control returns to user only after I/O completes. CPU waits (idles) — only one I/O at a time. Simple but wasteful.
 
-Direct Memory Access (DMA):
-Used for high-speed I/O (disks, network cards). The device controller transfers entire BLOCKS of data directly from its buffer to main memory WITHOUT CPU involvement. The CPU sets up the DMA transfer, then goes off and does other work. When done, only ONE interrupt is generated per block (not one per byte → massive reduction in interrupts).`,
+Asynchronous I/O: after I/O starts, control returns to user program immediately without waiting for I/O to complete. The user program can do other work. When I/O completes, the device notifies the OS via interrupt.
+
+DMA (Direct Memory Access):
+Without DMA (programmed I/O): CPU reads one byte at a time from device, stores in memory. For a 1MB file → 1 million CPU cycles wasted just moving data!
+
+With DMA: the DMA controller takes over. CPU tells DMA: "Transfer this block from disk to memory address X". DMA does it while CPU does other useful work. ONE interrupt at the end signals completion. Critical for high-speed devices like disks and network cards.`,
     keyPoints: [
-      "Device controller = manages specific device type + has local buffer",
-      "Device driver = software interface between controller and OS kernel",
-      "Synchronous I/O: CPU waits for I/O to complete before returning",
-      "Asynchronous I/O: control returns immediately; process can do other work",
-      "Device-status table: OS tracks state of every I/O device",
-      "DMA: controller transfers block directly to RAM, NO CPU per byte",
-      "DMA: ONE interrupt per block (not per byte) — huge efficiency gain",
-      "DMA used for high-speed devices: disk, network, graphics",
+      "Each device has a controller with a local buffer",
+      "Device driver = software interface between OS and controller",
+      "Synchronous I/O: CPU waits until I/O done → simple but wastes CPU",
+      "Asynchronous I/O: I/O starts, CPU continues → interrupt when done",
+      "DMA: controller transfers entire blocks between device and memory",
+      "DMA benefit: CPU is freed during transfer — ONE interrupt per block",
+      "Without DMA: one interrupt (or CPU stall) per byte — terrible for large transfers",
+      "System bus: common pathway connecting CPUs, memory, and device controllers",
     ],
     formula: {
-      code: `Without DMA (Programmed I/O):
-  CPU reads 1 byte → puts in RAM → reads next byte → ...
-  → One interrupt (or polling) per byte → CPU very busy!
+      code: `System Architecture:
+  ┌──────┐   ┌──────┐   ┌──────┐
+  │ CPU  │   │ CPU  │   │ DMA  │
+  └──┬───┘   └──┬───┘   └──┬───┘
+     │           │           │
+  ═══╪═══════════╪═══════════╪══ System Bus
+     │           │           │
+  ┌──┴───┐   ┌──┴──┐   ┌────┴────────┐
+  │Memory│   │ I/O │   │Device Ctrl  │
+  │      │   │Ctrl │   │(disk, net)  │
+  └──────┘   └─────┘   └─────────────┘
 
-With DMA:
-  CPU: "DMA controller, read 4096 bytes from disk to RAM@0x5000"
-  DMA: transfers all 4096 bytes directly → RAM
-  CPU: continues doing other work
-  DMA: done! → generates ONE interrupt
-  CPU: handles the one interrupt → continues
+DMA Transfer:
+  CPU: "DMA, copy 1MB from disk to memory[0x8000]"
+  DMA: *silently transfers 1MB while CPU runs other things*
+  DMA: [interrupt] "Done!"
+  CPU: 1 interrupt handled. Back to work.
 
-I/O Life cycle (simplified):
-  Process → system call → kernel validates → device driver
-  → device controller starts I/O → process BLOCKED
-  → context switch (CPU runs another process)
-  → device done → interrupt → ISR → process READY
-  → scheduler → process RESUMES`,
-      explanation: "DMA = device controller bypasses CPU to write to RAM. 1 interrupt per block = N×8 bytes of data with just 1 interrupt.",
+Programmed I/O (no DMA):
+  for each byte: CPU reads → stores → reads → stores...
+  1MB = 1,048,576 interrupts or stalls. Terrible!`,
+      explanation: "DMA = 'fire and forget' for large data transfers. CPU gets back just 1 interrupt per block.",
     },
     examTips: [
-      "DMA: ONE interrupt per BLOCK (not per byte) — this is the key advantage",
-      "DMA: CPU not involved in data transfer (just setup + final interrupt)",
-      "Without DMA: one interrupt per byte = CPU is overwhelmed for large transfers",
-      "Device driver = software. Device controller = hardware.",
+      "DMA = ONE interrupt per BLOCK (key fact for exam)",
+      "Without DMA: CPU involved per byte = terrible efficiency",
+      "Device controller has LOCAL BUFFER (not same as main memory)",
+      "Synchronous = wait. Asynchronous = continue, interrupt when done.",
     ],
     questions: [
-      { q: "What is the key advantage of DMA over regular programmed I/O?", a: "With regular I/O, the CPU handles data byte-by-byte and gets interrupted for each byte (or polls continuously). With DMA, the device controller transfers entire blocks of data directly to RAM without CPU involvement. Only ONE interrupt is generated per block — dramatically reducing CPU overhead for large data transfers." },
+      { q: "What is the difference between synchronous and asynchronous I/O?", a: "Synchronous I/O: the process is blocked until the I/O operation completes. Control only returns to the user program after I/O is done. Simple, but CPU is idle. Asynchronous I/O: the I/O operation is started and control immediately returns to the user program. The process can continue doing other work. When I/O completes, the OS is notified via an interrupt." },
+      { q: "Why is DMA important for system performance?", a: "Without DMA, the CPU must be involved in every byte transfer between device and memory, wasting enormous processing time on data movement. With DMA, the DMA controller handles entire block transfers autonomously while the CPU runs other processes. Only one interrupt per block is generated, drastically reducing CPU overhead for large I/O operations like disk reads." },
     ],
   },
 
   "multiprocessor": {
-    title: "Multiprocessor Systems", emoji: "🔢",
-    tldr: "SMP: all processors equal, all run all tasks. AMP: boss-worker, one master. Multi-core: multiple CPUs on one chip.",
-    explanation: `Most systems use a single general-purpose processor. But many also have special-purpose processors (disk controllers, keyboard controllers, GPU cores) — these are managed by the OS but run limited instruction sets.
+    title: "Computer System Architecture", emoji: "🏗️",
+    tldr: "Single processor: one CPU. Multiprocessor: multiple CPUs sharing memory. AMP = boss-worker. SMP = all peers. Multi-core = multiple cores per chip.",
+    explanation: `Single-Processor Systems: One general-purpose CPU. May also have special-purpose processors (disk, keyboard, graphics controllers) but these are managed by the OS and are not general-purpose.
 
-Multiprocessor Systems (parallel/tightly-coupled systems):
-Advantages: Increased throughput, Economy of scale, Increased reliability (graceful degradation / fault tolerance).
+Multiprocessor Systems (Parallel / Tightly-coupled):
+Multiple CPUs sharing the same physical memory and system bus. Also called parallel systems or tightly-coupled systems.
 
-Two types:
-1. Asymmetric Multiprocessing (AMP): one master processor handles scheduling, I/O, and OS decisions. Other processors execute only user code. Simple — no data sharing needed between processors.
+Advantages:
+1. Increased throughput: more work in less time
+2. Economy of scale: shared resources (memory, I/O) → cheaper than multiple single-processor systems
+3. Increased reliability: if one CPU fails, others continue (fault tolerance / graceful degradation)
 
-2. Symmetric Multiprocessing (SMP): all processors are equal peers. Each has its own registers and local cache. All share physical memory. All processors can run any task. Modern systems use SMP.
+Two types of multiprocessing:
+1. Asymmetric Multiprocessing (AMP): Boss-worker model. One master processor controls the system and assigns work to slave processors. Each slave does specific tasks. Simple but master is a bottleneck.
 
-Clustered Systems: Multiple complete systems working together, sharing storage via SAN (Storage Area Network). Provides high availability. Asymmetric clustering = one machine in hot-standby. Symmetric clustering = multiple nodes, all active, monitoring each other.`,
+2. Symmetric Multiprocessing (SMP): All processors are peers. Each processor has its own registers and private cache, but all share physical memory. Each processor runs its own copy of the OS kernel. ALL modern OSes (Linux, Windows, macOS) use SMP. More complex but no bottleneck.
+
+Multi-Core Design:
+Multiple cores on a single chip. On-chip communication (between cores) is much faster than between separate chips (uses the same bus). Significantly less power than multiple single-core chips. A 4-core CPU is NOT the same as 4 separate CPUs.
+
+Blade Servers: Multiple processor/IO/networking boards in one chassis. Each blade boots independently with its own OS. Used in data centers.`,
     keyPoints: [
-      "AMP: one master processor, others run user code only",
-      "SMP: all processors are equal peers, share memory, all run any task",
-      "SMP: each processor has own registers + local cache",
+      "Single-processor: one general-purpose CPU + special-purpose processors",
       "Multiprocessor advantages: throughput, economy of scale, reliability",
-      "Graceful degradation: system continues even if some hardware fails",
-      "Clustered system: multiple complete systems sharing SAN storage",
-      "Asymmetric cluster: one hot-standby machine. Symmetric: all active.",
+      "AMP: boss-worker. Master assigns, slaves execute. Master is bottleneck.",
+      "SMP: all processors are peers, share memory. All modern OSes use SMP.",
+      "Multi-core: multiple cores on ONE chip. On-chip comm faster than between chips.",
+      "Clustered systems: multiple machines connected via SAN (Storage Area Network)",
+      "Asymmetric clustering: one machine in hot-standby",
+      "Symmetric clustering: multiple nodes running apps, monitoring each other",
       "DLM (Distributed Lock Manager): prevents conflicting operations on shared storage",
     ],
     formula: {
-      code: `AMP (Asymmetric):
-  [Master CPU] ← runs OS, scheduling, I/O decisions
-  [Slave CPU1] ← runs user code only
-  [Slave CPU2] ← runs user code only
-  Simple: only master touches system data structures
+      code: `AMP vs SMP:
+  AMP:
+    [Master CPU] ──→ [Slave CPU 1] (handles disk I/O)
+              ──→ [Slave CPU 2] (handles network)
+              ──→ [Slave CPU 3] (handles user tasks)
+    Problem: Master is a bottleneck!
 
-SMP (Symmetric):
-  [CPU0] ←─┐
-  [CPU1] ←─┤── All share main memory
-  [CPU2] ←─┤── All can run any task
-  [CPU3] ←─┘── Each has private L1/L2 cache
-  Complex: need synchronization for shared data
+  SMP:
+    [CPU 0] ← → [CPU 1] ← → [CPU 2] ← → [CPU 3]
+    All connected to shared memory
+    All run same OS kernel
+    All pick from same ready queue
+    More efficient, no bottleneck!
 
-Clustered System:
-  [Node1] ─┐
-  [Node2] ─┤── SAN (Storage Area Network)
-  [Node3] ─┘   (shared disk pool)`,
-      explanation: "SMP = all processors equal. AMP = boss-worker. Modern systems are all SMP.",
+Multi-core vs Multi-chip:
+  4-core chip: cores share L3 cache, communicate via fast on-chip bus
+  4 single-core chips: communicate via slower system bus
+  Multi-core wins on speed AND power consumption!
+
+Check your machine:
+  cat /proc/cpuinfo | more  (Linux)`,
+      explanation: "SMP = modern standard. All CPUs are equal peers with shared memory access.",
     },
     examTips: [
-      "SMP: processors are PEERS (no master-slave). AMP: one master.",
-      "SMP: each CPU has own cache. ALL share physical memory.",
-      "SMP requires synchronization. AMP is simpler (only master accesses shared OS data).",
-      "Clustered = multiple systems + SAN. High availability via failover.",
+      "AMP = boss-worker (master+slaves). SMP = all peers. Modern OSes use SMP.",
+      "Multiprocessor advantages: throughput, economy of scale, reliability",
+      "Multi-core ≠ multiple CPUs — same chip, shared cache, faster interconnect",
+      "Clustered systems use SAN (Storage Area Network) for shared storage",
+      "DLM = Distributed Lock Manager (prevents concurrent conflicting disk ops)",
     ],
     questions: [
-      { q: "What is the difference between AMP and SMP?", a: "AMP (Asymmetric): one master processor handles all OS decisions (scheduling, I/O); other processors execute only user code. SMP (Symmetric): all processors are equal peers — each can run any task, all share physical memory, each has its own cache. SMP is more complex but more powerful and used in modern systems." },
+      { q: "What is the difference between AMP and SMP?", a: "AMP (Asymmetric Multiprocessing): boss-worker model. One master processor assigns tasks to slave processors. Simple but master becomes a bottleneck. SMP (Symmetric Multiprocessing): all processors are peers. Each has its own registers and cache, all share physical memory and run the OS kernel. No bottleneck. All modern operating systems use SMP." },
+      { q: "What are the advantages of multiprocessor systems?", a: "1. Increased throughput: more work gets done per unit time with multiple CPUs. 2. Economy of scale: multiple CPUs sharing memory/I/O is cheaper than multiple complete single-CPU systems. 3. Increased reliability: if one processor fails, others continue working (graceful degradation/fault tolerance)." },
     ],
   },
 
   "multicore-cluster": {
-    title: "Multi-Core & Clustered Systems", emoji: "🧩",
-    tldr: "Multi-core: multiple CPUs on one chip (faster inter-CPU comms, less power). Blade servers: multiple boards in one chassis.",
-    explanation: `Multi-Core Design:
-Recent CPUs include multiple computing cores on a single chip. More efficient than multiple single-core chips because:
-1. On-chip communication is faster than between-chip communication
-2. One chip with multiple cores uses significantly less power than multiple single-core chips
+    title: "Multi-Core & Clustered Systems", emoji: "🔗",
+    tldr: "Multi-core: multiple cores per chip, faster than multi-chip. Clustered: multiple full systems sharing storage, high availability.",
+    explanation: `Multi-Core Systems:
+A single chip with multiple processing cores. Each core has its own registers and L1/L2 cache, but all share L3 cache and the memory bus. On-chip communication is orders of magnitude faster than off-chip (system bus) communication. Also more power-efficient than multiple separate chips.
 
-A dual-core chip has two complete CPUs sharing the same die. You can check core info on Linux with: cat /proc/cpuinfo
+Example: An Intel Core i7 with 8 cores is NOT the same as 8 separate Intel CPUs. The cores communicate via shared L3 cache — no slow system bus needed.
 
-Blade Servers:
-Multiple processor boards, I/O boards, and networking boards in the same chassis. Each blade boots independently with its own OS. Some blades are themselves multiprocessor. Essentially: multiple independent multiprocessor systems in one box.
+Clustered Systems:
+Multiple complete computer systems (nodes) working together, connected via high-speed network, and sharing storage via a SAN (Storage Area Network). Provides:
+• High availability: if one node fails, others take over
+• High performance computing (HPC): apps distributed across nodes (must use parallelization)
+• Scalability: add more nodes to increase capacity
 
-Command to see CPU/core info: $cat /proc/cpuinfo | more or $more /proc/cpuinfo`,
+Two clustering types:
+Asymmetric clustering: One machine in hot-standby mode, monitoring the active server. If active server fails, standby takes over.
+Symmetric clustering: Multiple nodes all running applications AND monitoring each other. More efficient — no idle standby machines.
+
+DLM (Distributed Lock Manager): Prevents conflicting concurrent operations when multiple nodes access shared storage. Without DLM, Node A and Node B could both write to the same file simultaneously, corrupting it.`,
     keyPoints: [
-      "Multi-core: multiple CPU cores on single chip",
-      "On-chip communication faster than between-chip communication",
-      "Multi-core uses less power than multiple single-core chips",
-      "Linux command: cat /proc/cpuinfo — shows core count, cache info",
-      "Blade server: multiple processor boards in one chassis",
-      "Each blade board boots independently with its own OS",
-      "Blade servers = multiple independent multiprocessor systems in one enclosure",
+      "Multi-core: multiple cores on one chip. On-chip comm faster than bus.",
+      "Cores share L3 cache and memory bus, have private L1/L2",
+      "Clustered systems: multiple complete computers sharing storage via SAN",
+      "High availability: node failure → other nodes take over",
+      "HPC clusters: apps must use parallelization to exploit multiple nodes",
+      "Asymmetric clustering: one machine in hot-standby",
+      "Symmetric clustering: all nodes active, monitoring each other",
+      "DLM: prevents conflicting operations on shared cluster storage",
     ],
     formula: {
-      code: `Multi-core chip (dual-core example):
-  ┌───────────────────────────────────────┐
-  │              Single Chip              │
-  │  ┌──────────┐        ┌──────────┐    │
-  │  │  Core 0  │        │  Core 1  │    │
-  │  │  (CPU)   │        │  (CPU)   │    │
-  │  └────┬─────┘        └─────┬────┘    │
-  │       └──── Shared L3 Cache ─────┘   │
-  │              │                        │
-  └──────────────┼────────────────────────┘
-                 │
-           Main Memory (RAM)
+      code: `Multi-core chip:
+  ┌─────────────────────────────────┐
+  │  Core 0  │  Core 1  │  Core 2  │
+  │ [L1][L2] │ [L1][L2] │ [L1][L2] │
+  ├─────────────────────────────────┤
+  │          Shared L3 Cache        │
+  ├─────────────────────────────────┤
+  │       Memory Controller         │
+  └─────────────────────────────────┘
 
-Linux Commands:
-  cat /proc/cpuinfo | more    → shows each CPU core details
-  nproc                       → count of logical CPUs
-  lscpu                       → detailed CPU architecture info`,
-      explanation: "Cores share L3 cache on same chip → fast communication. Multiple chips = separate buses → slower.",
+Clustered System:
+  [Node 1] ──┐
+  [Node 2] ──┼── High-speed Network
+  [Node 3] ──┘        │
+                 ┌─────┴──────┐
+                 │    SAN     │ ← shared storage
+                 └────────────┘`,
+      explanation: "Multi-core = one chip, multiple CPUs. Cluster = multiple computers as one system.",
     },
     examTips: [
-      "Multi-core advantage: on-chip comms FASTER + less POWER than multi-chip",
-      "cat /proc/cpuinfo — the Linux command to see CPU/core details",
-      "Each blade server board = independent OS boot (not like a cluster sharing one OS)",
+      "Multi-core: cores share L3 cache, on-chip comm much faster than system bus",
+      "SAN = Storage Area Network (used in clustered systems for shared disk)",
+      "DLM = Distributed Lock Manager — prevents concurrent conflicting writes in cluster",
+      "Asymmetric cluster = hot-standby. Symmetric cluster = all nodes active.",
     ],
     questions: [
-      { q: "Why are multi-core chips more efficient than multiple single-core chips?", a: "Two reasons: (1) On-chip communication between cores is much faster than between separate chips (no external bus needed). (2) A single multi-core chip consumes significantly less power than multiple single-core chips providing the same total computing power." },
+      { q: "Why are multi-core systems more efficient than multiple single-core chips?", a: "In a multi-core chip, cores communicate via the on-chip bus (L3 cache) which is orders of magnitude faster than the system bus between separate chips. They also share L3 cache, reducing memory traffic. Additionally, a single multi-core chip consumes significantly less power than multiple single-core chips doing the same work." },
     ],
   },
 
   "dual-mode-timer": {
-    title: "Dual-Mode Operation & Timer", emoji: "🔐",
-    tldr: "Two modes: User mode (mode bit=1) and Kernel mode (mode bit=0). System call switches to kernel mode. Timer prevents infinite loops.",
-    explanation: `Dual-Mode Operation:
-To protect the OS from user programs (and users from each other), modern hardware supports at least two modes: User Mode and Kernel Mode. A hardware mode bit indicates current mode: 0 = Kernel mode, 1 = User mode.
+    title: "Dual-Mode Operation & Timer", emoji: "🛡️",
+    tldr: "User mode vs Kernel mode (mode bit). Privileged instructions only in kernel mode. System call → kernel mode. Timer prevents infinite loops.",
+    explanation: `Dual-Mode Operation — the fundamental OS protection mechanism:
+Hardware provides two CPU execution modes, tracked by a mode bit:
+• Kernel mode (mode bit = 0): OS runs here. ALL instructions allowed, including privileged ones.
+• User mode (mode bit = 1): User programs run here. Privileged instructions are BLOCKED.
 
-Privileged instructions can ONLY execute in kernel mode (e.g., I/O instructions, modifying mode bit, disabling interrupts). If a user program tries a privileged instruction, hardware causes a trap (exception).
+Why dual mode? Without it, any user program could execute harmful instructions (like halting the CPU, overwriting OS memory, or disabling all interrupts) that would crash the entire system. Dual mode prevents this.
 
-Transition: User program makes a system call → hardware switches mode bit to 0 (kernel mode) → OS handles request → returns to user mode (mode bit = 1).
+Privileged instructions — only allowed in kernel mode:
+• I/O instructions (talk directly to devices)
+• Setting/modifying interrupt vectors
+• Setting the timer
+• Clearing memory
+• Halting the CPU
+• Switching to kernel mode (but trap instruction does this safely)
 
-Why? This prevents user programs from directly controlling hardware, corrupting OS data, or accessing other processes' memory.
+Mode transitions:
+• User program → OS service: execute a TRAP (software interrupt). Hardware automatically switches mode bit 1→0.
+• System call completes: kernel executes return instruction. Mode bit 0→1.
+• Hardware interrupt: hardware switches mode bit 1→0.
+• Interrupt handled: mode bit 0→1.
 
 Timer:
-Prevents a process from hogging the CPU (infinite loop or malicious code). A timer generates an interrupt after a specified period (fixed: 1/60 sec, or variable: 1ms to 1sec). A variable timer uses a fixed-rate clock + a counter: OS sets the counter (privileged instruction). Each clock tick decrements counter. When counter = 0 → interrupt → OS regains control.`,
+Prevents infinite loops or process hogging the CPU. Implemented as a variable timer = fixed-rate clock + counter. OS sets the counter (privileged instruction). Each clock tick decrements counter. Counter hits 0 → timer interrupt fires → kernel takes control → can terminate or preempt the process.
+
+Think of it like a parking meter — the OS sets how long a process can run. When time's up, the OS takes the CPU back.`,
     keyPoints: [
-      "User mode: mode bit = 1. Kernel mode: mode bit = 0.",
-      "Privileged instructions: ONLY executable in kernel mode",
-      "System call: switches from user mode → kernel mode",
-      "Return from system call: switches kernel mode → user mode",
-      "Trap: user program tries privileged instruction → hardware exception",
-      "Timer: generates interrupt after set period — prevents infinite loops",
-      "Variable timer: fixed clock + counter (OS sets counter, privileged)",
-      "Counter reaches 0 → interrupt → OS takes back CPU",
+      "Mode bit: 0 = kernel mode, 1 = user mode",
+      "Kernel mode: all instructions allowed (privileged + normal)",
+      "User mode: privileged instructions BLOCKED — causes trap/error",
+      "Privileged: I/O, set timer, modify interrupt vectors, halt CPU",
+      "System call → TRAP → mode switches 1→0 (user→kernel)",
+      "Return from syscall → mode switches 0→1 (kernel→user)",
+      "Timer: prevents infinite loops / resource hogging",
+      "Variable timer = fixed-rate clock + counter (OS sets counter)",
+      "Counter hits 0 → timer interrupt → OS takes control",
+      "Modern CPUs: multi-mode (e.g., VMM mode for virtual machines)",
     ],
     formula: {
       code: `Mode Bit Transitions:
-  User Program (mode=1)
-    → makes system call (e.g., read())
-    → hardware sets mode bit to 0 (kernel mode)
-    → OS kernel handles request
-    → sets mode bit to 1 (user mode)
-    → returns to user program
+  
+  [User Program running]   mode bit = 1
+        │
+        │  executes TRAP (system call request)
+        ▼
+  [Kernel mode]            mode bit = 0
+  OS handles system call
+        │
+        │  system call return instruction
+        ▼
+  [User Program resumes]   mode bit = 1
 
-  Privileged instruction attempt by user program:
-    → hardware detects mode bit = 1
-    → generates TRAP (exception)
-    → OS handles trap (usually terminates program)
+  Hardware interrupt:
+  [User running] → interrupt signal → [Kernel handles ISR] → [User resumes]
+  mode bit: 1   →      auto 1→0    →     mode bit = 0     →   mode bit = 1
 
 Timer Operation:
-  OS loads counter = 1000 (privileged instruction)
-  clock tick: counter = 999
-  clock tick: counter = 998
-  ...
-  clock tick: counter = 0
-  → INTERRUPT → OS regains control
-  → OS decides: give more time or switch process`,
-      explanation: "Mode bit = 1 means user mode (restricted). Mode bit = 0 means kernel mode (privileged). Hardware enforces this.",
+  OS (privileged): set counter = 1000
+  Clock tick: counter = 999
+  Clock tick: counter = 998
+  ... 
+  Clock tick: counter = 0 → INTERRUPT!
+  → OS checks: should process continue?
+  → If yes: reset counter and let it run
+  → If no: preempt and schedule another process`,
+      explanation: "Mode bit = hardware enforced security. Timer = hardware enforced fairness.",
     },
     examTips: [
-      "Mode bit: 0 = kernel mode (privileged). 1 = user mode (restricted). MEMORIZE.",
-      "System call → user→kernel. Return → kernel→user.",
-      "Timer is a MECHANISM. The time limit policy is set by OS (privileged).",
-      "Without timer: one malicious/buggy program could freeze the entire system",
+      "Kernel mode = mode bit 0. User mode = mode bit 1. (Counterintuitive — 0 = more power)",
+      "Privileged instruction in user mode → trap/protection fault (OS handles it)",
+      "TRAP = mechanism for user to request kernel service SAFELY",
+      "Timer is SET by OS (privileged). User cannot modify the timer.",
+      "VMM mode: modern CPUs support a 3rd mode for hypervisors (virtual machines)",
     ],
     questions: [
-      { q: "What is the purpose of the dual-mode operation in OS design?", a: "Dual-mode (user/kernel) protects the OS and hardware from user programs. Privileged instructions (I/O, memory management, interrupt handling) can only run in kernel mode. User programs run in user mode — if they try privileged operations, hardware generates a trap and the OS handles it. This prevents accidental or malicious damage." },
-      { q: "How does the timer prevent a process from monopolizing the CPU?", a: "The OS sets a hardware counter (privileged instruction). Each clock tick decrements it. When it reaches 0, a hardware interrupt fires, transferring control to the OS. The OS can then preempt the process, schedule another, or give more time — preventing any single process from running forever." },
+      { q: "What is privileged mode of operation? (PYQ)", a: "Privileged mode (kernel mode) is a CPU execution mode where ALL instructions can execute, including privileged ones: I/O instructions, setting the timer, modifying interrupt vectors, clearing memory, and halting the CPU. User programs run in user mode where these privileged instructions are blocked — attempting them causes a trap/fault. This dual-mode operation protects the OS from errant or malicious user code. The hardware mode bit (0=kernel, 1=user) enforces this distinction." },
+      { q: "How does the timer prevent a process from running forever?", a: "The OS sets a hardware counter (privileged operation). Each clock tick decrements the counter. When it reaches 0, a timer interrupt fires and the OS regains control. The OS can then decide to preempt the process (if its quantum expired) or reset the counter (if it should continue). The process cannot modify the timer — that's a privileged instruction only the OS can execute." },
+      { q: "When does the CPU switch from user mode to kernel mode?", a: "Three events cause the switch: 1. System call: user program executes a TRAP instruction requesting an OS service. 2. Hardware interrupt: a device sends an interrupt signal (e.g., disk done, key pressed). 3. Software exception/trap: an error occurs (divide by zero, invalid memory access). In all cases, hardware automatically clears the mode bit (1→0) and jumps to the appropriate handler." },
     ],
   },
 
   "multiprog-multitask": {
-    title: "Multiprogramming & Multitasking", emoji: "⚡",
-    tldr: "Multiprogramming: keep CPU always busy by switching when process waits. Multitasking (timesharing): switch so fast users can interact with each job.",
-    explanation: `Multiprogramming (Batch):
-A single user cannot keep both CPU and I/O devices busy at all times. Multiprogramming organizes multiple jobs in memory so the CPU always has something to execute. When one job waits for I/O, the OS switches the CPU to another job — keeping CPU utilization high.
+    title: "Multiprogramming & Multitasking", emoji: "🔄",
+    tldr: "Multiprogramming: keep CPU busy by switching when one process waits. Multitasking: CPU switches so fast users feel they're running simultaneously.",
+    explanation: `The core problem: A single user can't keep the CPU AND I/O devices busy at the same time. When the user's process does I/O, the CPU is idle — wasteful!
 
-A subset of all jobs is kept in memory. One job is selected and run. When it has to wait (for I/O), OS switches to another job. This is job scheduling.
+Multiprogramming (Batch systems):
+The OS keeps SEVERAL jobs in memory simultaneously. When the currently running job needs I/O (and must wait), the OS switches the CPU to another job. The CPU is never idle as long as there's a job ready. Job selection = job scheduling.
 
-Multitasking (Timesharing):
-Logical extension of multiprogramming. The CPU switches between jobs so frequently that users can interact with each job while it runs — creating interactive computing. Response time should be < 1 second.
+Think of it like a chef cooking multiple dishes simultaneously — while the pasta water boils (I/O wait), the chef chops vegetables for another dish (another process gets CPU).
 
-Each user has at least one program in memory (called a process). If several jobs are ready → CPU scheduling decides which runs. If processes don't fit in memory → swapping (move some to disk temporarily). Virtual memory: allows execution of processes not completely in memory.`,
+Multitasking (Time-sharing / Interactive):
+An extension of multiprogramming for interactive use. The CPU switches jobs so RAPIDLY (every few milliseconds) that each user feels they have a dedicated machine. Response time is typically < 1 second.
+
+Key mechanisms enabled by multitasking:
+• Swapping: If all processes don't fit in memory, OS moves some to disk and back (swapping).
+• Virtual Memory: Allows execution of processes not COMPLETELY in memory. A process can be larger than physical RAM. Only the needed parts are loaded.
+
+Multiprogramming: focuses on CPU utilization (don't let CPU idle)
+Multitasking: focuses on response time (interactive feel)`,
     keyPoints: [
-      "Multiprogramming: keep CPU busy by switching when process waits for I/O",
-      "Multiprogramming = batch system. Jobs organized in memory.",
-      "Multitasking = timesharing. Switch fast enough for interactive use.",
-      "Response time in timesharing: < 1 second",
-      "CPU scheduling: decides which process gets CPU when multiple are ready",
-      "Swapping: move processes between memory and disk when memory full",
-      "Virtual memory: run processes not entirely loaded in memory",
-      "Multiprogramming → CPU utilization. Multitasking → user interactivity.",
+      "Problem: single user can't keep CPU + I/O devices busy simultaneously",
+      "Multiprogramming: several jobs in memory; switch when one waits",
+      "CPU never idle as long as there's a ready job",
+      "Multitasking (time-sharing): CPU switches fast enough to feel simultaneous",
+      "Response time in time-sharing: < 1 second",
+      "Swapping: process moved between memory and disk when memory is tight",
+      "Virtual memory: execute processes not completely in RAM",
+      "Multiprogramming goal: CPU utilization. Time-sharing goal: response time.",
     ],
     formula: {
-      code: `Multiprogramming (no interaction):
-  [Job1: running] → waits for I/O
-  [Job2: running] → waits for I/O
-  [Job3: running] → ...
-  CPU always busy! (no idle time)
+      code: `Without Multiprogramming:
+  [Job A runs] → [Job A waits for I/O] → CPU IDLE → [Job A runs]
+  CPU utilization: ~20-30% (wasteful!)
 
-Multitasking (timesharing):
-  t=0ms:  Job1 runs
-  t=10ms: Job1 timer fires → Job2 runs
-  t=20ms: Job2 timer fires → Job3 runs
-  t=30ms: Job3 timer fires → Job1 runs
-  User sees: all 3 running "simultaneously"
-  Response time: <1 second ← KEY METRIC
+With Multiprogramming:
+  [Job A runs] → [Job A: I/O wait] → [Job B runs] → [Job C runs]
+                                          ↑ CPU never idle!
+  CPU utilization: 60-90%!
 
-Virtual Memory:
-  Physical RAM: 4GB
-  Sum of all process sizes: 10GB
-  → Virtual memory maps what's NEEDED into RAM
-  → Rest stays on disk (demand paging)`,
-      explanation: "Multiprogramming = efficiency. Multitasking = responsiveness. Virtual memory = run bigger-than-RAM processes.",
+Time-sharing (Multitasking) Timeline:
+  |User1:4ms|User2:4ms|User3:4ms|User1:4ms|...
+  
+  Each user feels they're always running.
+  Switch is so fast (4ms) humans can't notice!`,
+      explanation: "Multiprogramming = utilization. Multitasking = responsiveness. Multitasking is multiprogramming for interactive use.",
     },
     examTips: [
-      "Multiprogramming ≠ multitasking: batch efficiency vs interactive responsiveness",
-      "Timesharing response time: < 1 second (this number matters in exams)",
-      "Virtual memory: allows running processes LARGER than physical RAM",
-      "Swapping: entire process in/out of memory (different from virtual memory paging)",
+      "Multiprogramming: CPU utilization goal. Multitasking/time-sharing: response time goal.",
+      "Virtual memory = allows process larger than physical RAM",
+      "Swapping = process moved to disk when memory is tight (medium-term scheduler)",
+      "Response time < 1 second = definition of time-sharing",
     ],
     questions: [
-      { q: "What is the difference between multiprogramming and multitasking (timesharing)?", a: "Multiprogramming: multiple jobs kept in memory; when one waits for I/O, CPU switches to another. Goal = maximize CPU utilization. Multitasking (timesharing): CPU switches so rapidly between jobs that users can interact with each. Goal = response time < 1 second. Multitasking is an interactive extension of multiprogramming." },
+      { q: "What is the difference between multiprogramming and multitasking?", a: "Multiprogramming: keeps multiple processes in memory and switches the CPU to another when the current one waits for I/O. Goal: maximize CPU utilization. Used in batch systems. Multitasking (time-sharing): extends multiprogramming to interactive systems. Switches CPU between processes so rapidly (every few ms) that each user perceives dedicated machine access. Goal: minimize response time (< 1 second). Both keep the CPU busy, but multitasking adds the constraint of fast response." },
     ],
   },
 
   "os-services": {
     title: "OS Services", emoji: "🛎️",
-    tldr: "OS provides: UI, program execution, I/O ops, file system manipulation, communications, error detection, resource allocation, accounting, protection & security.",
-    explanation: `OS services fall into two categories:
+    tldr: "9 OS services: 6 for users (UI, Program exec, I/O, File-system, Communications, Error detection) + 3 for efficiency (Resource alloc, Accounting, Protection).",
+    explanation: `The OS provides services in two categories:
 
-Services that help the USER:
-1. User Interface (UI): Command-Line (CLI/shell), GUI, Batch
-2. Program Execution: load into memory, run, end (normal or abnormal)
-3. I/O Operations: programs need I/O — OS provides safe access
-4. File-system Manipulation: read/write files and directories, create/delete, search, permissions
-5. Communications: processes exchange information — via shared memory OR message passing
-6. Error Detection: CPU/memory errors, I/O device errors, user program errors — OS responds appropriately
+Services helpful to users:
+1. User Interface (UI): CLI (command-line shells like bash), GUI (windows/icons/mouse), Batch (job scripts). The interface between human and OS.
+2. Program Execution: Load program code into memory, run it, end it normally or with error indication.
+3. I/O Operations: Running programs need file or device I/O (read/write file, talk to printer, etc.). OS provides safe, uniform I/O interface.
+4. File-System Manipulation: Create/delete/read/write files and directories. Search for files, list info, manage permissions.
+5. Communications: Between processes on the SAME computer (shared memory or message passing) or different computers (network).
+6. Error Detection: Detect and handle hardware errors (memory failure, power failure, I/O errors) and software errors (invalid memory access, arithmetic overflow). OS takes appropriate corrective action.
 
-Services for EFFICIENT SYSTEM OPERATION:
-7. Resource Allocation: when multiple users/jobs run concurrently, allocate CPU, memory, I/O fairly
-8. Accounting: track who uses what resources (for billing or statistics)
-9. Protection & Security: control access to resources; authenticate users; defend from external attacks`,
+Services for efficient operation:
+7. Resource Allocation: Allocate CPU cycles, main memory, file storage, I/O devices among concurrent processes fairly and efficiently.
+8. Accounting: Track which users use how much of what resources. Used for billing and/or performance tuning.
+9. Protection & Security: Control access so concurrent processes don't interfere. Authenticate users. Defend against external threats.`,
     keyPoints: [
-      "UI: CLI (shell), GUI, or Batch — almost all OSes have some UI",
-      "Program execution: OS loads program → runs → handles termination",
-      "I/O operations: OS provides safe interface — programs don't access hardware directly",
-      "File system: read/write/create/delete/search/permissions",
-      "Communications: shared memory OR message passing (2 mechanisms)",
-      "Error detection: responds to hardware faults, software errors consistently",
-      "Resource allocation: CPU cycles, memory, I/O devices — allocated fairly",
-      "Accounting: tracks resource usage (CPU time, memory used)",
-      "Protection: control access to resources. Security: user authentication, external threats.",
+      "UI: CLI (bash), GUI (desktop), Batch (scripts)",
+      "Program execution: load into memory, run, end (normal or error)",
+      "I/O operations: OS provides safe uniform access to devices",
+      "File-system manipulation: CRUD operations on files/directories + permissions",
+      "Communications: shared memory OR message passing (same/different computers)",
+      "Error detection: handle hardware + software errors; take appropriate action",
+      "Resource allocation: CPU, memory, I/O fairly assigned to concurrent processes",
+      "Accounting: track who uses what (billing + tuning)",
+      "Protection & security: access control + authentication + external defense",
     ],
     formula: null,
     examTips: [
-      "9 OS services — categorize into user-facing (6) and efficiency-focused (3)",
-      "Communications: 2 methods — shared memory AND message passing",
-      "Protection = internal (access control). Security = external (authentication, attacks).",
-      "Error detection is DIFFERENT from protection — it's about reliability",
+      "9 services total: 6 user-facing + 3 efficiency-focused",
+      "Communications: shared memory vs message passing — know both",
+      "Error detection is DIFFERENT from protection (detection = reactive; protection = preventive)",
+      "Resource allocation falls under 'efficiency' not 'user convenience'",
     ],
     questions: [
-      { q: "List the 9 main OS services and categorize them.", a: "User-facing: (1) UI, (2) Program execution, (3) I/O operations, (4) File-system manipulation, (5) Communications, (6) Error detection. Efficiency-focused: (7) Resource allocation, (8) Accounting, (9) Protection and security." },
+      { q: "List the 9 main OS services and categorize them.", a: "User-facing: (1) User Interface, (2) Program execution, (3) I/O operations, (4) File-system manipulation, (5) Communications, (6) Error detection. Efficiency-focused: (7) Resource allocation, (8) Accounting, (9) Protection and security." },
     ],
   },
 
   "syscalls": {
     title: "System Calls", emoji: "📞",
-    tldr: "System calls = interface to OS services. Written in C/C++. 6 categories: Process control, File, Device, Information, Communications, Protection.",
-    explanation: `System calls provide the programmatic interface between user programs and the OS kernel. They are generally available as routines written in C/C++ (or assembly for low-level). 
+    tldr: "System calls = interface to OS services. 6 categories: Process control, File, Device, Information, Communications, Protection. printf() calls write() syscall.",
+    explanation: `System calls provide the programmatic interface between user programs and the OS kernel. Think of them as the "menu" a user program can order from — the OS is the kitchen that actually does the work.
 
-When a user program calls printf(), the C library intercepts it and invokes the write() system call → OS kernel executes it → returns result to C library → returns to user.
+They're generally implemented as C library functions. When you write code in C, Java, or Python, you don't call system calls directly — you call library functions (like printf) that internally call the appropriate system call (like write).
 
-6 categories of system calls:
-1. Process Control: create/terminate process (fork, exit, wait), load/execute (exec), get/set attributes
-2. File Manipulation: create/delete file, open/close, read/write/reposition, get/set attributes
-3. Device Manipulation: request/release device, read/write/reposition, get/set attributes
-4. Information Maintenance: get/set time, date, system data, process/file/device attributes
-5. Communications: create/delete connection, send/receive messages, transfer status info
-6. Protection: get/set permissions, allow/deny resource access
+The complete flow of printf("Hello"):
+1. User program calls printf()
+2. C library formats the string, calls write() system call
+3. write() issues a TRAP instruction
+4. Hardware: mode bit switches 1→0 (user → kernel)
+5. Kernel: looks up system call number in the system call table
+6. Dispatches to the write handler
+7. Handler validates parameters, identifies stdout (fd=1)
+8. Sends data to terminal device driver
+9. Return value placed in register
+10. Mode bit switches 0→1 (kernel → user)
+11. Control returns to printf() in C library → returns to user program
 
-System call interface: user program → library call → system call (trap) → kernel → returns.`,
+6 Categories of System Calls:
+1. Process Control: fork(), exec(), exit(), wait(), getpid()
+2. File Manipulation: open(), read(), write(), close(), unlink()
+3. Device Manipulation: ioctl(), read(), write() for devices
+4. Information Maintenance: getpid(), alarm(), sleep(), time()
+5. Communications: socket(), send(), recv(), pipe()
+6. Protection: chmod(), chown(), setuid()`,
     keyPoints: [
-      "System call = the interface between user programs and OS services",
+      "System call = programmatic interface between user program and OS kernel",
       "Written in C/C++ (or assembly for low-level access)",
       "6 categories: Process, File, Device, Information, Communications, Protection",
       "printf() → C library → write() system call → OS kernel",
       "System call causes mode switch: user mode → kernel mode",
+      "System call table: maps system call number → handler function",
       "Return from system call: kernel mode → user mode",
       "fork(): creates new process. exec(): replaces process image. exit(): terminates.",
       "open(), read(), write(), close() — file manipulation system calls",
@@ -611,8 +723,10 @@ System call interface: user program → library call → system call (trap) → 
     → C Library: formats string, calls write()
     → write() issues TRAP instruction
     → Hardware: mode bit 1→0 (user→kernel)
-    → Kernel: handles write to stdout (screen)
-    → Returns result to C library
+    → Kernel: indexes system call table with call number
+    → Dispatches to write() handler
+    → Handler writes to terminal
+    → Returns bytes written in register
     → Mode bit 0→1 (kernel→user)
     → C library returns to user program
 
@@ -632,34 +746,38 @@ System call interface: user program → library call → system call (trap) → 
       "fork() return: child gets 0, parent gets child's PID, error gets -1",
     ],
     questions: [
+      { q: "What is a system call? What actions does the OS perform while executing one? (PYQ)", a: "A system call is a programmatic request by a user-mode process to the OS kernel for a service it cannot perform itself (I/O, memory allocation, process creation).\n\nActions during a system call:\n1. User program invokes library function (e.g., printf() which internally calls write()).\n2. Library places system call number + parameters in registers or on the stack.\n3. A trap instruction (software interrupt) switches CPU from user mode → kernel mode.\n4. Kernel looks up the system call number in the system call table and dispatches to the handler.\n5. Handler validates parameters and performs the service.\n6. Return value placed in a register.\n7. CPU switches back to user mode. Control returns to user program." },
       { q: "What are the 6 categories of system calls? Give one example each.", a: "1. Process Control: fork(). 2. File Manipulation: open(). 3. Device Manipulation: ioctl(). 4. Information Maintenance: getpid(). 5. Communications: socket(). 6. Protection: chmod()." },
       { q: "Is printf() a system call?", a: "No. printf() is a C standard library function. It formats the string and then internally calls the write() system call to actually send data to the output device. The system call is write(), not printf()." },
     ],
   },
 
   "policy-mechanism": {
-    title: "Policy vs Mechanism & OS Implementation", emoji: "⚙️",
+    title: "Policy vs Mechanism & OS Design", emoji: "⚙️",
     tldr: "Policy = WHAT to do. Mechanism = HOW to do it. Separate them for flexibility. OS mostly in C, lowest level in assembly.",
     explanation: `Policy vs Mechanism — the most important design principle in OS:
-Policy: What will be done? (decision-making) Example: "Allow user program to run for at most 30 minutes"
-Mechanism: How to do it? (implementation) Example: The timer hardware + counter system
+• Policy: What will be done? (decision-making) Example: "Allow user program to run for at most 30 minutes"
+• Mechanism: How to do it? (implementation) Example: The timer hardware + counter system
 
-Separation of policy from mechanism = maximum flexibility. If someone wants a different policy (e.g., "limit to 1 hour"), you don't need to change the timer (mechanism) — just change the setting.
+Separation = maximum flexibility. When someone wants a different policy (e.g., "limit to 1 hour instead"), you don't need to change the timer hardware (mechanism) — just change the time limit (policy).
+
+Real analogy: A car's speedometer is the mechanism (measures speed). "Don't exceed 60 km/h" is a policy. To change the speed limit law, you don't redesign the speedometer.
+
+OS Design Goals:
+• User perspective: Convenient, easy to learn, reliable, safe, fast.
+• System perspective: Easy to design/implement/maintain, flexible, reliable, efficient.
 
 OS Implementation:
-Early OSes: entirely in assembly language. Then: system programming languages (Algol, PL/1). Now: mostly C/C++.
-
-Typical mix: lowest-level code in assembly (performance-critical, hardware-specific), main body in C, system programs in C/C++/scripting (Python, shell scripts, PERL).
-
-More high-level language → easier to port to other hardware, but potentially slower. Emulation: allows OS to run on non-native hardware.`,
+Early OSes: written entirely in assembly language (fast but hard to port).
+Now: mostly C/C++ (small lowest-level parts still in assembly).
+Higher-level language = easier to port to other hardware architectures (ARM, x86, RISC-V) but potentially slightly slower. For modern CPUs, the performance difference is negligible.`,
     keyPoints: [
       "Policy = WHAT to do. Mechanism = HOW to do it. They must be SEPARATE.",
       "Separation allows: change policy without changing mechanism",
       "Example: timer mechanism stays same; time limit policy can change",
       "OS implementation: mostly C/C++",
       "Lowest levels: assembly. Main body: C. System programs: C/C++/scripts",
-      "High-level language → easier portability, potentially slower",
-      "Emulation: run OS on non-native hardware (e.g., PowerPC code on Intel)",
+      "High-level language → easier portability, potentially slightly slower",
     ],
     formula: null,
     examTips: [
@@ -669,608 +787,753 @@ More high-level language → easier to port to other hardware, but potentially s
       "OS written in C = easier to PORT (compile for ARM, x86, etc.)",
     ],
     questions: [
-      { q: "Why is separating policy from mechanism important?", a: "Separation allows the policy to change without modifying the underlying mechanism. For example, the timer mechanism (hardware counter + clock) stays the same whether the policy is '10ms timeslice' or '100ms timeslice'. This flexibility allows OS designers to tune behavior without rebuilding core components." },
+      { q: "Why is separating policy from mechanism important?", a: "Separation allows the policy to change without modifying the underlying mechanism. For example, the timer mechanism (hardware counter + clock) stays the same whether the policy is '10ms timeslice' or '100ms timeslice'. This flexibility allows OS designers to tune behavior without rebuilding core components. It also allows different policies for different environments (interactive vs batch) using the same mechanisms." },
     ],
   },
 
   "arrays-lists": {
     title: "Kernel Data Structures — Arrays & Lists", emoji: "📋",
     tldr: "Array: O(1) direct access, fixed size. Linked list: O(n) traversal, dynamic size, easy insert/delete.",
-    explanation: `The OS kernel uses standard data structures extensively to manage resources.
+    explanation: `The OS kernel uses standard data structures extensively to manage resources. These aren't just academic — they're actively used in Linux and Windows kernels right now.
 
-Array: simplest data structure — each element accessed directly by index. Main memory is implemented as an array (item number × item size = address). Problem: fixed size, can't store variable-size items, removing while preserving order is expensive.
+Array: simplest data structure. Each element accessed directly by index (address = base + item_number × item_size). Main memory is fundamentally modeled as an array — each byte has an index (its address). Problem: fixed size, can't store variable-size items, removing while preserving order requires shifting all subsequent elements = O(n).
 
-Linked Lists: items accessed in order, connected by pointers.
-Singly linked list: each item points to its successor (one direction only).
-Doubly linked list: each item points to both predecessor and successor.
-Circular linked list: last element points back to first (not null).
+Linked Lists: items connected by pointers. Three variants:
+• Singly linked: each node has data + pointer to next. One direction.
+• Doubly linked: each node has data + pointer to next AND pointer to previous. Can traverse both ways.
+• Circularly linked: last node points back to first (not null). No "end" — useful for round-robin scheduling.
 
-Advantages of linked lists: accommodate variable-sized items, easy insertion/deletion.
-Disadvantage: O(n) search — must traverse up to n elements to find specific item.
-Usage: kernel algorithms, building stacks and queues.`,
+Analogy: Array = numbered seats in a stadium (you can go directly to seat 47). Linked list = a treasure hunt (you go to node 1, it tells you where node 2 is, and so on).
+
+Linux kernel uses doubly-linked lists extensively for: process lists, file descriptors, module lists, I/O request queues.
+
+Advantages: variable-sized items, O(1) insertion/deletion at known position.
+Disadvantage: O(n) search — must traverse up to n elements.`,
     keyPoints: [
       "Array: O(1) direct access by index. Fixed size. Main memory uses array model.",
-      "Array problem: variable sizes, maintaining order on deletion is expensive",
-      "Singly linked: each item → successor. O(n) traversal.",
-      "Doubly linked: each item ← → predecessor AND successor",
-      "Circular linked: last → first (not null). No end pointer needed.",
-      "Linked list advantages: variable sizes, easy insert/delete",
-      "Linked list disadvantage: O(n) search (no direct access)",
-      "Kernel uses linked lists for: process lists, file descriptors, I/O queues",
+      "Array problem: fixed size, deletion requires shifting elements O(n)",
+      "Singly linked: each item → successor. One direction.",
+      "Doubly linked: each item ← → predecessor AND successor. Two directions.",
+      "Circular linked: last → first (not null). Used in round-robin schedulers.",
+      "Linked list advantages: variable sizes, O(1) insert/delete at known position",
+      "Linked list disadvantage: O(n) search (no direct access by index)",
+      "Linux kernel uses doubly-linked lists for process lists, file descriptors",
     ],
     formula: {
-      code: `Array access: address = base + (index × item_size)
-  Example: int arr[10] at address 0x1000, item=4B
-  arr[3] = 0x1000 + (3 × 4) = 0x100C  ← O(1) direct!
+      code: `Array: address of element[i] = base_address + i × element_size
+  e.g., int arr[5] at base 0x1000, element size = 4 bytes
+  arr[3] is at address 0x1000 + 3×4 = 0x100C  ← O(1) direct!
 
 Singly Linked List:
   [data|next] → [data|next] → [data|next] → NULL
-  Search: must traverse from head → O(n)
-  Insert/Delete at known position: O(1) (just update pointers)
+  Traversal: start at head, follow next pointers
 
-Doubly Linked List (Linux uses this for task list):
-  NULL ← [prev|data|next] ↔ [prev|data|next] → NULL
+Doubly Linked List (used in Linux kernel):
+  NULL ← [prev|data|next] ↔ [prev|data|next] ↔ [prev|data|next] → NULL
+  Can go forward OR backward
 
-Circular List:
+Circular Linked List:
   [data|next] → [data|next] → [data|next] ─┐
-       ↑────────────────────────────────────┘`,
-      explanation: "Linux kernel represents process list as a doubly-linked circular list of task_struct nodes.",
+       ↑___________________________________|
+  Used for: round-robin process scheduling`,
+      explanation: "Array = direct address. Linked list = follow the chain. Both have their place in the kernel.",
     },
     examTips: [
-      "Array: O(1) access. Linked list: O(n) search.",
-      "Doubly linked: can go forward AND backward (singly: only forward)",
-      "Circular: last element points to FIRST (not null)",
-      "Linked lists used in kernel for variable-size items and frequent insert/delete",
+      "Array: O(1) access. Linked list: O(n) search but O(1) insert/delete.",
+      "Main memory is fundamentally an array (byte addresses = indices)",
+      "Linux uses doubly-linked lists for its process table (task_struct list)",
+      "Circular linked list is natural for round-robin scheduling",
     ],
     questions: [
-      { q: "What are the advantages and disadvantages of linked lists over arrays in OS context?", a: "Advantages: (1) Accommodate items of varying sizes. (2) Allow easy O(1) insertion and deletion at known positions. Disadvantages: (1) O(n) retrieval of a specific item (must traverse from head). (2) Extra memory per node for pointer storage." },
+      { q: "Compare arrays and linked lists for OS kernel use.", a: "Arrays: O(1) direct access by index, fixed size, cache-friendly. Good for: main memory addressing, interrupt vector table. Linked lists: O(n) search, but dynamic size and O(1) insert/delete at known position. Good for: process queues, file descriptor lists, I/O queues. The kernel uses both — arrays for fixed structures, linked lists for dynamic ones." },
     ],
   },
 
   "stacks-queues-trees": {
-    title: "Stacks, Queues, Trees", emoji: "🌳",
-    tldr: "Stack: LIFO (function calls). Queue: FIFO (ready queue, printer). BST: O(log n) search. Linux uses balanced BST for CPU scheduling.",
-    explanation: `Stack: LIFO (Last In, First Out). OS uses stacks for function calls — parameters, local variables, and return addresses are pushed when a function is called and popped on return.
+    title: "Stacks, Queues & Trees in Kernel", emoji: "🌳",
+    tldr: "Stack (LIFO): used for function calls. Queue (FIFO): used for process/print queues. BST: O(log n) search. Linux CFS uses red-black tree.",
+    explanation: `Stacks (LIFO — Last In First Out):
+Used for function calls. When you call a function: parameters, return address, and local variables are PUSHED onto the stack. When the function returns, they're POPPED. This is why stack overflow happens when you have infinite recursion — too many frames pushed!
 
-Queue: FIFO (First In, First Out). Processes waiting for CPU are in ready queues. Print jobs are printed in order of submission.
+Queues (FIFO — First In First Out):
+Tasks waiting for CPU organized in queues. Print jobs served in submission order. The ready queue in CPU scheduling is typically a queue. Device I/O queues are also FIFO per device.
 
-Trees: hierarchical data structure. Nodes connected by parent-child relationships.
-Binary Search Tree (BST): left child ≤ right child. O(n) worst case search.
-Balanced BST: tree of n items has ≤ log n levels. O(log n) search, insert, delete.
-Linux CFS (Completely Fair Scheduler) uses a balanced BST (red-black tree) to select which task to run next — leftmost node (lowest vruntime) is always the next task.`,
+Trees:
+Hierarchical structure. Parent–child relationships. Used when you need sorted order AND fast access.
+
+Binary Search Tree (BST): left child ≤ parent ≤ right child. Search O(n) worst case (if unbalanced — can degrade to a linked list).
+
+Balanced BST (like AVL or Red-Black Tree): at most log(n) levels. Search always O(log n). Self-balancing — automatically rebalances after insert/delete.
+
+CRITICAL EXAM FACT — Linux CFS Scheduler:
+The Linux Completely Fair Scheduler uses a Red-Black Tree (balanced BST) keyed by each process's virtual runtime (vruntime). The process with the LOWEST vruntime (leftmost node in the tree) gets the CPU next. Finding the next process = finding the leftmost node = O(log n) time. After running, the process's vruntime increases and it's repositioned in the tree.`,
     keyPoints: [
-      "Stack: LIFO. OS: function call frames (parameters, local vars, return addr)",
-      "Queue: FIFO. OS: ready queue (CPU), device queues, print spooler",
-      "BST: left ≤ right. O(n) worst case. Balanced BST: O(log n).",
-      "Balanced BST: n items → at most log n levels → O(log n) search",
-      "Linux CFS uses red-black tree (balanced BST): leftmost = next to run",
-      "Each tree operation (insert, delete, find min) = O(log n) in balanced BST",
+      "Stack (LIFO): function call frames — push on call, pop on return",
+      "Queue (FIFO): tasks waiting for CPU/printer served in order of arrival",
+      "BST: left ≤ parent ≤ right. Search O(n) worst case (unbalanced).",
+      "Balanced BST (Red-Black Tree): max log(n) levels. Search O(log n).",
+      "Linux CFS uses Red-Black Tree keyed by vruntime",
+      "Leftmost node in CFS tree = process with lowest vruntime = next to run",
+      "After running, process's vruntime increases → repositioned in tree",
+      "Stack overflow: too many nested function calls exceed stack size limit",
     ],
     formula: {
-      code: `Stack (LIFO - function calls):
-  void foo() {
-    int x = 5;      // pushed to stack
-    bar();          // return address pushed
-  }                 // all popped on return
+      code: `Stack (function call):
+  main() calls foo() calls bar()
+  Stack (grows downward):
+  ┌──────────────┐ ← top of stack
+  │ bar's frame  │ (local vars, return addr)
+  │ foo's frame  │
+  │ main's frame │
+  └──────────────┘ ← bottom
 
-Queue (FIFO - ready queue):
-  [P1]→[P2]→[P3]→[P4]
-   ↑                 ↑
-  dequeue (run)   enqueue (new arrival)
+Queue (FIFO):
+  [P1] ← [P2] ← [P3] ← [P4] (new arrivals join back)
+    ↑ CPU picks from front
 
-BST Search Performance:
-  Unbalanced BST (worst case):
-    1 → 2 → 3 → 4 → 5    ← just a linked list! O(n)
-  Balanced BST (AVL or Red-Black):
-         3
-        / \\
-       2   4
-      /     \\
-     1       5          O(log n) guaranteed
-
-Linux CFS: balanced BST (Red-Black tree)
-  leftmost node = task with lowest vruntime = next to run
-  Insertion/deletion: O(log N), N = runnable tasks`,
-      explanation: "Balanced BST guarantees O(log n). Linux CFS leftmost node selection = O(1) with cached pointer.",
+Linux CFS Red-Black Tree (keyed by vruntime):
+        [vrt=50]
+       /         \
+  [vrt=20]    [vrt=80]
+  /      \
+[vrt=10] [vrt=30]
+   ↑
+leftmost = vrt=10 → THIS process runs next!`,
+      explanation: "CFS always picks leftmost node (minimum vruntime). After running, vruntime increases and process is reinserted.",
     },
     examTips: [
-      "Stack = LIFO. Queue = FIFO. Both used heavily in OS.",
-      "BST search: O(n) worst. Balanced BST: O(log n) guaranteed.",
-      "Linux CFS uses balanced BST (red-black tree) — leftmost = next process to run",
-      "Function calls: stack-based (parameters, locals, return address all on stack)",
+      "Stack = LIFO. Queue = FIFO. OS uses both extensively.",
+      "Linux CFS = Red-Black Tree (balanced BST). O(log n) to find next process.",
+      "Leftmost node in CFS tree = process with minimum vruntime = runs next",
+      "Balanced BST guarantees O(log n) even in worst case (unlike plain BST)",
     ],
     questions: [
-      { q: "Why does Linux CFS use a balanced BST instead of a simple queue?", a: "CFS needs to find the task with the minimum vruntime efficiently. A balanced BST provides O(log n) insertion and O(1) minimum lookup (cached leftmost node), making scheduling decisions fast even with many runnable tasks. A simple queue would be O(n) to find the minimum." },
+      { q: "Why does the Linux CFS scheduler use a red-black tree?", a: "The CFS scheduler must efficiently find the process with the minimum vruntime (virtual runtime) to run next. A red-black tree (balanced BST) keyed by vruntime lets it find the minimum in O(log n) time (leftmost node). After a process runs, its vruntime increases and it's reinserted in O(log n) time. A plain BST could degrade to O(n) if unbalanced, making the scheduler too slow for systems with many processes." },
     ],
   },
 
   "hash-bitmap": {
-    title: "Hash Functions, Maps & Bitmaps", emoji: "#️⃣",
-    tldr: "Hash map: O(1) key-value lookup. Bitmap: 1 bit per resource (0=available, 1=unavailable). Used for disk block tracking.",
-    explanation: `Hash Functions and Hash Maps:
-A hash function maps a key to a hash value (table index). This allows O(1) average-case lookup. Problem: hash collisions (two different keys map to same output value). Handled by chaining or open addressing.
+    title: "Hash Functions, Hash Maps & Bitmaps", emoji: "#️⃣",
+    tldr: "Hash map: O(1) average lookup. Bitmap: track resource availability with 1 bit per resource — extremely space-efficient.",
+    explanation: `Hash Functions and Maps:
+A hash function takes an input (like a process name or file path) and produces a fixed-size output (hash value). Think of it as a "fingerprint" function. The same input always gives the same output. Different inputs may give the same output — this is a collision.
 
-Hash Map: maps key-value pairs using a hash function. Example: OS uses hash maps to look up process IDs, file descriptor tables, etc. Search performance: O(1) average case.
+A hash map (hash table) stores key:value pairs. To look up a value:
+1. Compute hash(key) → get an index
+2. Go directly to that index in the array
+3. Retrieve the value
 
-Bitmaps:
-A bitmap is a string of n binary digits representing the status of n items. Each bit = one resource.
-0 = resource is AVAILABLE (Note: different from file protection bit convention!)
-1 = resource is UNAVAILABLE
+Average case: O(1) lookup! (Compare to linked list: O(n), BST: O(log n))
+Worst case: O(n) if many collisions hash to same slot.
 
-Example: bitmap 001011101 means:
-Positions 0,1,3,6 are available (bit=0). Positions 2,4,5,7,8 are unavailable (bit=1).
+The Linux kernel uses hash tables for: process ID lookup, inode lookup, network routing tables.
 
-Commonly used to track disk block availability, memory page allocation, and other large resource sets.`,
+Bitmaps — The most space-efficient data structure:
+A string of n binary digits where each bit represents the status of one resource.
+Convention: 0 = available (free), 1 = unavailable (allocated)
+
+Why bitmaps? To track 1 MILLION disk blocks' availability, you'd need:
+• Integer array: 4,000,000 bytes = 4 MB
+• Bitmap: 1,000,000 bits = 125,000 bytes = only 125 KB!
+
+Bitmaps used in OS for: disk block tracking, memory page availability, inode availability in filesystems (ext4, NTFS).
+
+Finding a free resource = find the first 0 bit. Using bitwise operations (like checking 8/16/32 bits at a time), this is very fast even for millions of bits.`,
     keyPoints: [
-      "Hash function: key → hash value (table index). O(1) lookup average.",
-      "Hash collision: two keys map to same output → handled by chaining",
-      "Hash map: O(1) key-value lookup. Used for PID tables, file descriptors.",
-      "Bitmap: n bits representing n resources. 1 bit per resource.",
-      "Bitmap: 0 = AVAILABLE. 1 = UNAVAILABLE. (memorize this!)",
-      "Bitmap example: 001011101 → positions 0,1,3,6 available; 2,4,5,7,8 unavailable",
-      "Bitmap used for: disk blocks, memory pages, any large set of resources",
+      "Hash function: input → fixed-size output. Same input = same output.",
+      "Collision: different inputs → same hash. Must be handled!",
+      "Hash map: key:value pairs. Average O(1) lookup. Worst O(n).",
+      "Linux uses hash tables for PID lookup, inode lookup",
+      "Bitmap: 1 bit per resource. 0=free, 1=allocated.",
+      "Space efficiency: 1M disk blocks = 125 KB bitmap vs 4 MB integer array",
+      "Bitmaps used for: disk blocks, memory pages, inodes",
+      "Finding free resource: scan bitmap for first 0 bit, using bitwise ops for speed",
     ],
     formula: {
-      code: `Hash Map (O(1) lookup):
+      code: `Hash Map Lookup:
   key: "process_name"
-  hash("process_name") = 42
-  table[42] = {pid: 1234, state: "running", ...}
-  
-  Lookup: O(1) average (collision = O(n) worst)
+  hash("process_name") → index 42
+  table[42] → {pid: 1234, state: running}
+  O(1) average!
 
-Bitmap (resource tracking):
-  9 resources: 0 0 1 0 1 1 1 0 1
-  Position:    0 1 2 3 4 5 6 7 8
+Bitmap — Disk Block Example:
+  Bit index: 0 1 2 3 4 5 6 7
+  Bitmap:    0 0 1 0 1 1 1 0
   
-  0 = AVAILABLE: positions 0, 1, 3, 7 are free
-  1 = UNAVAILABLE: positions 2, 4, 5, 6, 8 are in use
-  
-  To find free resource: scan for first 0 → position 0
-  To allocate: set bit to 1
-  To free: set bit to 0
+  0 = FREE:   blocks 0, 1, 3, 7 are available
+  1 = IN USE: blocks 2, 4, 5, 6 are allocated
 
-Disk Block Bitmap (1TB disk, 4KB blocks):
-  256M blocks → 256M bits → 32MB bitmap in memory`,
-      explanation: "Bitmap bit=0 means available. Opposite of some other conventions — memorize carefully.",
+  When a file needs a new block:
+  Scan bitmap for first '0' bit:
+  → Find bit 0 (value=0) → allocate block 0
+  → Set bit 0 = 1 → bitmap: 1 0 1 0 1 1 1 0
+
+Space Comparison (1 million disk blocks):
+  Array of ints:  1,000,000 × 4 bytes = 4,000,000 bytes (4 MB)
+  Bitmap:         1,000,000 bits       =   125,000 bytes (125 KB) ✓`,
+      explanation: "Bitmap: 1 bit per item. Extraordinarily space-efficient. Used everywhere resources need tracking.",
     },
     examTips: [
-      "Bitmap: 0 = AVAILABLE, 1 = UNAVAILABLE (note: opposite of file protection bitmap!)",
-      "Hash map: O(1) search (best for large lookup tables in OS)",
-      "Example: bitmap 001011101 — positions 2,4,5,6,8 unavailable (bit=1)",
-      "OS uses bitmaps for disk block tracking and memory page tracking",
+      "Bitmap: 0 = free, 1 = allocated (know this convention)",
+      "Space efficiency: 1M blocks → only 125 KB as bitmap (vs 4 MB for int array)",
+      "Hash map: O(1) average. Collision = performance degrades.",
+      "Linux kernel uses bitmaps for free disk block and free memory page tracking",
     ],
     questions: [
-      { q: "In a kernel bitmap, what does a 0 bit represent?", a: "In kernel resource bitmaps, 0 means the resource is AVAILABLE and 1 means UNAVAILABLE. Example: bitmap 001011101 → positions with 0 (0,1,3,7) are free resources; positions with 1 (2,4,5,6,8) are currently in use." },
+      { q: "What is the significance of the bitmap data structure in the kernel? Give an example. (PYQ)", a: "Bitmaps track availability of large numbers of resources extremely space-efficiently. Each bit corresponds to a resource — 0 = available, 1 = allocated. Tracking 1 million disk blocks requires only 125 KB (vs 4 MB for an integer array).\n\nExample — Disk block management: A disk has 8 blocks, bitmap = 00101110.\n• Blocks 0, 1, 3, 7 are FREE (bit = 0).\n• Blocks 2, 4, 5, 6 are ALLOCATED (bit = 1).\n\nWhen a file needs a new block, the OS scans the bitmap for the first 0 bit using bitwise operations — O(n/word_size) time, extremely fast even for millions of blocks." },
+      { q: "What is a hash collision and how is it handled?", a: "A collision occurs when two different keys produce the same hash value, causing them to map to the same array slot. Handled by: (1) Chaining: each slot holds a linked list of all colliding entries — lookup traverses the list. (2) Open addressing: if slot is taken, probe neighboring slots (linear probing, quadratic probing). Well-designed hash functions minimize collisions, keeping average lookup close to O(1)." },
     ],
   },
 
   "trad-mobile": {
-    title: "Computing Environments: Traditional, Mobile, Distributed", emoji: "🌍",
-    tldr: "Traditional: standalone PCs. Mobile: iOS/Android, GPS/gyro. Distributed: LAN/WAN, TCP/IP, illusion of single system.",
-    explanation: `Traditional Computing: Stand-alone general-purpose machines. Now interconnected via Internet. Portals provide web access to internal systems. Network computers (thin clients) like web terminals. Mobile computers use wireless. Home systems use firewalls.
+    title: "Traditional & Mobile Computing Environments", emoji: "📱",
+    tldr: "Traditional: standalone → networked. Mobile: smartphones with extra sensors (GPS, gyroscope). iOS and Android dominate.",
+    explanation: `Traditional Computing: Originally, standalone machines. Now interconnected via Internet. Portals allow thin clients (web browsers) to access heavy computing. Mobile computing extends to anywhere. Firewalls protect networked computing.
 
-Mobile Computing: Handheld smartphones and tablets. Extra hardware features (GPS, gyroscope, accelerometer) enable new app types (AR, navigation). Use IEEE 802.11 WiFi or cellular data. Leaders: Apple iOS, Google Android.
+Mobile Computing: Smartphones and tablets. Extra hardware compared to traditional: GPS, gyroscope, accelerometer, camera, fingerprint sensor, NFC. iOS (Apple) and Android (Google/open-source) dominate. Challenges: limited battery, smaller screen, cellular network variability.
 
-Distributed Computing: Collection of separate, possibly heterogeneous systems networked together. Network = communications path (TCP/IP most common). Types of networks: LAN (Local Area Network), WAN (Wide Area Network), MAN (Metropolitan), PAN (Personal). Network OS provides features across the network. Key goal: illusion of a single unified system.`,
+Real-Time Embedded: The MOST PREVALENT form of computers. They're everywhere: washing machines, cars (ECUs), medical devices, industrial controllers, traffic lights, ATMs. Strict fixed timing constraints — the response must happen within a guaranteed deadline.
+
+Difference from general-purpose OS: Embedded OS has a very specific purpose, minimal UI, limited resources (RAM, storage), and often cannot be updated easily. Real-time embedded systems must meet timing deadlines without exception.`,
     keyPoints: [
-      "Traditional: standalone PCs, firewalls protect home systems",
-      "Mobile: smartphones/tablets, GPS+gyroscope, IEEE 802.11, iOS/Android",
-      "Distributed: separate systems on TCP/IP network, heterogeneous OK",
-      "LAN: local. WAN: wide area. MAN: city. PAN: personal (Bluetooth range)",
-      "Network OS: provides interface/features between distributed systems",
-      "Distributed goal: illusion of a single unified system",
-      "TCP/IP: most common network protocol",
+      "Traditional: standalone → networked → Internet-connected",
+      "Thin clients: web browser does all UI, server does heavy computation",
+      "Mobile: smartphones/tablets with extra sensors (GPS, gyro, camera, NFC)",
+      "iOS and Android dominate mobile OS market",
+      "Mobile challenges: battery life, limited screen, variable network",
+      "Real-time embedded: MOST prevalent form of computing",
+      "Embedded examples: washing machines, cars, medical devices, traffic lights",
+      "Embedded: fixed purpose, limited resources, strict timing constraints",
     ],
     formula: null,
     examTips: [
-      "Mobile: extra sensors (GPS, gyroscope) = new app types (AR, navigation)",
-      "Distributed = heterogeneous systems on TCP/IP. Goal = single system illusion.",
-      "LAN vs WAN vs MAN vs PAN — know the geographic scale of each",
-      "iOS and Android are the two mobile OS leaders (exam fact)",
+      "Real-time embedded = most prevalent form of computing (not PCs/phones!)",
+      "Mobile OS extras: GPS, gyroscope, accelerometer — beyond traditional HW",
+      "iOS = closed source (Apple). Android = open source (Google/AOSP).",
+      "Thin client = browser-based, server does work — reduces client requirements",
     ],
     questions: [
-      { q: "What is a distributed computing environment?", a: "A collection of separate, possibly heterogeneous (different hardware/software) systems networked together via TCP/IP. A Network OS provides features across systems. The goal is to create an illusion of a single unified system where users and programs can access resources anywhere on the network transparently." },
+      { q: "What extra hardware features do mobile devices have compared to traditional computers?", a: "Mobile devices have additional sensors and hardware: GPS (location), gyroscope (orientation/rotation), accelerometer (motion), proximity sensor, fingerprint reader, NFC (near-field communication), front AND rear cameras, cellular modem (3G/4G/5G), and sometimes barometer. These require the OS to manage more diverse hardware with strict power constraints." },
     ],
   },
 
   "client-server-p2p": {
-    title: "Client-Server, P2P, Virtualization & Cloud", emoji: "☁️",
-    tldr: "Client-server: servers respond to client requests. P2P: all nodes equal (no clients/servers). Cloud: IaaS/PaaS/SaaS. VM: run OS inside OS.",
-    explanation: `Client-Server Computing: Dumb terminals replaced by smart PCs. Many systems now act as servers responding to client requests. Compute-server: provides computation services (databases). File-server: clients store/retrieve files.
+    title: "Client-Server & Peer-to-Peer Computing", emoji: "🌐",
+    tldr: "Client-server: dedicated server responds to client requests. Peer-to-Peer: all nodes are equal peers. Distributed: heterogeneous systems networked together.",
+    explanation: `Distributed Computing: Heterogeneous systems (different hardware, different OS) networked together via LAN, WAN, MAN, or PAN. A Network Operating System (NOS) provides cross-network services (file sharing, printing). Users are aware of the multiple machines but interact with them transparently.
 
-Peer-to-Peer (P2P): All nodes are equal peers — no distinction between client and server. Each node may act as client, server, or both. To join: register with central lookup service OR broadcast and use discovery protocol. Examples: Napster, Gnutella, Skype (VoIP).
+Client-Server Model: The classic internet model. Two types:
+• Compute-server: clients send computation requests (e.g., database queries), server executes and returns results. Example: SQL database server.
+• File-server: clients read/write files stored on the server. Example: NFS, SMB/CIFS.
 
-Virtualization: Allows OSes to run applications within other OSes. VMM (Virtual Machine Manager) provides virtualization services. Emulation: source CPU ≠ target CPU (e.g., PowerPC → x86). Interpretation: language not compiled to native code. Use cases: running multiple OSes, QA testing, compatibility.
+Peer-to-Peer (P2P): No distinction between clients and servers. All nodes are peers — any node can be both a client AND a server simultaneously. Examples: BitTorrent (file sharing), Bitcoin blockchain, early Skype (VoIP), Napster-era music sharing. Advantages: no central bottleneck, more resilient (no single point of failure).
 
-Cloud Computing: Logical extension of virtualization. Delivers computing/storage/apps as a service over Internet. Amazon EC2: thousands of servers, millions of VMs. Types: Public (anyone, pay-per-use), Private (company internal), Hybrid (both). Service models: SaaS (apps), PaaS (software stack), IaaS (servers/storage).`,
+Key difference: In client-server, removing the server kills the service. In P2P, the network continues even if many nodes leave.`,
     keyPoints: [
-      "Client-server: compute-server (computation) + file-server (storage)",
-      "P2P: all nodes are peers. No dedicated clients or servers.",
-      "P2P: join via central lookup OR broadcast/discovery protocol",
-      "P2P examples: Napster, Gnutella, Skype",
-      "Virtualization: OS runs inside another OS via VMM",
-      "Emulation: different CPU architectures (slow). Interpretation: non-native code.",
-      "Cloud: IaaS (servers/storage), PaaS (software stack), SaaS (apps)",
-      "Cloud types: Public, Private, Hybrid",
+      "Distributed: heterogeneous systems on LAN/WAN/MAN/PAN",
+      "NOS (Network OS): provides file sharing, printing across network",
+      "Client-server: dedicated server responds to client requests",
+      "Compute-server: client requests computation (e.g., database)",
+      "File-server: client reads/writes files stored on server (NFS, SMB)",
+      "P2P: no client/server distinction. All nodes are peers.",
+      "P2P examples: BitTorrent, Bitcoin, VoIP",
+      "P2P advantage: no central bottleneck, no single point of failure",
     ],
     formula: {
       code: `Client-Server:
-  [Client: browser] → request → [Web Server]
-  [Client: app]     → query  → [Database Server]
+  [Client] ──request──→ [SERVER] ←─request── [Client]
+                           │
+                      processes request
+                           │
+  [Client] ←─response── [SERVER] ──response──→ [Client]
 
-P2P (e.g., BitTorrent):
-  NodeA ↔ NodeB ↔ NodeC ↔ NodeD
-  Any node can upload (server) or download (client)
-
-Virtualization Stack:
-  [App A] [App B]  ← guest apps
-  [Guest OS]       ← Windows XP (guest)
-  [VMM/Hypervisor] ← VMware, VirtualBox
-  [Host OS]        ← Windows 11 (host)
-  [Hardware]       ← actual CPU + RAM
-
-Cloud Service Models:
-  SaaS: Google Docs (you use the app, manage nothing)
-  PaaS: Google App Engine (you write code, they manage OS/DB)
-  IaaS: Amazon EC2 (you manage OS+apps, they manage hardware)`,
-      explanation: "IaaS = most control. PaaS = middleware control. SaaS = just use the app, no control over infrastructure.",
+Peer-to-Peer:
+  [Node A] ↔ [Node B] ↔ [Node C]
+      ↕            ↕
+  [Node D] ↔ [Node E]
+  
+  Any node can ask OR answer. No central server needed.
+  BitTorrent: you download from AND upload to peers simultaneously.`,
+      explanation: "P2P: every node is both client and server. More resilient, no bottleneck.",
     },
     examTips: [
-      "P2P: ALL nodes are peers. No dedicated server. Examples: Napster, Skype.",
-      "Cloud types: Public/Private/Hybrid. Service models: IaaS/PaaS/SaaS — know all 6.",
-      "Emulation = different CPU architectures (slowest). Virtualization = same CPU (fast).",
-      "VMM = Virtual Machine Manager = hypervisor. Manages guest OSes.",
+      "Client-server: server does the work, client requests. Central bottleneck.",
+      "P2P: all nodes equal. No single point of failure. Examples: BitTorrent, Bitcoin.",
+      "File-server vs Compute-server: file = stores files, compute = runs computation",
     ],
     questions: [
-      { q: "What is the difference between IaaS, PaaS, and SaaS?", a: "IaaS (Infrastructure as a Service): provides servers/storage over internet; user manages OS and applications (e.g., Amazon EC2). PaaS (Platform as a Service): provides a software stack ready for application use; user writes code, provider manages OS/DB (e.g., Google App Engine). SaaS (Software as a Service): one or more applications available via internet; user just uses the app (e.g., Google Docs)." },
+      { q: "What is the key advantage of P2P over client-server architecture?", a: "P2P has no central server — no single point of failure and no bottleneck. If any node leaves the network, the service continues because other nodes take over. In client-server, if the server goes down, all clients lose service. P2P also scales better — as more nodes join, the network gets stronger (more resources to share)." },
     ],
   },
 
   "virt-cloud": {
-    title: "Real-Time Embedded Systems & OS Design", emoji: "⏱️",
-    tldr: "Real-time OS: hard time constraints. Processing must complete within constraint. Correct operation requires constraint met.",
-    explanation: `Real-Time Embedded Systems: the most prevalent form of computers overall (cars, appliances, industrial controllers, medical devices). They have special-purpose, limited OS, or no OS at all. Use expanding rapidly.
+    title: "Virtualization & Cloud Computing", emoji: "☁️",
+    tldr: "Virtualization: multiple OSes on one physical machine via VMM/hypervisor. Cloud: SaaS, PaaS, IaaS. Logical extension of virtualization.",
+    explanation: `Virtualization:
+Allows running multiple operating systems concurrently on a single physical machine. A Virtual Machine Manager (VMM) or hypervisor creates virtual machines (VMs) — each VM believes it has its own dedicated hardware.
 
-Real-Time OS: has well-defined, fixed time constraints. Processing MUST be done within the constraint. Correct operation = processing completed within time constraint. (If not done in time = WRONG, even if correct result.)
+Two key terms:
+• Emulation: simulating a completely DIFFERENT CPU architecture (e.g., running ARM code on an Intel x86 machine). Slow because every instruction must be translated.
+• Virtualization: running an OS for the SAME CPU architecture. The guest OS is natively compiled for the real CPU, so no instruction translation needed. Much faster than emulation.
 
-Two types of real-time systems:
-Hard real-time: missing a deadline = system failure. Used in flight control, pacemakers, nuclear reactor control.
-Soft real-time: missing a deadline = degraded performance but not catastrophic. Used in multimedia, video streaming.
+Types of hypervisors:
+• Type 1 (bare metal): hypervisor runs directly on hardware. Guest OSes run on top. Examples: VMware ESXi, Microsoft Hyper-V, Xen. Used in data centers.
+• Type 2 (hosted): hypervisor runs as an application on a host OS. Examples: VMware Workstation, VirtualBox, Parallels. Used by developers.
 
-OS Design Considerations for Embedded/Real-time:
-- Must be lean and fast (no unnecessary features)
-- Predictable response times (no unbounded delays)
-- Often use priority-based preemptive scheduling
-- Memory management may be simplified or absent`,
+Use cases: multi-OS development, QA testing (multiple environments), data center consolidation (run 20 VMs on one server instead of 20 servers).
+
+Cloud Computing: delivering computing/storage/apps as a service over a network. The logical extension of virtualization.
+• SaaS (Software as a Service): application over Internet. Example: Google Docs, Gmail, Salesforce. You use software, someone else manages everything.
+• PaaS (Platform as a Service): platform/runtime ready for your apps. Example: Google App Engine, Heroku. You manage your app; cloud manages OS, runtime.
+• IaaS (Infrastructure as a Service): raw servers/storage/network over Internet. Example: AWS EC2, Azure VMs. You manage everything above the hardware.
+
+Cloud types: Public (Amazon, Google, Azure), Private (your own data center), Hybrid (combination).`,
     keyPoints: [
-      "Real-time embedded = most prevalent type of computer",
-      "Real-time OS: hard, well-defined time constraints",
-      "Correct operation = processing DONE within time constraint",
-      "Hard real-time: missing deadline = system failure (pacemaker, flight control)",
-      "Soft real-time: missing deadline = degraded performance only (video streaming)",
-      "Embedded systems: special-purpose, limited/no OS",
+      "VMM (hypervisor): creates virtual machines, each thinks it has dedicated hardware",
+      "Emulation: different CPU arch → slow (instruction translation needed)",
+      "Virtualization: same CPU arch → fast (native execution)",
+      "Type 1 hypervisor: bare metal (data centers). Type 2: hosted (developers).",
+      "Use cases: multi-OS dev, QA testing, data center consolidation",
+      "SaaS: app over internet (Google Docs). User manages nothing.",
+      "PaaS: platform + runtime (Heroku). User manages app only.",
+      "IaaS: raw VMs (AWS EC2). User manages everything above hardware.",
+      "Cloud types: Public, Private, Hybrid",
     ],
-    formula: null,
+    formula: {
+      code: `Type 1 Hypervisor (bare metal):
+  ┌──────────────┬──────────────┐
+  │ Windows VM   │ Linux VM     │
+  │ (guest OS)   │ (guest OS)   │
+  ├──────────────┴──────────────┤
+  │         VMM (Hypervisor)    │
+  ├─────────────────────────────┤
+  │         Hardware            │
+  └─────────────────────────────┘
+
+Type 2 Hypervisor (hosted):
+  ┌─────────┬─────────┐
+  │ Win VM  │ Linux VM│
+  ├─────────┴─────────┤
+  │    VMware         │ ← runs as an app
+  ├───────────────────┤
+  │   Host OS (macOS) │
+  ├───────────────────┤
+  │   Hardware        │
+  └───────────────────┘
+
+Cloud Service Models:
+  SaaS: You use the app   (Gmail, Google Docs)
+  PaaS: You write the app (Heroku, App Engine)
+  IaaS: You manage the VM (AWS EC2, Azure)`,
+      explanation: "Virtualization = multiple OSes on one machine. Cloud = virtualization as a service.",
+    },
     examTips: [
-      "Real-time: correct result + on TIME. Late result = wrong result in hard real-time.",
-      "Hard real-time: deadline miss = FAILURE. Soft: deadline miss = degraded quality.",
-      "Embedded systems = most prevalent computers (more than PCs/phones combined)",
+      "Emulation = different CPU (slow). Virtualization = same CPU (fast).",
+      "VMM = Virtual Machine Manager = hypervisor",
+      "Type 1 = bare metal (data centers). Type 2 = hosted app (developers).",
+      "SaaS/PaaS/IaaS: know which layer YOU manage in each",
     ],
     questions: [
-      { q: "What defines a real-time operating system?", a: "A real-time OS has well-defined, fixed time constraints. Processing must be done within the constraint — correctness is defined as producing the right result AND delivering it within the time limit. In hard real-time systems, missing a deadline is considered a system failure. In soft real-time systems, missing a deadline causes degraded performance but is not catastrophic." },
+      { q: "What is operating system virtualization? Give an example. (PYQ)", a: "OS virtualization allows multiple operating systems to run concurrently on a single physical machine. A Virtual Machine Manager (VMM) or hypervisor creates virtual machines — each believes it has its own dedicated hardware. The guest OS is natively compiled for the real CPU, avoiding the slowness of emulation.\n\nExample 1: VMware running Windows 10 as a guest on a Linux host. Linux manages real hardware; Windows runs in a VM, unaware it's sharing resources.\nExample 2: macOS + Ubuntu running simultaneously on an Apple laptop via Parallels. Both are fully functional, isolated operating systems." },
+      { q: "What is the difference between emulation and virtualization?", a: "Emulation: simulates a completely different CPU architecture. Every instruction must be translated in software. Very slow. Example: running old Game Boy games on a modern PC — the x86 CPU emulates the Game Boy Z80 CPU. Virtualization: the guest OS runs on the SAME CPU architecture as the host. Instructions execute natively with minimal overhead. Much faster than emulation. Example: Linux guest VM on a Linux host, both x86-64." },
+      { q: "Explain SaaS, PaaS, and IaaS with examples.", a: "SaaS (Software as a Service): Complete application delivered over Internet. User only manages their data. Example: Google Docs, Gmail, Salesforce. PaaS (Platform as a Service): Platform and runtime environment for your application. User manages the app; cloud manages OS and runtime. Example: Heroku, Google App Engine. IaaS (Infrastructure as a Service): Raw compute, storage, and networking. User manages everything above the hardware (OS, runtime, app). Example: AWS EC2, Microsoft Azure VMs." },
     ],
   },
 
   "process-concept": {
-    title: "Process Concept", emoji: "🔄",
-    tldr: "Process = program in execution. Program = passive (disk). Process = active (memory). Memory layout: text, data, heap, stack.",
-    explanation: `A program is a passive entity stored on disk (an executable file). A process is an active entity — a program loaded into memory and executing. One program can become multiple processes (e.g., multiple users running the same editor).
+    title: "Process Concept & Memory Layout", emoji: "💻",
+    tldr: "Process = program in execution (active). Program = file on disk (passive). Memory layout: Text → Data → BSS → Heap↑ ↓Stack.",
+    explanation: `A process is a program IN EXECUTION. Distinction:
+• Program: passive entity — a file on disk containing instructions (e.g., /bin/ls)
+• Process: active entity — a program loaded into memory with its own execution context (PC, registers, stack)
 
-Process memory layout (bottom to top in address space):
-- Text section: the program code (machine instructions)
-- Data section: global variables
-- Heap: memory dynamically allocated at runtime (malloc/new)
-- Stack: temporary data — function parameters, local variables, return addresses
+One program → multiple processes (e.g., 5 users all running the same text editor = 5 separate processes, each with their own memory)
 
-Program counter (PC): holds address of next instruction to execute.
-CPU registers: hold current working values.
+Process Memory Layout (from low to high address):
+┌─────────────┐ High address
+│    Stack    │ ← grows DOWNWARD. Holds: function params, return addresses, local variables
+│  free space │
+│    Heap     │ ← grows UPWARD. Dynamic memory (malloc/new)
+│    BSS      │ Uninitialized global variables (zeroed at startup)
+│    Data     │ Initialized global and static variables
+│    Text     │ ← Low address. Program code (machine instructions, read-only)
+└─────────────┘
 
-Process = code + data + heap + stack + CPU state (PC + registers)
+Remember: "Stack grows DOWN, heap grows UP" — they grow toward each other.
 
-Process States:
-- New: being created
-- Running: instructions executing on CPU (only ONE process running at a time on single CPU)
-- Waiting: waiting for an event (I/O completion, signal)
-- Ready: in memory, waiting to be assigned to CPU
-- Terminated: finished execution`,
+Stack and heap meet = stack overflow (or heap exhaustion).
+
+The OS gives each process its OWN address space — process A cannot read process B's memory (memory protection).
+
+Process states: New → Ready → Running → Waiting → Terminated (covered in next topic)`,
     keyPoints: [
-      "Program = passive (stored on disk). Process = active (in execution in memory).",
-      "Process memory: Text (code) + Data (globals) + Heap (dynamic) + Stack (local/params)",
-      "Stack: grows downward. Heap: grows upward. They can collide.",
-      "5 process states: New → Ready → Running → Waiting → Terminated",
-      "New: being created. Ready: in memory, waiting for CPU. Running: on CPU.",
-      "Waiting: waiting for I/O or event. Terminated: finished.",
-      "Single CPU: only ONE process in RUNNING state at a time",
-      "Multiple processes can be in READY or WAITING simultaneously",
+      "Process = program in execution (active). Program = file on disk (passive).",
+      "One program can spawn multiple processes (e.g., multiple terminal tabs)",
+      "Text segment: program code (machine instructions, read-only)",
+      "Data segment: initialized global + static variables",
+      "BSS: uninitialized global variables (zeroed at start)",
+      "Heap: dynamic memory via malloc/new. Grows UPWARD.",
+      "Stack: function params, return addresses, local vars. Grows DOWNWARD.",
+      "Stack and heap grow TOWARD each other (free space between them)",
+      "Each process has its own isolated address space (memory protection)",
     ],
     formula: {
-      code: `Process Memory Layout (high → low addresses):
-  ┌─────────────────┐ High address
-  │     Stack       │  ← function frames, local vars
-  │        ↓        │
-  │   (free space)  │
-  │        ↑        │
-  │      Heap       │  ← malloc(), new()
-  ├─────────────────┤
-  │      Data       │  ← global variables
-  ├─────────────────┤
-  │      Text       │  ← program code (read-only)
-  └─────────────────┘ Low address (e.g., 0x400000)
+      code: `Process Memory Layout:
+  High address
+  ┌───────────────────┐
+  │      STACK        │ ← local vars, params, return addr
+  │  (grows ↓)        │   grows downward
+  │  ─────────────    │
+  │    free space     │
+  │  ─────────────    │
+  │      HEAP         │ ← malloc(), new(), etc.
+  │  (grows ↑)        │   grows upward
+  ├───────────────────┤
+  │  BSS segment      │ ← uninitialized globals: int g;
+  ├───────────────────┤
+  │  Data segment     │ ← initialized globals: int g = 5;
+  ├───────────────────┤
+  │  Text segment     │ ← machine code (read-only)
+  └───────────────────┘
+  Low address
 
-Process State Diagram:
-  new ──────admit──────→ ready
-                           ↑↓ scheduler/interrupt
-                        running ──I/O/event──→ waiting
-                           │                      │
-                        exit↓            I/O done→ ready
-                       terminated`,
-      explanation: "Text (code) at low addresses. Stack grows DOWN. Heap grows UP. They can meet and cause overflow.",
+Example mapping for this code:
+#include <stdio.h>
+#include <stdlib.h>
+int g = 0;          // → Data segment (initialized global)
+int main(int argc, char *argv[]) {
+    int i = 0;              // → Stack (local variable)
+    char *p = malloc(100);  // → Heap (100 bytes allocated)
+    // ... 
+    free(p);
+    return 0;
+}
+
+Memory layout:
+  Stack:      argc, argv, i, p (pointer variable), return addr
+  Heap:       100 bytes from malloc()
+  Data:       g = 0
+  Text:       compiled code of main(), printf, scanf`,
+      explanation: "Text = code. Data/BSS = globals. Heap = dynamic (malloc). Stack = function frames.",
     },
     examTips: [
-      "Program ≠ Process: program is passive (file). Process is active (executing).",
-      "5 states: New, Ready, Running, Waiting, Terminated — know all transitions",
-      "Only ONE process RUNNING at a time on single-core CPU",
-      "Stack: LIFO, grows downward. Heap: grows upward. Both share same memory space.",
+      "Stack grows DOWN, Heap grows UP — toward each other",
+      "BSS = uninitialized globals (auto-zeroed). Data = initialized globals.",
+      "malloc() allocates from HEAP. Local variables are on STACK.",
+      "Stack overflow = stack and heap meet (or too many recursive calls)",
     ],
     questions: [
-      { q: "What are the 5 states of a process and when does each transition occur?", a: "New: being created. Ready: in memory, waiting for CPU (transitions to Running when scheduler picks it). Running: instructions executing (transitions to Waiting on I/O, to Ready on interrupt/preemption, to Terminated on exit). Waiting: awaiting event like I/O (transitions to Ready when event completes). Terminated: finished execution." },
-      { q: "What are the 4 sections of a process in memory?", a: "Text section: program code/instructions. Data section: global variables. Heap: dynamically allocated memory (grows upward at runtime). Stack: temporary data — function parameters, local variables, return addresses (grows downward)." },
+      { q: "Draw the memory map of a process executing this program (PYQ):\nint g = 0;\nint main() { int i = 0; char *p = malloc(100); ... free(p); return 0; }", a: "Memory layout (high to low address):\n• Stack: argc, argv[] pointer, i (local var), p (the pointer variable itself), main()'s return address — Stack grows downward\n• [free space between stack and heap]\n• Heap: 100 bytes allocated by malloc(100), freed by free(p) — Heap grows upward\n• BSS: g = 0 (initialized global goes in DATA, but if uninitialized would be BSS)\n• Data: g = 0 (initialized global variable)\n• Text: compiled machine code of main(), printf, scanf (read-only)" },
+      { q: "What is the difference between a program and a process?", a: "A program is a passive entity — a file stored on disk containing instructions (e.g., /bin/ls). A process is an active entity — a program that has been loaded into memory and is currently executing, with its own: program counter, CPU registers, stack, heap, and address space. One program can give rise to many processes (e.g., 5 users each running vim = 5 separate processes)." },
     ],
   },
 
   "pcb-states": {
-    title: "PCB & Process Scheduling Queues", emoji: "📁",
-    tldr: "PCB = the OS data structure representing a process. Contains all state. 3 queues: Job queue, Ready queue, Device queues.",
-    explanation: `Process Control Block (PCB) — also called Task Control Block:
-Every process in the OS is represented by a PCB. It stores all information the OS needs to manage the process:
-- Process state: running, waiting, ready, etc.
-- Program counter: address of next instruction
-- CPU registers: all register values (saves context on switch)
-- CPU scheduling info: priority, queue pointers
-- Memory management info: base/limit registers, page tables
-- Accounting info: CPU time used, clock time, limits
-- I/O status info: devices allocated, open files
+    title: "Process States, PCB & Queues", emoji: "📊",
+    tldr: "5 states: New → Ready → Running → Waiting → Terminated. PCB = OS data structure for each process. Short/long/medium-term schedulers.",
+    explanation: `Process States — the lifecycle of a process:
 
-Process Scheduling Queues:
-Job queue: ALL processes in the system.
-Ready queue: processes in main memory, ready and waiting to execute (records are PCBs).
-Device queues: processes waiting for a specific I/O device (one queue per device).
+1. New: Process is being created (fork() called, PCB being set up)
+2. Ready: Process is in memory, waiting to be assigned to a processor (in the ready queue)
+3. Running: Instructions are being executed on the CPU (only ONE process per core at a time)
+4. Waiting / Blocked: Process is waiting for an EVENT to complete (I/O, signal, timer) — NOT on CPU
+5. Terminated: Process has finished execution (exit() called, all resources being freed)
 
-Processes migrate between queues based on their state.
+Key transitions:
+• New → Ready: process admitted to memory
+• Ready → Running: CPU scheduler dispatches (picks) it
+• Running → Ready: PREEMPTED (timer expired or higher-priority process arrived)
+• Running → Waiting: process requests I/O or event
+• Waiting → Ready: I/O complete or event occurred (process re-enters ready queue)
+• Running → Terminated: process exits or is killed
 
-Schedulers:
-Short-term (CPU scheduler): picks next process from ready queue, allocates CPU. Invoked frequently (milliseconds) → must be fast.
-Long-term (job scheduler): picks which processes from disk to bring into memory (ready queue). Invoked infrequently (seconds/minutes) → can be slow. Controls degree of multiprogramming.
-Medium-term: swaps processes in/out of memory. Reduces degree of multiprogramming temporarily.`,
+IMPORTANT: Waiting → Ready does NOT preempt the running process. The process goes to the READY QUEUE, not directly to the CPU.
+
+Process Control Block (PCB):
+The OS represents each process with a PCB. Contains:
+1. Process state (running, waiting, ready, etc.)
+2. Program counter — address of next instruction
+3. CPU registers — all register values (saved on context switch)
+4. CPU scheduling info — priority, queue pointers
+5. Memory management info — base/limit registers, page tables
+6. Accounting info — CPU time used, elapsed time
+7. I/O status info — list of open files, allocated I/O devices
+
+Think of PCB as a process's "passport" — everything the OS needs to know about it.`,
     keyPoints: [
-      "PCB = OS data structure for ONE process. Contains: state, PC, registers, scheduling info, memory info, accounting, I/O info",
-      "Job queue: ALL processes in system. Ready queue: in memory, ready for CPU.",
-      "Device queues: one per I/O device. Processes waiting for that device.",
-      "Short-term scheduler: fast, invoked every milliseconds, picks from ready queue",
-      "Long-term scheduler: slow, invoked every seconds/minutes, picks from disk",
-      "Long-term controls DEGREE OF MULTIPROGRAMMING (how many processes in memory)",
-      "Medium-term: swapping — moves processes between memory and disk",
-      "I/O-bound: many short CPU bursts. CPU-bound: few long CPU bursts.",
-      "Long-term aims for good MIX of I/O-bound + CPU-bound processes",
+      "5 states: New, Ready, Running, Waiting/Blocked, Terminated",
+      "Only ONE process per CPU core can be RUNNING at a time",
+      "Ready: in memory, waiting for CPU. Waiting: blocked for I/O/event.",
+      "Ready → Running: scheduler dispatches (chooses)",
+      "Running → Ready: preempted (timer or higher priority)",
+      "Running → Waiting: I/O request. Waiting → Ready: I/O done.",
+      "PCB = OS data structure representing one process. 7 fields.",
+      "Context switch: save old PCB → load new PCB",
+      "Job queue: ALL processes. Ready queue: waiting for CPU. Device queues: waiting for I/O.",
     ],
     formula: {
-      code: `PCB Contents:
+      code: `Process State Diagram:
+
+         ┌──────────────────────────────────┐
+         │              ADMITTED            │
+  [NEW] ─┤───────────────────────────────→ [READY]
+         │                                  ↑  │
+         │                           I/O done  │ Scheduler dispatches
+         │                                  │  ↓
+         │                              [RUNNING] ──→ [TERMINATED]
+         │                                  │
+         │                         I/O request
+         │                                  ↓
+         │                              [WAITING]
+         └──────────────────────────────────┘
+
+A-F Transitions (PYQ standard labeling):
+  A: New → Ready         (process admitted)
+  B: Ready → Running     (scheduler dispatches to CPU)
+  C: Running → Waiting   (process requests I/O)
+  D: Running → Terminated(process exits)
+  E: Running → Ready     (preempted — quantum expired/higher priority)
+  F: Waiting → Ready     (I/O complete / event occurs)
+
+PCB Contents:
   ┌─────────────────────────────┐
-  │ Process State  (running)    │
+  │ Process State  (RUNNING)    │
   │ Program Counter (0x401234)  │
-  │ CPU Registers  (rax, rbx..) │
-  │ Scheduling Info (priority=5)│
+  │ CPU Registers  (all regs)   │
+  │ Scheduling Info (priority)  │
   │ Memory Info    (page table) │
-  │ Accounting     (CPU=0.5s)   │
-  │ I/O Status     (files:[fd3])│
-  └─────────────────────────────┘
-
-Queue Model:
-  [New] → ready queue → [P1][P2][P3] → CPU
-                                         ↓
-                        device queue ← I/O request
-                        [P4][P5]         ↓
-                                       I/O done → ready queue
-
-Scheduler Comparison:
-  Short-term: invoked every ~10ms. MUST be fast (O(1) preferred)
-  Long-term:  invoked every ~seconds. Can afford O(n) work.
-  Medium-term: handles swapping (when memory is overloaded)`,
-      explanation: "PCB = identity card of a process. Short-term = fast CPU dispatcher. Long-term = memory admission control.",
+  │ Accounting     (CPU used)   │
+  │ I/O Status     (open files) │
+  └─────────────────────────────┘`,
+      explanation: "Ready ≠ Running. A process can be Ready (has everything, waiting for CPU) or Running (actively on CPU). Only one per core runs at a time.",
     },
     examTips: [
-      "PCB stores ALL process info — state, PC, registers, scheduling, memory, I/O, accounting",
-      "Short-term: FREQUENT (ms), FAST. Long-term: INFREQUENT (s/min), can be slow.",
-      "Long-term controls DEGREE OF MULTIPROGRAMMING — how many in memory",
-      "I/O-bound vs CPU-bound: long-term scheduler aims to MIX them",
+      "Waiting → Ready does NOT give the process the CPU immediately — joins ready QUEUE",
+      "Only 1 process per CPU core can be RUNNING. Many can be READY or WAITING.",
+      "PCB = identity card of process. 7 fields — state, PC, registers, scheduling, memory, accounting, I/O",
+      "A-F transitions: memorize which letter = which transition for PYQ diagrams",
     ],
     questions: [
-      { q: "What information does a PCB store?", a: "Process state, Program counter, CPU registers, CPU scheduling information (priority, queue pointers), Memory management information (page tables), Accounting information (CPU time used, time limits), I/O status information (open files, allocated devices)." },
-      { q: "What is the difference between short-term and long-term schedulers?", a: "Short-term (CPU) scheduler: selects which process from the ready queue gets the CPU next. Invoked every few milliseconds — must be very fast. Long-term (job) scheduler: selects which processes from disk to admit into memory (ready queue). Invoked every seconds/minutes — can be slower. Controls the degree of multiprogramming (number of processes in memory)." },
+      { q: "Identify process states and transitions with labels A, B, C, D, E, F (PYQ)", a: "A: New → Ready (process admitted to memory)\nB: Ready → Running (scheduler dispatches to CPU)\nC: Running → Waiting (process requests I/O or event)\nD: Running → Terminated (process exits or is killed)\nE: Running → Ready (preempted — quantum expired or higher priority arrived)\nF: Waiting → Ready (I/O complete or event occurred — joins ready queue, doesn't immediately run)\n\nStatement I: 'A process can move to ready state when I/O completes irrespective of other process being in running state.' → TRUE. Waiting→Ready (F) happens independently of what's running. The process joins the ready queue.\nStatement II: 'Transition D (Running→Terminated) immediately causes Transition A (New→Ready).' → FALSE. D causes B (ready process gets CPU), not A (new process admitted). These are independent events." },
+      { q: "What information does a PCB store?", a: "7 categories: 1. Process state (running/waiting/ready/etc.). 2. Program counter (address of next instruction). 3. CPU registers (all register values — accumulators, index, stack pointer, general-purpose). 4. CPU scheduling info (priority, queue pointers). 5. Memory management info (base/limit registers, page tables). 6. Accounting info (CPU time used, elapsed time, time limits). 7. I/O status info (list of open files, allocated I/O devices)." },
     ],
   },
 
   "schedulers-types": {
-    title: "Schedulers & I/O vs CPU-Bound Processes", emoji: "⚖️",
-    tldr: "I/O-bound: many short bursts. CPU-bound: few long bursts. Long-term mixes both. CPU-I/O burst cycle is fundamental.",
-    explanation: `CPU-I/O Burst Cycle: Process execution alternates between CPU execution (CPU burst) and I/O wait (I/O burst). This cycle repeats until process terminates.
+    title: "Schedulers & CPU-I/O Burst Cycle", emoji: "⚖️",
+    tldr: "3 schedulers: Short-term (CPU, fast), Long-term (job, slow), Medium-term (swapper). I/O-bound = short bursts, CPU-bound = long bursts.",
+    explanation: `CPU-I/O Burst Cycle:
+Every process alternates between: CPU burst (actively computing) → I/O burst (waiting for device) → CPU burst → ... until it terminates.
 
-I/O-bound process: spends more time doing I/O than computing. Has many SHORT CPU bursts. Example: text editor, web browser.
-CPU-bound process: spends more time computing. Has few VERY LONG CPU bursts. Example: matrix multiplication, video encoding.
+I/O-bound process: spends more time doing I/O than computing. Has MANY SHORT CPU bursts. Example: text editor (you type → CPU processes → waits for next keystroke), database server.
 
-CPU burst distribution: most CPU bursts are SHORT (this is important for RR scheduling). A few processes have very long bursts.
+CPU-bound process: spends more time computing. Has FEW VERY LONG CPU bursts. Example: video encoder, scientific simulation, matrix multiplication.
 
-Long-term scheduler strategy: maintain a good MIX of I/O-bound and CPU-bound processes. If all CPU-bound → ready queue overloads CPU, I/O devices idle. If all I/O-bound → CPU idles, I/O devices overloaded.
+Three Types of Schedulers:
 
-Medium-term scheduler: when degree of multiprogramming needs to decrease, it swaps processes out of memory to disk. Later, swaps back in. This is SWAPPING.`,
+1. Long-term Scheduler (Job Scheduler):
+Selects from job pool on disk → loads into memory (ready queue). Controls DEGREE OF MULTIPROGRAMMING (how many processes are in memory). Invoked infrequently (seconds/minutes). Strategy: maintain good MIX of I/O-bound and CPU-bound. If all CPU-bound → ready queue overloads, I/O devices idle. If all I/O-bound → CPU idles, I/O devices overloaded.
+
+2. Short-term Scheduler (CPU Scheduler):
+Selects from ready queue → allocates CPU. Invoked VERY FREQUENTLY (every millisecond). Must be EXTREMELY FAST. Directly determines system response time. Even a 10ms scheduling decision for 100ms quantum = 10% overhead.
+
+3. Medium-term Scheduler (Swapper):
+When degree of multiprogramming must decrease (memory pressure), removes processes from memory → disk (swapping out). Later, brings them back (swapping in). Reduces multiprogramming temporarily to relieve memory pressure.`,
     keyPoints: [
       "CPU-I/O burst cycle: alternates CPU burst and I/O wait until termination",
-      "I/O-bound: many SHORT CPU bursts. Example: word processor",
-      "CPU-bound: few LONG CPU bursts. Example: scientific computation",
-      "Long-term scheduler goal: mix I/O-bound + CPU-bound = balance",
-      "Medium-term: swapping — process removed from memory to disk and back",
-      "Swapping reduces degree of multiprogramming temporarily",
-      "Histogram of CPU bursts: mostly short (exponential distribution shape)",
+      "I/O-bound: many SHORT CPU bursts. Example: word processor, database",
+      "CPU-bound: few LONG CPU bursts. Example: scientific computation, encoder",
+      "Long-term: infrequent (seconds/min), selects jobs from disk, controls multiprogramming degree",
+      "Short-term: very frequent (ms), selects from ready queue, must be fast",
+      "Medium-term: swapping — removes processes from memory to disk and back",
+      "Long-term strategy: mix I/O-bound + CPU-bound for maximum utilization",
     ],
     formula: {
       code: `CPU-I/O Burst Cycle:
-  [CPU burst] → [I/O wait] → [CPU burst] → [I/O wait] → ... → exit
+  [CPU burst 5ms] → [I/O wait 100ms] → [CPU burst 3ms] → [I/O wait 50ms] → exit
+  (I/O-bound: short CPU, long I/O)
 
-I/O-bound process (word processor):
-  CPU:  2ms │ CPU: 1ms │ CPU: 3ms │ CPU: 1ms ...
-  I/O:    ────────── 50ms ──────── 100ms ───
+  [CPU burst 500ms] → [I/O wait 2ms] → [CPU burst 800ms] → exit
+  (CPU-bound: long CPU, short I/O)
 
-CPU-bound process (video encoder):
-  CPU:  ───────── 800ms ─────── 1000ms ─── ...
-  I/O:  │ 1ms │               │ 2ms │
+Scheduler Comparison:
+  ┌──────────────┬──────────────┬──────────────────────────┐
+  │ Scheduler    │ Frequency    │ Function                 │
+  ├──────────────┼──────────────┼──────────────────────────┤
+  │ Long-term    │ seconds/min  │ disk → memory (job pool) │
+  │ Short-term   │ milliseconds │ ready queue → CPU        │
+  │ Medium-term  │ as needed    │ memory ↔ disk (swapping) │
+  └──────────────┴──────────────┴──────────────────────────┘
 
-Good mix on long-term scheduling:
-  Process A (I/O-bound):  ████░░░░░░░████░░░░
-  Process B (CPU-bound):  ░░░░████████░░░░████
-  CPU is NEVER idle! I/O devices are NEVER idle!`,
-      explanation: "Mixing I/O and CPU bound processes maximizes both CPU and I/O device utilization simultaneously.",
+Good Mix (long-term strategy):
+  I/O-bound: ████░░░░░░████░░░░  (CPU short, I/O long)
+  CPU-bound: ░░░░████████░░░████  (CPU long, I/O short)
+  Combined:  ALL resources always busy!`,
+      explanation: "Long-term controls HOW MANY processes in memory. Short-term decides WHO runs NOW. Medium-term manages OVERFLOW.",
     },
     examTips: [
-      "I/O-bound: MANY SHORT bursts. CPU-bound: FEW LONG bursts.",
-      "Long-term scheduler mixes both for maximum system utilization",
+      "Short-term: FREQUENT (ms), FAST. Long-term: INFREQUENT (s/min), can be slow.",
+      "Long-term controls DEGREE OF MULTIPROGRAMMING",
+      "I/O-bound vs CPU-bound: long-term scheduler aims to MIX them",
       "Medium-term = swapping (process to disk and back). Reduces multiprogramming.",
-      "CPU burst histogram: mostly short bursts with exponential tail (important for SJF/RR)",
     ],
     questions: [
-      { q: "Why should the long-term scheduler maintain a mix of I/O-bound and CPU-bound processes?", a: "If all processes are CPU-bound: the ready queue overloads, I/O devices sit idle. If all I/O-bound: the CPU sits idle while processes wait for I/O. A good mix keeps both CPU and I/O devices busy simultaneously, maximizing overall system utilization." },
+      { q: "Explain the three types of schedulers in OS. (PYQ)", a: "1. Long-term (Job) Scheduler: Selects from the job pool on disk and loads into memory (ready queue). Controls degree of multiprogramming. Invoked infrequently (seconds/minutes). Tries to maintain a good mix of I/O-bound and CPU-bound processes for maximum utilization.\n\n2. Short-term (CPU) Scheduler: Selects a process from the ready queue and allocates the CPU. Invoked very frequently (every milliseconds). Must be extremely fast. Directly affects system response time.\n\n3. Medium-term Scheduler (Swapper): Temporarily removes processes from memory (swapping out to disk) to reduce degree of multiprogramming when memory is overloaded. Later swaps them back in." },
     ],
   },
 
   "context-switch": {
     title: "Context Switch", emoji: "🔁",
-    tldr: "Context switch: save old process state (PCB) + load new process state. PURE OVERHEAD — no useful work done during switch.",
-    explanation: `When the CPU switches from one process to another, the OS must save the complete state of the current process and restore the state of the next process. This is called a context switch.
+    tldr: "Context switch: save old PCB + load new PCB. PURE OVERHEAD — no useful work done. Faster with hardware support (multiple register sets).",
+    explanation: `When the CPU switches from one process to another, the OS must:
+1. Save the complete state of the current process to its PCB (all registers, PC, memory pointers)
+2. Select the next process to run (done by the scheduler)
+3. Load the saved state from the new process's PCB
+4. Resume execution of the new process
 
-Context of a process = everything stored in its PCB (registers, PC, memory info, etc.)
-
-Context switch steps:
-1. Save current process state to its PCB (all registers, PC, memory pointers)
-2. Select next process to run
-3. Load saved state from new process's PCB
-4. Resume execution of new process
-
-Context switch time = PURE OVERHEAD. No useful computation happens while switching. The longer the switch takes, the less time is available for actual work.
+Context switch time = PURE OVERHEAD. No useful computation happens while switching. If context switch takes 1ms and time quantum is 10ms, that's 10% overhead — just for switching!
 
 Factors affecting context switch time:
-- OS complexity and PCB size
-- Hardware support (some CPUs have multiple register sets → can load context faster)
-- Memory speed
+• OS complexity (more info to save = longer switch)
+• Hardware support: some CPUs have multiple register sets (hardware contexts) — can switch almost instantly
+• Memory speed (loading page tables takes time)
 
-More complex OS = longer context switch. Hardware with multiple register sets per CPU = multiple contexts can be loaded simultaneously → faster switches.`,
+How does the OS switch from P0 to P1 when P0 makes a system call?
+1. P0 executes a system call (e.g., I/O). Trap instruction → CPU to kernel mode.
+2. Kernel saves P0's context (ALL CPU registers, PC, stack pointer) → P0's PCB. P0 state: Running → Waiting.
+3. CPU scheduler selects next process → selects P1.
+4. Kernel loads P1's context from P1's PCB (restores registers, PC, stack pointer). P1 state: Ready → Running.
+5. CPU switches to user mode and jumps to P1's saved program counter.
+6. P1 resumes exactly where it left off.`,
     keyPoints: [
-      "Context switch: save old PCB + load new PCB + transfer CPU",
-      "Context = all process state: registers, PC, memory info",
-      "Context switch = PURE OVERHEAD. No useful work done.",
+      "Context switch: save old PCB → select next → load new PCB",
+      "Context = all process state: registers, PC, memory info, etc.",
+      "Context switch = PURE OVERHEAD. No useful work during switch.",
       "More complex OS/PCB = longer switch time",
       "Hardware with multiple register sets → faster context switches",
-      "Time dependent on hardware support and OS complexity",
-      "Minimize context switch frequency for better performance (use larger time quantum in RR)",
+      "System call → saves P0's PCB → loads P1's PCB → P1 runs",
+      "Dispatch latency = time taken by dispatcher to switch processes",
     ],
     formula: {
       code: `Context Switch Timeline:
-  Process P0 running
-    |
-    | ← interrupt or system call
-    ↓
-  Save P0 state → PCB0
-  (OS runs: selects P1 from ready queue)
-  Load P1 state ← PCB1
-    |
-    | ← P1 executes
-    ↓
-  Save P1 state → PCB1
-  (OS runs: selects P0 from ready queue)
-  Load P0 state ← PCB0
-    |
-    | ← P0 resumes where it left off
-    
-  ← idle (overhead) →← useful work →← idle →`,
-      explanation: "The time saving/restoring state = wasted time. Minimizing context switch time = key performance goal.",
+
+  P0 running  │ save P0 ctx  │ P1 running
+  ────────────────────────────────────────
+              │← dispatch   →│
+              │  latency     │
+              │(pure overhead│
+              │ no useful    │
+              │   work!)     │
+
+P0 → P1 switch (system call scenario):
+  1. P0 makes system call → TRAP → kernel mode
+  2. Save P0's: PC, SP, registers → P0's PCB
+  3. P0 state: Running → Waiting
+  4. Scheduler picks P1
+  5. Load P1's: PC, SP, registers ← P1's PCB
+  6. P1 state: Ready → Running
+  7. Jump to P1's saved PC in user mode
+  → P1 continues from where it left off!`,
+      explanation: "Every context switch = overhead. Minimizing it is critical. Hardware support (multiple register sets) can eliminate most of the cost.",
     },
     examTips: [
-      "Context switch = PURE OVERHEAD (zero useful computation during switch)",
-      "Save state to PCB → select new process → load state from PCB",
-      "More complex OS = longer switch. Hardware support = shorter switch.",
-      "Context switch time: hardware dependent. Typically < 10 microseconds.",
+      "Context switch = PURE OVERHEAD — examiners love asking 'what useful work is done during context switch?' (Answer: NONE)",
+      "Hardware multiple register sets → near-zero context switch time",
+      "Context switch required for: preemption, system calls that block, I/O waits",
     ],
     questions: [
-      { q: "Why is context switch time considered overhead?", a: "During a context switch, the CPU is neither running the old process nor the new process — it is saving and restoring state (PCB). No useful computation occurs during this time. Therefore, context switches represent pure overhead — the more frequent they are, the less time is spent on actual work." },
+      { q: "How does the OS switch between P0 and P1 when P0 makes a system call? (PYQ)", a: "This is a context switch:\n1. P0 executes a system call (e.g., I/O request). Trap instruction switches CPU to kernel mode.\n2. Kernel saves P0's context (all CPU registers, PC, stack pointer) → P0's PCB. P0 state: Running → Waiting.\n3. CPU scheduler selects next process from ready queue → selects P1.\n4. Kernel loads P1's context from P1's PCB (restores registers, PC, stack pointer). P1 state: Ready → Running.\n5. CPU switches to user mode and jumps to P1's saved program counter.\n6. P1 resumes exactly where it left off.\n\nThe entire context switch is pure overhead — no useful work is done during the switch itself." },
     ],
   },
 
   "process-creation": {
     title: "Process Creation — fork, exec, vfork", emoji: "🌱",
-    tldr: "fork(): duplicate parent process (child gets PID 0, parent gets child PID). exec(): replace process image. vfork(): no copy, child runs first.",
+    tldr: "fork() = duplicate process. exec() = replace process image. vfork() = share memory, child runs first. fork() returns: 0 to child, PID to parent.",
     explanation: `Process Creation:
-Parent processes create child processes, forming a tree (with init/systemd at the root in Linux). Each process has a unique PID (Process ID).
+Parent process creates child processes → forms a process tree. Each process has a unique PID (Process Identifier). UNIX/Linux: PID 1 = init (or systemd) = root of ALL processes.
 
-Resource sharing options: parent and children share all, children share subset, or no sharing.
-Execution options: parent and children execute concurrently, OR parent waits for children.
+Resource sharing options for child:
+• Child gets copy of all parent resources
+• Child shares a subset of parent resources  
+• Child gets no shared resources (independent)
 
-fork():
-Creates a new process — the child is a duplicate of the parent (same code, data, heap, stack — but separate copy).
-Return values: 0 in the child, child's PID in the parent, -1 on error.
-After fork(), both parent and child continue from the next instruction.
+Execution options:
+• Parent and child run concurrently (most common with fork())
+• Parent waits for child to finish (parent calls wait())
 
-exec():
-Replaces the calling process's memory (text, data, heap, stack) with a new program loaded from disk. PID does NOT change. Typical pattern: fork() → exec() in child to run a new program.
+fork() — creates a new child process:
+• Child is an exact COPY of parent (data, heap, stack — copy-on-write)
+• Both continue from the same instruction after fork()
+• Returns: 0 to child, child's PID to parent, -1 on error
+• Modern Linux uses Copy-On-Write (COW) — pages only actually copied when modified
 
-vfork():
-Like fork() but does NOT copy the parent's address space (child uses parent's memory directly until exec/exit). Guarantees child runs FIRST. Much faster for fork-then-exec pattern.
+exec() — replaces current process image:
+• Does NOT create a new process (PID stays the same!)
+• Replaces: text, data, heap, stack with a new program
+• Typical pattern: fork() + exec() in child = child runs a different program
+• Returns: -1 on failure, NO RETURN on success (process is replaced!)
 
-getpid(): returns current process's PID.
-getppid(): returns parent process's PID.`,
+vfork() — optimized fork for exec:
+• Does NOT copy parent's address space (shares memory temporarily)
+• Child runs FIRST until it calls exec() or exit()
+• More efficient when child immediately calls exec()
+
+Orphan process: Parent exits WITHOUT calling wait(). Child is re-parented to init (PID 1).
+Zombie process: Child exits but parent hasn't called wait() yet. Entry stays in process table.`,
     keyPoints: [
-      "fork(): create duplicate child. Child gets 0, parent gets child's PID.",
-      "exec(): replace process image with new program. PID unchanged.",
-      "vfork(): no copy of address space. Child runs FIRST. Faster than fork.",
-      "Typical Unix pattern: fork() → exec() in child",
-      "Process tree: init → login shell → user programs",
-      "getpid(): my PID. getppid(): my parent's PID.",
-      "fork() returns -1 on error. exec() never returns on success.",
-      "exec() replaces: text, data, heap, stack — everything (PID stays same)",
+      "Parent creates children → process tree. Root = init (PID 1).",
+      "fork(): creates exact copy of parent. Child has new PID.",
+      "fork() returns: 0 to child, child PID to parent, -1 on error",
+      "exec(): replaces process image with new program. PID unchanged.",
+      "exec() does NOT return on success. Returns -1 on failure.",
+      "fork() + exec() = create child running a different program",
+      "vfork(): NO address space copy. Child runs first until exec/exit.",
+      "Copy-On-Write (COW): pages only copied when actually modified",
     ],
     formula: {
-      code: `fork() code pattern:
-  pid_t pid = fork();
-  
-  if (pid < 0) {
-    // error: fork failed
-    perror("fork");
-  } else if (pid == 0) {
-    // CHILD process
-    // pid == 0 in child
-    execlp("/bin/ls", "ls", NULL);  // exec replaces child image
-  } else {
-    // PARENT process
-    // pid = child's PID
-    wait(NULL);  // parent waits for child to finish
-  }
+      code: `Classic fork() + exec() pattern:
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
 
-Return values:
-  Parent: fork() returns child's PID (e.g., 1234)
-  Child:  fork() returns 0
-  Error:  fork() returns -1
+int main() {
+    pid_t pid = fork();
+    
+    if (pid < 0) {
+        perror("Fork failed"); return 1;     // error
+    } else if (pid == 0) {
+        // CHILD: runs here
+        printf("Child PID=%d\\n", getpid());
+        execlp("/bin/ls", "ls", "-l", NULL); // replace with ls
+        perror("exec failed");               // only if exec fails
+    } else {
+        // PARENT: runs here  
+        printf("Parent: child is PID %d\\n", pid);
+        wait(NULL);   // wait for child to finish
+        printf("Child done!\\n");
+    }
+    return 0;
+}
 
-vfork() vs fork():
-  fork():  copies parent's address space → safe but slower
-  vfork(): shares parent's memory → child runs FIRST → faster
-           (must call exec() or exit() immediately!)`,
+Orphan Process Program:
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main() {
+    pid_t pid = fork();
+    if (pid > 0) {
+        // Parent exits IMMEDIATELY without wait()
+        printf("Parent PID: %d, exiting now...\\n", getpid());
+        exit(0);  ← parent exits here!
+    } else if (pid == 0) {
+        sleep(2); // give parent time to die
+        // getppid() now returns 1 (init) since parent is gone
+        printf("Orphan child PID: %d, new parent: %d\\n",
+               getpid(), getppid());
+    }
+    return 0;
+}`,
       explanation: "fork() = duplicate. exec() = transform. vfork() = share + child first. These 3 are the foundation of Unix process creation.",
     },
     examTips: [
@@ -1280,70 +1543,68 @@ vfork() vs fork():
       "Process tree root in Linux: init (PID 1) or systemd",
     ],
     questions: [
+      { q: "Write a C program to create an orphan process. (PYQ)", a: "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n\nint main() {\n    pid_t pid = fork();\n    if (pid > 0) {\n        // Parent exits immediately WITHOUT wait()\n        printf(\"Parent PID: %d, exiting now...\\n\", getpid());\n        exit(0);\n    } else if (pid == 0) {\n        sleep(2); // give parent time to die\n        // getppid() now returns 1 (init) since parent is gone\n        printf(\"Orphan child PID: %d, new parent PID: %d\\n\",\n               getpid(), getppid());\n    }\n    return 0;\n}\n\nExplanation: Parent exits before the child (no wait()). OS re-parents the child to init (PID 1). After sleep(2), getppid() returns 1." },
+      { q: "Identify and fix the serious issue in this fork/exec code. (PYQ)\nparent: exit(0) without wait(). child: execl('/bin/ls', '/home', '-l', NULL)", a: "Two bugs:\n1. Parent calls exit(0) without wait() → child becomes an orphan (or zombie if child finishes first).\n2. execl argument order is wrong — first arg after path should be argv[0] (program name 'ls'), not the path '/home'.\n\nFixed code:\nif (pid > 0) {\n    wait(NULL);  // FIX: wait for child\n    printf(\"Child completed.\\n\");\n} else if (pid == 0) {\n    execl(\"/bin/ls\", \"ls\", \"-l\", \"/home\", NULL); // FIX: argv[0]='ls'\n    perror(\"execl failed\");\n    exit(1);\n}" },
+      { q: "Write a C program where child executes another program. (PYQ)", a: "#include <stdio.h>\n#include <stdlib.h>\n#include <unistd.h>\n#include <sys/wait.h>\n\nint main() {\n    pid_t pid = fork();\n    if (pid < 0) {\n        perror(\"Fork failed\"); exit(1);\n    } else if (pid == 0) {\n        // Child: replace itself with ls program\n        printf(\"Child PID: %d\\n\", getpid());\n        execlp(\"/bin/ls\", \"ls\", \"-l\", \"/home\", NULL);\n        perror(\"exec failed\"); exit(1);\n    } else {\n        // Parent: wait for child\n        int status;\n        wait(&status);\n        printf(\"Child exited with status: %d\\n\", WEXITSTATUS(status));\n    }\n    return 0;\n}\n\nfork() creates child. Child calls execlp() to replace itself with /bin/ls. Parent calls wait() to avoid zombie." },
       { q: "What is the difference between fork() and exec()?", a: "fork() creates a new process by duplicating the calling process — both parent and child then run the same code from the same point, with separate memory copies. exec() does NOT create a new process — it replaces the calling process's memory (text, data, heap, stack) with a completely new program. PID stays the same after exec(). The typical pattern is fork() followed by exec() in the child to create a child running a different program." },
-      { q: "What does fork() return in the child vs the parent?", a: "In the child process: 0. In the parent process: the PID (process ID) of the newly created child. On error: -1 (no child created)." },
     ],
   },
 
   "process-termination": {
     title: "Process Termination — exit, wait, zombie, orphan", emoji: "💀",
-    tldr: "exit(): normal termination. Zombie: child terminated, parent hasn't waited. Orphan: parent terminated first. Cascading termination: OS kills all children.",
+    tldr: "exit(): normal termination. Zombie: child terminated, parent hasn't waited. Orphan: parent terminated first, child re-parented to init.",
     explanation: `Process Termination:
-Normal exit: process executes last statement → calls exit(). Returns status data to parent via wait(). OS deallocates all resources.
+Normal exit: process executes last statement → calls exit(). Returns status to parent via wait(). OS deallocates all resources.
 
-5 ways to terminate normally:
-1. Return from main() 2. Call exit() 3. Call _exit() or _Exit() 4. Return from last thread's start routine 5. pthread_exit() from last thread
+5 normal ways to terminate:
+1. Return from main() 
+2. Call exit()
+3. Call _exit() or _Exit()
+4. Last thread returns from start routine
+5. pthread_exit() from last thread
 
-3 abnormal termination ways:
-1. Call abort() 2. Receive a signal 3. Last thread responds to cancellation
+3 abnormal ways:
+1. Call abort() — abnormal termination signal
+2. Receive a signal (SIGKILL, SIGSEGV, etc.)
+3. Last thread responds to cancellation
 
-Parent can terminate child using abort(). Reasons: child exceeded resources, task no longer needed, parent is exiting.
+Cascading termination: some OSes (like Windows) automatically terminate all children when parent terminates.
 
-Cascading termination: if parent exits and OS doesn't allow orphans, ALL children are terminated too (recursively including grandchildren).
+Zombie process: Child has terminated (called exit()) but parent has NOT yet called wait() to collect its exit status. The OS keeps a minimal entry in the process table (just enough to hold the exit status). This entry is the "zombie" — dead but not cleaned up. If the parent never calls wait() → zombies accumulate → process table fills up (resource leak!).
 
-Zombie: A child has terminated but its parent has NOT yet called wait(). The process still exists as a "zombie" entry in the process table — its exit status is stored there until the parent reads it.
+Orphan process: Parent terminated WITHOUT calling wait(). The orphaned child is re-parented to init (PID 1). init periodically calls wait() for all its children, cleaning up properly.
 
-Orphan: Parent terminated WITHOUT calling wait(). The orphaned child is re-parented to init (PID 1), which periodically calls wait() to clean up.
-
-wait() / waitpid(): parent waits for child. Returns child's PID and exit status. Can block (if child still running) or return immediately (if child already done).`,
+How to avoid zombies: always call wait() or waitpid() in the parent after forking.`,
     keyPoints: [
       "exit(): normal termination. Returns exit status to parent via wait().",
+      "5 normal + 3 abnormal ways to terminate",
       "Zombie: child exited, parent NOT yet called wait(). Still in process table.",
+      "Zombie risk: process table fills up if zombies accumulate (resource leak)",
       "Orphan: parent exited without wait(). Child re-parented to init (PID 1).",
-      "Cascading termination: parent exits → OS kills all descendants",
-      "wait(): parent gets child's exit status + PID. Blocks if child running.",
-      "waitpid(): wait for specific child (not just any child).",
-      "pid = wait(&status) returns: child PID on success, 0 if no change, -1 on error",
-      "exec(): same PID, returns -1 on error, NO return on success",
+      "init (PID 1) always calls wait() for orphaned children — prevents zombies",
+      "Cascading termination: parent exits → OS kills all descendants (some OSes)",
+      "wait(): parent gets child's exit status + PID. Blocks if child still running.",
     ],
     formula: {
-      code: `Process Termination Flow:
-  Child: executes exit(0)
-    → OS closes all file descriptors
-    → Releases memory
-    → Keeps minimal entry in process table (zombie)
-    → Sends SIGCHLD to parent
-  
-  Parent: calls wait(&status)
-    → Gets child's exit status
-    → OS removes zombie from process table
-    → Returns child's PID
+      code: `Zombie Creation (BAD - bug):
+  Child:  exit(0)           → state = zombie (waiting for parent)
+  Parent: [never calls wait()]  → zombie stays forever!
+  → Process table fills up → system cannot create new processes!
 
-Zombie State:
-  Child exits → still in table as zombie
-  Parent ignores → zombie accumulates
-  (memory leak in process table!)
+Zombie Prevention (GOOD):
+  Child:  exit(0)
+  Parent: wait(&status)     → collects exit status
+                            → zombie REMOVED from process table ✓
 
-Orphan Handling:
-  Parent exits without wait()
-    → OS re-parents child to init (PID=1)
-    → init periodically calls wait() for all orphans
-    → Properly cleans up
+Orphan Creation:
+  fork() → Parent: exit(0) [no wait!]
+         → Child still running
+  OS: re-parents child to init (PID 1)
+  init: periodically calls wait() → cleans up ✓
 
-Race Condition Example:
-  fork() → who runs first? (undefined)
-  Solution: parent calls wait() to synchronize`,
-      explanation: "Zombie = dead but not cleaned up. Orphan = parent died first, adopted by init. Both use process table entry.",
+Check zombies on your Linux system:
+  ps aux | grep 'Z'   ← Z = zombie state`,
+      explanation: "Zombie = dead but not collected. Orphan = parent died, adopted by init. Both need wait() to be properly handled.",
     },
     examTips: [
       "Zombie: child DONE, parent NOT called wait() yet. Still in process table.",
@@ -1352,24 +1613,123 @@ Race Condition Example:
       "wait() removes zombie. If parent never calls wait() → zombie accumulates (memory leak).",
     ],
     questions: [
-      { q: "What is a zombie process?", a: "A zombie process is a child that has terminated (called exit()) but whose parent has not yet called wait() to collect its exit status. The OS keeps a minimal entry for it in the process table to preserve the exit status for the parent. Once the parent calls wait(), the zombie is fully cleaned up." },
-      { q: "What happens when a parent process exits before its child?", a: "The child becomes an orphan. The OS re-parents it to init (PID 1). The init process periodically calls wait() to clean up any orphaned children that have terminated, preventing zombies from accumulating." },
+      { q: "What is a zombie process? How does it differ from an orphan?", a: "Zombie: a child that has terminated (called exit()) but whose parent has not yet called wait() to collect its exit status. The OS keeps a minimal process table entry to preserve the exit status. If the parent never calls wait(), zombies accumulate and eventually fill the process table.\n\nOrphan: a child whose parent has terminated without calling wait(). The OS re-parents it to init (PID 1), which periodically calls wait() for all its children, preventing zombie accumulation." },
+    ],
+  },
+
+  "ipc-models": {
+    title: "IPC — Inter-Process Communication", emoji: "🔗",
+    tldr: "Two IPC models: Shared Memory (fast, no kernel per exchange) and Message Passing (slower, kernel involved). Pipes = unidirectional byte streams.",
+    explanation: `Inter-Process Communication (IPC):
+Processes need to communicate and cooperate. Two fundamental models:
+
+1. Shared Memory:
+A region of memory is shared between cooperating processes. After initial setup (which requires OS help to create the shared region), processes read/write directly to this shared memory WITHOUT kernel involvement per exchange. FAST.
+
+Example: Producer-Consumer problem — producer writes to shared buffer, consumer reads from it.
+
+Must use synchronization (semaphores/mutexes) to prevent race conditions — if two processes write simultaneously, data gets corrupted.
+
+Best for: large data exchange, high-frequency communication between processes on the same machine.
+
+2. Message Passing:
+Processes communicate by sending and receiving messages. The KERNEL manages every transfer — it's involved in each send/receive. SLOWER than shared memory but simpler.
+
+Can be:
+• Direct (name the recipient): send(P2, message)
+• Indirect (use mailbox/port): send(mailbox_A, message)
+• Blocking (synchronous): sender blocks until receiver gets message
+• Non-blocking (asynchronous): sender sends and continues immediately
+
+Best for: distributed systems (across network), when processes are on different machines, simpler synchronization needs.
+
+Pipes — Classic Unix IPC:
+A pipe is a unidirectional byte stream between two related processes.
+• Created via pipe() system call → returns fd[0] (read end) and fd[1] (write end)
+• Unnamed pipes: ONLY between parent and child (created after fork())
+• Named pipes (FIFOs): have a filesystem name, any process can open them (mkfifo())`,
+    keyPoints: [
+      "Two IPC models: Shared Memory (fast) and Message Passing (simpler)",
+      "Shared memory: processes map same region into their address space",
+      "Shared memory: NO kernel per exchange after setup. Very fast.",
+      "Shared memory: REQUIRES synchronization (semaphores/mutexes)",
+      "Message passing: kernel mediates every send/receive. Slower.",
+      "Message passing: easier to use across distributed systems",
+      "Direct vs Indirect: name the process vs use a mailbox/port",
+      "Blocking (synchronous) vs Non-blocking (asynchronous)",
+      "Pipe: unidirectional byte stream. fd[0]=read, fd[1]=write.",
+      "Named pipe (FIFO): persistent, any process can open it",
+    ],
+    formula: {
+      code: `Shared Memory:
+  Process A │ Process B
+  ──────────┼──────────
+     writes │ reads
+            │
+  ┌─────────┴──────────┐
+  │   Shared Memory    │ ← mapped into BOTH address spaces
+  │   (kernel created) │
+  └────────────────────┘
+  Fast! No kernel per exchange. But needs semaphores for sync.
+
+Message Passing:
+  Process A   ──send(msg)──→   KERNEL   ──recv(msg)──→   Process B
+  Slower (kernel every time), but simpler + works across network.
+
+Pipe Example (Unix):
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+
+int main() {
+    int fd[2];
+    pipe(fd);      // fd[0]=read, fd[1]=write
+    pid_t pid = fork();
+    
+    if (pid > 0) {           // PARENT writes
+        close(fd[0]);        // close read end
+        char msg[] = "Hello from parent!";
+        write(fd[1], msg, strlen(msg) + 1);
+        close(fd[1]);
+    } else {                 // CHILD reads
+        close(fd[1]);        // close write end
+        char buf[100];
+        read(fd[0], buf, sizeof(buf));
+        printf("Child got: %s\\n", buf);
+        close(fd[0]);
+    }
+    return 0;
+}`,
+      explanation: "Shared memory: fast but needs sync. Message passing: simple but kernel overhead. Pipes: simplest for parent-child.",
+    },
+    examTips: [
+      "Shared memory: fast (no kernel per exchange). Needs synchronization.",
+      "Message passing: slower (kernel per exchange). Simpler. Works across network.",
+      "Pipe: unidirectional. fd[0]=read end, fd[1]=write end.",
+      "Named pipe (FIFO): any process, not just parent-child. Created with mkfifo().",
+    ],
+    questions: [
+      { q: "Explain the two models of IPC. (PYQ)", a: "1. Shared Memory: A region of memory is shared between cooperating processes. After OS creates the shared region, processes read/write directly — NO kernel involvement per exchange. Fast. Requires synchronization (semaphores/mutexes) to prevent race conditions. Good for large, frequent data exchange between processes on the same machine. Example: producer-consumer with shared buffer.\n\n2. Message Passing: Processes communicate via send(message) and receive(message) system calls. The KERNEL manages every transfer. Slower (kernel overhead per exchange). Easier to implement and works across distributed systems (different machines). Can be direct (named recipient) or indirect (mailbox/port). Can be blocking or non-blocking." },
+      { q: "How does a pipe work in IPC? (PYQ)", a: "A pipe is a simple, unidirectional byte-stream IPC mechanism.\n\nCreated via pipe() system call → returns fd[0] (read end) and fd[1] (write end).\n\nUnnamed (ordinary) pipes: only between related processes (parent-child). Created before fork(). Parent closes one end, child closes the other — communication is one-directional.\n\nNamed pipes (FIFOs): have a filesystem name (created with mkfifo()). Any process can open them. Persist beyond the lifetime of processes.\n\nLimitation: pipes are UNIDIRECTIONAL (one end reads, other writes). For bidirectional communication, two pipes are needed." },
     ],
   },
 
   "io-lifecycle": {
     title: "Life Cycle of an I/O Request", emoji: "📤",
-    tldr: "Process → syscall → kernel validates → device driver → controller → process BLOCKED → context switch → interrupt → ISR → process READY → resume.",
-    explanation: `The I/O Life Cycle defines the complete sequence from a process requesting I/O to resuming execution.
+    tldr: "Process → syscall → kernel validates → device driver → controller → BLOCKED → context switch → interrupt → ISR → READY → resume.",
+    explanation: `The I/O Life Cycle defines the complete sequence from a process requesting I/O to resuming execution. This is also the answer to the classic PYQ about what happens when printf("Hello world\\n") executes.
 
 Phase 1 — Initiation:
-Process calls read()/write()/open(). System call switches user→kernel mode. Kernel validates parameters, file descriptors, access permissions. Identifies target device and device driver. Encapsulates request into kernel data structure. Places request in device's I/O queue. May be blocking or non-blocking.
+Process calls a library function (e.g., printf). Library calls the appropriate system call (write). TRAP instruction → CPU switches to kernel mode. Kernel validates parameters and file descriptors. Identifies target device and device driver.
 
-Phase 2 — Execution:
-Device driver converts kernel request to hardware-specific commands. Programs the device controller to start operation. Requesting process is BLOCKED and moved to waiting state. OS performs context switch → another process runs. (CPU and I/O work in parallel → better throughput)
+Phase 2 — Kernel Processing:
+Creates I/O request data structure. Places request in device's I/O queue. The requesting process is BLOCKED — state changes from Running → Waiting. OS performs a context switch → another process gets the CPU. CPU and I/O work in PARALLEL — this is the efficiency gain!
 
-Phase 3 — Completion:
-Device generates an interrupt when done. CPU executes ISR (Interrupt Service Routine). ISR verifies completion, handles errors. Blocked process moved from waiting → ready state. Scheduler eventually picks process → resumes execution. System call completes, returns to user mode.`,
+Phase 3 — Device Execution:
+Device driver converts the request to hardware-specific commands. Programs the device controller to start the operation. DMA (if applicable) transfers data autonomously.
+
+Phase 4 — Completion:
+Device generates an interrupt when done. CPU executes the ISR. ISR verifies completion, handles any errors. Blocked process moved from Waiting → Ready state. Scheduler eventually picks process → execution resumes. System call returns to user mode.`,
     keyPoints: [
       "I/O starts with system call (read/write/open) → mode switch to kernel",
       "Kernel validates request, identifies device driver, queues request",
@@ -1381,35 +1741,45 @@ Device generates an interrupt when done. CPU executes ISR (Interrupt Service Rou
       "System call returns → back to user mode",
     ],
     formula: {
-      code: `I/O Request Lifecycle:
-  Process A: read(fd, buf, 1024)
-    │
-    ↓ [1] System call → user mode → kernel mode
-    ↓ [2] Kernel validates fd, permissions, etc.
-    ↓ [3] Identifies disk device driver
-    ↓ [4] Creates I/O request data structure
-    ↓ [5] Queues request in disk I/O queue
-    ↓ [6] Process A → BLOCKED (moves to waiting)
-    ↓ [7] Context switch → Process B runs on CPU
-         
-  [Disk controller executes the I/O]
-         
-    ↓ [8] Disk done → raises INTERRUPT
-    ↓ [9] CPU handles interrupt → ISR runs
-    ↓ [10] ISR: data copied to Process A's buffer
-    ↓ [11] Process A → READY (moves to ready queue)
-    ↓ [12] Scheduler picks Process A
-    ↓ [13] read() returns 1024 (bytes read)
-    ↓ [14] User mode resumed`,
-      explanation: "Steps 7-8: CPU runs other processes while I/O executes = true parallel utilization.",
+      code: `What happens when printf("Hello world\\n") executes? (PYQ)
+
+  1. User program calls printf() — a C library function
+  2. printf() formats the string
+  3. printf() calls write() system call with fd=1 (stdout) and buffer
+  4. TRAP instruction executes → CPU: user mode → kernel mode
+  5. Kernel: validates fd=1 (stdout), checks permissions
+  6. Kernel: identifies output device (terminal) and its driver
+  7. Device driver: sends characters to terminal controller's buffer
+  8. Controller: outputs characters to the screen
+  9. On completion: device generates an interrupt
+  10. ISR processes completion → write() returns bytes written
+  11. CPU: kernel mode → user mode
+  12. printf() returns to the user program
+
+I/O Request Lifecycle (general):
+  Process: read(fd, buf, 1024)
+   ↓ [1] System call → user→kernel mode
+   ↓ [2] Kernel validates params, identifies driver
+   ↓ [3] Creates I/O request, queues it
+   ↓ [4] Process → BLOCKED (Running→Waiting)
+   ↓ [5] Context switch → Process B runs on CPU
+  
+  [I/O executes in parallel!]
+  
+   ↓ [6] Device done → raises INTERRUPT
+   ↓ [7] ISR runs → data in buffer
+   ↓ [8] Process → READY (Waiting→Ready)
+   ↓ [9] Eventually scheduled → resumes`,
+      explanation: "Steps 5-6: CPU runs other processes while I/O executes = true parallelism = efficiency.",
     },
     examTips: [
+      "printf() is NOT a system call — it calls write(). Know the chain.",
       "Process is BLOCKED during I/O — NOT running, NOT ready",
       "Context switch during I/O: another process gets CPU (key efficiency gain)",
-      "Interrupt = how device signals completion to CPU",
-      "ISR: runs in kernel mode, moves process from waiting → ready",
+      "The printf PYQ has 10 steps — kernel validates, driver sends, interrupt, ISR, return",
     ],
     questions: [
+      { q: "What actions does the OS perform while executing printf('Hello world\\n')? (PYQ)", a: "1. User program calls printf() — a C library function.\n2. printf() formats the string, then calls the write() system call with fd=1 (stdout) and the buffer.\n3. Trap instruction executes → CPU switches from user mode to kernel mode.\n4. Kernel validates fd=1 (stdout), checks permissions.\n5. Kernel identifies output device (terminal) and its driver.\n6. Device driver sends characters to the terminal controller's buffer.\n7. Controller outputs characters to the screen.\n8. On completion, device generates an interrupt.\n9. ISR processes completion. write() returns number of bytes written.\n10. CPU switches back to user mode. printf() returns to the user program." },
       { q: "What happens to a process that initiates a blocking I/O request?", a: "The process moves from running → waiting state (blocked). The OS performs a context switch, allowing another process to use the CPU. When the I/O completes, the device generates an interrupt. The ISR handles it and moves the blocked process from waiting → ready state. The scheduler eventually assigns the CPU back to the process." },
     ],
   },
@@ -1417,338 +1787,408 @@ Device generates an interrupt when done. CPU executes ISR (Interrupt Service Rou
   "sched-criteria": {
     title: "Scheduling Criteria & Goals", emoji: "📊",
     tldr: "5 criteria: CPU utilization, Throughput, Turnaround time, Waiting time, Response time. Maximize first 2, minimize last 3.",
-    explanation: `CPU Scheduling goals: decide which process in the ready queue gets the CPU next. This is the most important resource allocation decision.
+    explanation: `CPU Scheduling goals: decide which process in the ready queue gets the CPU next.
 
 5 Scheduling Criteria:
-1. CPU Utilization: keep CPU as busy as possible (maximize). Range: 40% (lightly loaded) to 90% (heavily loaded).
-2. Throughput: number of processes completing execution per time unit (maximize).
-3. Turnaround Time: total time to execute a process from submission to completion (minimize).
-4. Waiting Time: total time a process spends waiting in the ready queue (minimize). Scheduling affects only waiting time, not I/O time.
-5. Response Time: time from request submission until first response is produced (minimize). Important for interactive/timesharing systems.
+1. CPU Utilization: keep CPU as busy as possible. Range: 40% (light load) to 90% (heavy load). MAXIMIZE.
+2. Throughput: number of processes completing execution per time unit. MAXIMIZE.
+3. Turnaround Time: total time from submission to completion. MINIMIZE. Good for batch systems.
+4. Waiting Time: total time a process spends waiting in the READY QUEUE only. MINIMIZE. This is what scheduling algorithms directly control.
+5. Response Time: time from request until first response. MINIMIZE. Critical for interactive systems.
+
+Key insight: Waiting time only counts time in the ready queue, NOT time doing I/O or time actually executing. Scheduling can only directly affect waiting time.
 
 Key formulas:
-Turnaround Time = Completion Time − Arrival Time
-Waiting Time = Turnaround Time − Burst Time
-Response Time = Time of First CPU − Arrival Time
-Average values = sum / number of processes`,
+• Turnaround Time (TAT) = Completion Time − Arrival Time
+• Waiting Time (WT) = Turnaround Time − Burst Time = TAT − Burst
+• Alternatively: WT = Start Time − Arrival Time (for non-preemptive, simpler)
+• Response Time = Time of First CPU Assignment − Arrival Time
+• Average = sum / number of processes`,
     keyPoints: [
-      "CPU Utilization: maximize (keep CPU busy, range 40-90%)",
-      "Throughput: processes/second — maximize",
-      "Turnaround time: submission → completion — minimize",
-      "Waiting time: time in READY QUEUE only — minimize",
-      "Response time: first response time — minimize (for interactive systems)",
-      "Turnaround = Completion - Arrival",
-      "Waiting = Turnaround - Burst time",
-      "Scheduling only affects waiting time (not I/O time)",
+      "CPU Utilization: MAXIMIZE (keep CPU busy, target 40-90%)",
+      "Throughput: processes/second — MAXIMIZE",
+      "Turnaround time: submission → completion — MINIMIZE",
+      "Waiting time: time in READY QUEUE only — MINIMIZE",
+      "Response time: first response — MINIMIZE (for interactive)",
+      "WT = TAT − Burst. TAT = Completion − Arrival.",
+      "Scheduling ONLY directly affects waiting time",
+      "Response time matters for interactive, TAT matters for batch",
     ],
     formula: {
       code: `Key Formulas:
-  Turnaround Time = Completion Time − Arrival Time
-  Waiting Time    = Turnaround Time − Burst Time
-                  = Completion Time − Arrival Time − Burst Time
-  Response Time   = First CPU Time − Arrival Time
+  TAT (Turnaround Time) = Completion − Arrival
+  WT  (Waiting Time)    = TAT − Burst
+                        = Completion − Arrival − Burst
+  Response Time         = First CPU Time − Arrival
 
-Example: P1 arrives at 0, burst=10, finishes at 15
-  Turnaround = 15 − 0 = 15
-  Waiting    = 15 − 10 = 5  (waited 5ms in ready queue)
-  Response   = time first got CPU − 0
+Example: P1 arrives at 0, burst=8, starts at 5, finishes at 13
+  TAT = 13 − 0 = 13ms
+  WT  = 13 − 8 = 5ms  (waited 5ms in ready queue)
+  Response = 5 − 0 = 5ms
 
-Average Waiting Time Example (FCFS: P1=24, P2=3, P3=3):
-  P1: 0ms wait. P2: 24ms wait. P3: 27ms wait.
-  Avg = (0+24+27)/3 = 17ms
+Average example (3 processes):
+  P1: WT=0, P2: WT=24, P3: WT=27
+  Avg WT = (0 + 24 + 27) / 3 = 17ms
 
-Optimization Goals:
-  MAX: CPU utilization, throughput
-  MIN: turnaround, waiting, response time`,
-      explanation: "Waiting time = turnaround − burst. It measures only time spent idle in queue, not running or doing I/O.",
+MAXIMIZE: CPU utilization, Throughput
+MINIMIZE: Turnaround Time, Waiting Time, Response Time`,
+      explanation: "WT = TAT − Burst. It measures only time spent IDLE in queue, not running or doing I/O.",
     },
     examTips: [
       "Maximize: CPU utilization + throughput. Minimize: turnaround + waiting + response.",
-      "Waiting = Turnaround − Burst time. Turnaround = Completion − Arrival.",
-      "Scheduling ONLY affects waiting time (not I/O wait time or actual execution time)",
-      "Response time: for interactive systems. Turnaround: for batch systems.",
+      "WT = TAT − Burst. TAT = Completion − Arrival. Know these cold.",
+      "Scheduling ONLY affects waiting time (not I/O wait time or execution time)",
+      "Response time: for interactive. TAT: for batch. Different priorities.",
     ],
     questions: [
-      { q: "Calculate turnaround and waiting time: P1 arrives at t=0, burst=8. Starts at t=5, finishes at t=13.", a: "Turnaround = 13 - 0 = 13ms. Waiting = 13 - 8 = 5ms (or: started at 5, arrived at 0, so waited 5ms in ready queue before first getting CPU)." },
-      { q: "What is the difference between waiting time and response time?", a: "Waiting time = total time spent waiting in the ready queue across all time slices (complete execution). Response time = time from submission until the FIRST response is produced (first time process gets CPU). For batch systems, minimize turnaround/waiting. For interactive systems, minimize response time." },
+      { q: "Calculate TAT and WT: P1 arrives t=0, burst=8, starts at t=5, finishes at t=13.", a: "TAT = Completion − Arrival = 13 − 0 = 13ms. WT = TAT − Burst = 13 − 8 = 5ms. (Alternatively: WT = Start − Arrival = 5 − 0 = 5ms — same answer for non-preemptive.)" },
+      { q: "What is the difference between waiting time and response time?", a: "Waiting time = TOTAL time spent waiting in the ready queue across ALL time slices (for the entire execution). Response time = time from submission until the FIRST response (first time process gets CPU). For batch systems, minimize turnaround/waiting. For interactive systems, minimize response time. In non-preemptive scheduling, these are equal (only one time slice). In preemptive (like RR), waiting time > response time." },
     ],
   },
 
   "preemptive-dispatcher": {
     title: "Preemptive Scheduling & Dispatcher", emoji: "🚦",
-    tldr: "Preemptive: OS can take CPU away. Non-preemptive: process keeps CPU until done/blocked. Dispatcher latency = time to perform context switch.",
-    explanation: `CPU scheduling decisions occur when:
-1. Process switches from running → waiting (e.g., I/O request) — NON-preemptive
-2. Process switches from running → ready (e.g., timer interrupt) — PREEMPTIVE
-3. Process switches from waiting → ready (e.g., I/O completion) — PREEMPTIVE
+    tldr: "Preemptive: OS can forcibly take CPU. Non-preemptive: process keeps CPU until done/blocked. Dispatcher performs context switch.",
+    explanation: `CPU scheduling decisions occur at 4 points:
+1. Process switches from Running → Waiting (e.g., I/O request) — NON-preemptive
+2. Process switches from Running → Ready (e.g., timer interrupt) — PREEMPTIVE
+3. Process switches from Waiting → Ready (e.g., I/O completion) — PREEMPTIVE
 4. Process terminates — NON-preemptive
 
-Cases 1 and 4: non-preemptive (process voluntarily gives up CPU).
-Cases 2 and 3: preemptive (OS forcibly takes CPU from process).
+Non-preemptive scheduling: once CPU allocated, process keeps it until it terminates or blocks. Simple, no race conditions. Problem: long processes block short ones (convoy effect).
 
-Non-preemptive scheduling: once CPU allocated, process keeps it until it terminates or waits. Simpler, no race conditions from preemption. Used in early Windows (3.x). Problem: long processes block short ones.
+Preemptive scheduling: OS can forcibly take CPU at any time. Required for modern interactive systems. Risk: race conditions if shared data is being modified when preempted. Solution: mutex locks to protect shared kernel data.
 
-Preemptive scheduling: OS can take CPU away at any time. More complex (race conditions possible when shared data is being updated). Used in modern OSes (Windows 95+, Linux, macOS). Requires mutex locks to protect shared kernel data.
-
-Dispatcher: the module that actually gives the CPU to the selected process. Does:
+Dispatcher: the module that ACTUALLY gives CPU to the selected process. Three actions:
 1. Context switch (save old state, load new state)
-2. Switch to user mode
+2. Switch to user mode (mode bit 0→1)
 3. Jump to correct location in user program
 
-Dispatch latency = time dispatcher takes to stop one process and start another. Must be minimized.`,
+Dispatch latency = time dispatcher takes to stop one process and start another. Must be minimized — it's pure overhead.
+
+Scheduler vs Dispatcher: Scheduler DECIDES who runs next. Dispatcher EXECUTES the switch.`,
     keyPoints: [
-      "Non-preemptive (4 conditions 1+4): process gives up CPU voluntarily",
+      "Non-preemptive (conditions 1+4): process gives up CPU voluntarily",
       "Preemptive (conditions 2+3): OS forcibly reclaims CPU",
-      "Cases 1 (running→waiting) + 4 (terminate): always non-preemptive",
-      "Cases 2 (running→ready) + 3 (waiting→ready): preemptive",
       "Non-preemptive: simpler, no race conditions. Problem: convoy effect",
       "Preemptive: requires mutex locks for shared data. Used in modern OSes.",
       "Dispatcher: does context switch + mode switch + jump to user program",
-      "Dispatch latency: time to switch processes. Must be minimized.",
+      "Dispatch latency: time to switch processes. PURE overhead. Minimize it.",
+      "Scheduler = DECIDES. Dispatcher = EXECUTES the switch.",
     ],
     formula: {
       code: `4 Scheduling Decision Points:
-  1. running → waiting   (I/O request)      → NON-PREEMPTIVE
-  2. running → ready     (timer interrupt)  → PREEMPTIVE
-  3. waiting → ready     (I/O complete)     → PREEMPTIVE
-  4. terminates                              → NON-PREEMPTIVE
+  1. Running → Waiting   (I/O request)     → NON-PREEMPTIVE
+  2. Running → Ready     (timer interrupt) → PREEMPTIVE
+  3. Waiting → Ready     (I/O complete)   → PREEMPTIVE
+  4. Terminates                            → NON-PREEMPTIVE
 
-Dispatch Latency Timeline:
-  [Process P1 running]
-   ← dispatcher saves P1 context →
-   ← dispatcher loads P2 context →
-  [Process P2 running]
-  ←── dispatch latency ──→ (pure overhead!)
+Preemption Risk:
+  P1: reading shared_counter = ... (halfway)
+  Timer fires → P1 preempted!
+  P2: reads shared_counter → CORRUPT/STALE value!
+  Fix: mutex lock BEFORE reading shared data
 
-Preemption Race Condition:
-  P1: reading shared_var (halfway through)
-  Timer fires → P1 preempted
-  P2: reads shared_var → gets PARTIAL/CORRUPT data!
-  Solution: mutex lock before reading shared_var`,
-      explanation: "Dispatcher ≠ scheduler. Scheduler DECIDES. Dispatcher EXECUTES the switch.",
+Dispatch Latency:
+  [P1 running] → [save P1 ctx] → [load P2 ctx] → [P2 running]
+                 ←────────── dispatch latency ──────────→
+                 (pure overhead — no useful work!)`,
+      explanation: "Preemptive = OS can interrupt. Non-preemptive = process decides when to yield. Modern OSes = preemptive.",
     },
     examTips: [
       "Non-preemptive: running→waiting (I/O) and terminate. These 2 ONLY.",
-      "Preemptive: running→ready (timer) and waiting→ready (I/O done). These 2.",
+      "Preemptive: running→ready (timer) and waiting→ready (I/O done).",
       "Dispatcher ≠ scheduler. Scheduler picks. Dispatcher does the switch.",
-      "Dispatch latency = overhead. Minimize it.",
-      "Preemptive scheduling needs mutex locks for shared kernel data",
+      "Dispatch latency = overhead. Must minimize.",
     ],
     questions: [
-      { q: "What are the 4 conditions under which scheduling decisions are made? Which are preemptive?", a: "1. Running→Waiting: I/O request (NON-preemptive). 2. Running→Ready: timer interrupt (PREEMPTIVE). 3. Waiting→Ready: I/O completion (PREEMPTIVE). 4. Terminates (NON-preemptive). Cases 1 and 4 are non-preemptive. Cases 2 and 3 are preemptive." },
+      { q: "What are the 4 conditions for scheduling? Which are preemptive?", a: "1. Running→Waiting: I/O request (NON-preemptive — process voluntarily blocks). 2. Running→Ready: timer interrupt (PREEMPTIVE — OS forcibly takes CPU). 3. Waiting→Ready: I/O completion (PREEMPTIVE — can displace current process). 4. Terminates (NON-preemptive — process done voluntarily). Cases 1 and 4 are non-preemptive. Cases 2 and 3 are preemptive." },
     ],
   },
 
   "fcfs-sched": {
-    title: "FCFS Scheduling", emoji: "🚂",
-    tldr: "First Come First Served = non-preemptive FIFO. Simple but suffers convoy effect. Average waiting time highly variable.",
-    explanation: `FCFS (First Come, First Served): the simplest scheduling algorithm. Processes are assigned the CPU in the order they arrive. Implemented with a FIFO queue. Non-preemptive — once a process starts, it runs to completion.
+    title: "FCFS — First Come First Served", emoji: "🚶",
+    tldr: "FCFS: non-preemptive FIFO. Simple but suffers convoy effect. Short processes stuck behind long ones.",
+    explanation: `FCFS (First Come, First Served): The simplest scheduling algorithm. Processes are served in the order they arrive. Implemented with a basic FIFO queue.
 
-Convoy Effect: a short process gets stuck waiting behind a long process. Example: one CPU-bound process + many I/O-bound processes. CPU-bound hogs CPU → I/O-bound processes wait → I/O devices go idle → when I/O-bound finally gets CPU, it quickly goes to I/O → CPU now idle. Very inefficient.
+Non-preemptive: once a process starts, it runs until completion (or I/O block). No time quantum.
 
-FCFS Example:
-Processes arrive in order P1(24ms), P2(3ms), P3(3ms):
-Order: P1→P2→P3. Waits: P1=0, P2=24, P3=27. Avg wait = 17ms.
+Convoy Effect (major problem): If a long process arrives first, all shorter processes must wait behind it. This dramatically increases average waiting time.
 
-If arrival order is P2, P3, P1:
-Order: P2→P3→P1. Waits: P2=0, P3=3, P1=6. Avg wait = 3ms.
+Example: P1 arrives first with burst=24. P2 and P3 have burst=3 each.
+• In order P1→P2→P3: P2 waits 24ms, P3 waits 27ms. Avg WT = 17ms.
+• In order P2→P3→P1: P2 waits 0, P3 waits 3. Avg WT = 3ms!
 
-Same processes, very different waiting times — FCFS is highly dependent on arrival order. Not suitable for time-sharing systems where response time matters.`,
+The same processes, different arrival order → huge difference in wait time.
+
+Not suitable for time-sharing systems (terrible response time for short processes). Works OK for batch systems where all jobs arrive at once and order doesn't matter much.`,
     keyPoints: [
-      "FCFS = FIFO queue. Non-preemptive. Simplest algorithm.",
-      "Process keeps CPU until it terminates or waits for I/O.",
-      "Convoy effect: short process stuck behind long process",
-      "Average waiting time HIGHLY variable — depends on arrival order",
-      "Not suitable for timesharing systems",
-      "P1=24, P2=3, P3=3 arriving in P1,P2,P3 order: avg wait = 17ms",
-      "Same processes arriving P2,P3,P1: avg wait = 3ms (5.7× better!)",
+      "FCFS: non-preemptive FIFO. Process served in arrival order.",
+      "Convoy effect: short processes stuck behind long ones",
+      "Average WT can be dramatically reduced by reordering",
+      "Not suitable for time-sharing (poor response time)",
+      "Simple to implement. No starvation (every process eventually runs).",
     ],
     formula: {
-      code: `FCFS Example 1: P1=24, P2=3, P3=3 (arrive in order)
-  Gantt: |P1        |P2 |P3 |
-          0         24  27  30
-  
-  Waiting: P1=0, P2=24-0=24, P3=27-0=27
-  Avg wait = (0+24+27)/3 = 17ms  ← BAD
+      code: `FCFS Solved Problem:
+  P1 (burst=24), P2 (burst=3), P3 (burst=3). All arrive t=0.
 
-FCFS Example 2: P2=3, P3=3, P1=24 (arrive in order)
-  Gantt: |P2|P3|P1        |
-          0  3  6          30
-  
-  Waiting: P2=0, P3=3, P1=6
-  Avg wait = (0+3+6)/3 = 3ms  ← MUCH BETTER
+  Gantt: | P1 (0────24) | P2 (24──27) | P3 (27──30) |
 
-Convoy Effect:
-  [P1: CPU-bound 100ms] → [P2: 2ms] → [P3: 2ms] → [P4: 2ms]
-   P2, P3, P4 all wait 100ms for P1 to finish
-   During that 100ms: I/O devices IDLE (P2,P3,P4 can't go to I/O)`,
-      explanation: "Convoy = long job creates a train of waiting short jobs. Kills both CPU and I/O utilization.",
+  Process │ Burst │ Arrival │ Completion │ TAT (C-A) │ WT (TAT-Burst)
+  ──────────────────────────────────────────────────────────────────
+    P1    │  24   │    0    │     24     │    24     │      0
+    P2    │   3   │    0    │     27     │    27     │     24
+    P3    │   3   │    0    │     30     │    30     │     27
+
+  Avg TAT = (24+27+30)/3 = 27ms
+  Avg WT  = (0+24+27)/3  = 17ms
+
+  ⚠ CONVOY EFFECT: P2 and P3 (tiny jobs) wait 24ms and 27ms
+    behind P1 (huge job).
+
+  If order were P2→P3→P1:
+  | P2 (0─3) | P3 (3─6) | P1 (6─30) |
+  WT: P2=0, P3=3, P1=6 → Avg WT = (0+3+6)/3 = 3ms ← MUCH BETTER!`,
+      explanation: "FCFS: simple but convoy effect kills performance. Same processes, different order = 17ms vs 3ms average wait.",
     },
     examTips: [
-      "FCFS is non-preemptive — no preemption ever",
-      "Convoy effect: short processes stuck behind long ones",
-      "FCFS bad for time-sharing (response time too high)",
-      "Average wait = sum of waits / n. Remember the formulas.",
+      "FCFS: non-preemptive FIFO. Convoy effect = main problem.",
+      "Convoy effect: long process blocks all shorter processes behind it",
+      "No preemption means once P1 starts, P2 and P3 MUST wait",
     ],
     questions: [
-      { q: "What is the convoy effect in FCFS scheduling?", a: "The convoy effect occurs when short processes are stuck waiting behind a long CPU-bound process. The long process monopolizes the CPU, causing I/O devices to become idle (the short I/O-bound processes can't run). When the short processes finally get the CPU, they quickly go to I/O and the CPU sits idle. This severely reduces system efficiency." },
-      { q: "P1=6ms, P2=8ms, P3=7ms, P4=3ms arrive at t=0. Calculate FCFS average waiting time.", a: "Order: P1,P2,P3,P4. Waits: P1=0, P2=6, P3=14, P4=21. Avg = (0+6+14+21)/4 = 41/4 = 10.25ms." },
+      { q: "What is the convoy effect in FCFS scheduling?", a: "The convoy effect occurs when a long CPU-bound process arrives first and all shorter processes must queue behind it. Example: P1 (burst=24) arrives at t=0, then P2 (burst=3) and P3 (burst=3). P2 and P3 wait 24ms and 27ms respectively — causing avg WT=17ms. If the order were reversed (P2→P3→P1), avg WT = 3ms. The 'convoy' of short processes follows the 'slow truck' (long process) and can't pass. FCFS is non-preemptive, so there's no way to skip ahead." },
     ],
   },
 
   "sjf-srtf": {
     title: "SJF & SRTF Scheduling", emoji: "⚡",
-    tldr: "SJF: schedule shortest burst first. OPTIMAL average wait. SRTF = preemptive SJF. Burst predicted by exponential averaging: τ(n+1) = α·t(n) + (1-α)·τ(n).",
-    explanation: `Shortest Job First (SJF): associate each process with the length of its next CPU burst. Schedule the process with the shortest burst next. SJF is provably OPTIMAL — gives minimum average waiting time for a given set of processes.
+    tldr: "SJF: non-preemptive, run shortest burst first = optimal avg WT. SRTF: preemptive SJF, preempt if new arrival has shorter remaining time.",
+    explanation: `SJF (Shortest Job First) — Non-preemptive:
+Schedules the process with the shortest NEXT CPU burst first. OPTIMAL — provably minimizes average waiting time among all non-preemptive algorithms. Problem: burst length must be ESTIMATED (can't know future). Solution: exponential averaging.
 
-Problem: can't know the exact next CPU burst length in advance. Solution: PREDICT it using exponential averaging of past bursts.
+Exponential Averaging: τ(n+1) = α × t(n) + (1−α) × τ(n)
+• t(n) = actual nth burst length (measured after it runs)
+• τ(n) = predicted nth burst length
+• α = 0.5 is common (equal weight to recent and history)
+• As α→1: recent history dominates. As α→0: all history equally weighted.
 
-Exponential Averaging Formula:
-τ(n+1) = α × t(n) + (1-α) × τ(n)
-- τ(n+1): predicted next burst
-- t(n): actual last burst (most recent data)
-- τ(n): previous prediction (history)
-- α: weight (0 < α ≤ 1). Typically α = 1/2.
+SRTF (Shortest Remaining Time First) — Preemptive SJF:
+At EVERY scheduling event (new arrival or process completion), compare the remaining time of the running process vs the new process's burst. If new is shorter → PREEMPT the current process and run the new one.
 
-If α=0: τ(n+1) = τ(n) — only history, recent data ignored.
-If α=1: τ(n+1) = t(n) — only most recent burst, history ignored.
+Key formula for SRTF: WT = Completion − Arrival − Burst
+(Because the process may run in multiple disconnected intervals)
 
-SRTF (Shortest Remaining Time First) = preemptive version of SJF. When a new process arrives with burst shorter than remaining time of current process → preempt and run new one.
-
-SJF Example: P1=6, P2=8, P3=7, P4=3. Avg wait = (3+16+9+0)/4 = 7ms. (vs FCFS: 10.25ms)
-
-SRTF Example: P1(0,8), P2(1,4), P3(2,9), P4(3,5). Avg wait = 6.5ms.`,
+Starvation is possible in both SJF and SRTF: long processes may never run if short ones keep arriving. Solution: Aging (increase priority over time).`,
     keyPoints: [
-      "SJF: schedule process with SHORTEST next CPU burst first",
-      "SJF is OPTIMAL — minimum average waiting time guaranteed",
-      "Problem: can't know next burst exactly → predict with exponential averaging",
-      "τ(n+1) = α·t(n) + (1-α)·τ(n). Typically α = 0.5",
-      "α=0: ignore recent. α=1: only recent burst counts.",
-      "SRTF = preemptive SJF. Preempt if new arrival has shorter remaining time.",
-      "SJF avg wait example: 7ms. FCFS same processes: 10.25ms.",
-      "Starvation possible in SJF — long processes may never run (solution: aging)",
+      "SJF: non-preemptive. Shortest burst runs first. Optimal avg WT.",
+      "SRTF: preemptive SJF. Preempt if new arrival has shorter REMAINING time.",
+      "Exponential averaging: τ(n+1) = α×t(n) + (1-α)×τ(n) — predicts next burst",
+      "α=0.5: equal weight to recent burst and historical average",
+      "SRTF key formula: WT = Completion − Arrival − Burst",
+      "Both SJF/SRTF: starvation possible for long processes",
+      "Aging solves starvation: gradually increase priority of waiting processes",
     ],
     formula: {
-      code: `SJF Example: P1=6, P2=8, P3=7, P4=3 (all arrive t=0)
-  Order: P4(3) → P1(6) → P3(7) → P2(8)
-  Gantt: |P4|P1     |P3      |P2      |
-          0  3       9       16       24
-  
-  Waiting: P4=0, P1=3, P3=9, P2=16
-  Avg wait = (0+3+9+16)/4 = 28/4 = 7ms  ← OPTIMAL
+      code: `SJF Solved Problem (all arrive t=0):
+  P1(b=6), P2(b=8), P3(b=7), P4(b=3)
+  SJF order: P4(3) → P1(6) → P3(7) → P2(8)
 
-Exponential Averaging (α=0.5):
-  Given past bursts: 6, 4, 6, 4 with τ0=6
-  τ1 = 0.5×6 + 0.5×6 = 6
-  τ2 = 0.5×4 + 0.5×6 = 5
-  τ3 = 0.5×6 + 0.5×5 = 5.5
-  τ4 = 0.5×4 + 0.5×5.5 = 4.75
+  Gantt: | P4(0──3) | P1(3──9) | P3(9──16) | P2(16──24) |
 
-SRTF Example: P1(arr=0,burst=8), P2(1,4), P3(2,9), P4(3,5)
-  t=0:  P1 starts (only process)
-  t=1:  P2 arrives. P2 remaining=4 < P1 remaining=7 → preempt P1
-  t=5:  P2 done. Check: P1=7, P3=9, P4=5 → P4 starts
-  t=10: P4 done. Check: P1=7, P3=9 → P1 starts
-  t=17: P1 done. P3 starts → finishes at t=26
-  
-  Waiting: P1=(10-1)=9, P2=(1-1)=0, P3=(17-2)=15, P4=(5-3)=2
-  Avg = (9+0+15+2)/4 = 26/4 = 6.5ms`,
-      explanation: "SRTF: compare NEW arrival's burst with REMAINING time of current process (not original burst).",
+  P4: WT=0-0=0   P1: WT=3-0=3   P3: WT=9-0=9   P2: WT=16-0=16
+  Avg WT = (0+3+9+16)/4 = 7ms  (FCFS gives 10.25ms!)
+
+─────────────────────────────────────────────
+SRTF Solved Problem #1:
+  P1(a=0,b=8), P2(a=1,b=4), P3(a=2,b=9), P4(a=3,b=5)
+
+  t=0: Only P1 → run P1. rem=8.
+  t=1: P2(4) arrives. P1 rem=7. 4<7 → PREEMPT P1, run P2.
+  t=2: P3(9) arrives. P2 rem=3. 9>3 → P2 continues.
+  t=3: P4(5) arrives. P2 rem=2. 5>2 → P2 continues.
+  t=5: P2 done. Ready: P1(7), P3(9), P4(5). Min=P4 → run P4.
+  t=10: P4 done. Ready: P1(7), P3(9). Run P1.
+  t=17: P1 done. Run P3. Finishes t=26.
+
+  Gantt: |P1(0-1)|P2(1-5)|P4(5-10)|P1(10-17)|P3(17-26)|
+
+  P1: WT = 17-0-8 = 9    P2: WT = 5-1-4 = 0
+  P3: WT = 26-2-9 = 15   P4: WT = 10-3-5 = 2
+  Avg WT = (9+0+15+2)/4 = 6.5ms
+
+─────────────────────────────────────────────
+SRTF Solved Problem #2:
+  A(a=0,b=9), B(a=1,b=8), C(a=2,b=6), D(a=4,b=4)
+
+  t=0: A starts. rem=9.
+  t=1: B(8) arrives. A rem=8. Tie → A continues.
+  t=2: C(6) arrives. A rem=7. 6<7 → PREEMPT A, run C.
+  t=4: D(4) arrives. C rem=4. Tie → C continues.
+  t=8: C done. Ready: A(7), B(8), D(4). Min=D → run D.
+  t=12: D done. Ready: A(7), B(8). Run A.
+  t=19: A done. Run B. Finishes t=27.
+
+  Gantt: |A(0-2)|C(2-8)|D(8-12)|A(12-19)|B(19-27)|
+
+  A: TAT=19, WT=10   B: TAT=26, WT=18
+  C: TAT=6,  WT=0    D: TAT=8,  WT=4
+  Avg TAT = (19+26+6+8)/4 = 14.75ms
+  Avg WT  = (10+18+0+4)/4 = 8ms
+
+─────────────────────────────────────────────
+SRTF Solved Problem #3:
+  P1(a=3,b=4), P2(a=5,b=2), P3(a=0,b=2), P4(a=5,b=4), P5(a=4,b=2)
+
+  t=0: P3(2) starts. Finishes t=2. CPU IDLE t=2-3 (no process).
+  t=3: P1(4) arrives. Starts.
+  t=4: P5(2) arrives. P1 rem=3. 2<3 → PREEMPT P1, run P5.
+  t=5: P2(2), P4(4) arrive. P5 rem=1. Both>1 → P5 continues.
+  t=6: P5 done. Ready: P1(3), P2(2), P4(4). Min=P2 → run P2.
+  t=8: P2 done. Ready: P1(3), P4(4). Run P1.
+  t=11: P1 done. Run P4. Finishes t=15.
+
+  Gantt: |P3(0-2)|idle(2-3)|P1(3-4)|P5(4-6)|P2(6-8)|P1(8-11)|P4(11-15)|
+
+  P1: WT=4   P2: WT=1   P3: WT=0   P4: WT=6   P5: WT=0
+  Avg WT = (4+1+0+6+0)/5 = 2.2ms
+
+─────────────────────────────────────────────
+SRTF Solved Problem #4:
+  P1(a=2,b=6), P2(a=5,b=2), P3(a=1,b=8), P4(a=0,b=3), P5(a=4,b=4)
+
+  t=0: P4(3) starts.
+  t=1: P3(8) arrives. P4 rem=2. 8>2 → P4 continues.
+  t=2: P1(6) arrives. P4 rem=1. 6>1 → P4 continues.
+  t=3: P4 done. Ready: P3(8), P1(6). Min=P1 → run P1.
+  t=4: P5(4) arrives. P1 rem=5. 4<5 → PREEMPT P1, run P5.
+  t=5: P2(2) arrives. P5 rem=3. 2<3 → PREEMPT P5, run P2.
+  t=7: P2 done. Ready: P1(5), P3(8), P5(3). Min=P5 → run P5.
+  t=10: P5 done. Ready: P1(5), P3(8). Run P1.
+  t=15: P1 done. Run P3. Finishes t=23.
+
+  Gantt: |P4(0-3)|P1(3-4)|P5(4-5)|P2(5-7)|P5(7-10)|P1(10-15)|P3(15-23)|
+
+  P1: WT=7   P2: WT=0   P3: WT=14   P4: WT=0   P5: WT=2
+  Avg WT = (7+0+14+0+2)/5 = 4.6ms
+
+─────────────────────────────────────────────
+SRTF Solved Problem #5:
+  P1(a=0,b=20), P2(a=15,b=25), P3(a=30,b=10), P4(a=45,b=15)
+
+  t=0: P1 starts.
+  t=15: P2(25) arrives. P1 rem=5. 25>5 → P1 continues.
+  t=20: P1 done. Run P2(25).
+  t=30: P3(10) arrives. P2 rem=15. 10<15 → PREEMPT P2, run P3.
+  t=40: P3 done. P2 resumes (rem=15).
+  t=45: P4(15) arrives. P2 rem=10. 15>10 → P2 continues.
+  t=55: P2 done. Run P4. Finishes t=70.
+
+  Gantt: |P1(0-20)|P2(20-30)|P3(30-40)|P2(40-55)|P4(55-70)|
+
+  P1: WT=0    P2: WT=15 (preempted at t=30, resumed at t=40)
+  P3: WT=0    P4: WT=10
+  P2 waiting time = 15ms
+  Avg WT = (0+15+0+10)/4 = 6.25ms
+
+─────────────────────────────────────────────
+SJF Varying Arrivals:
+  P1(b=6,a=2), P2(b=2,a=5), P3(b=8,a=1), P4(b=3,a=0), P5(b=4,a=4)
+
+  t=0: Only P4 → run P4. Finishes t=3.
+  t=3: Available: P3(a=1,b=8), P1(a=2,b=6). Shortest=P1 → run P1. Fin t=9.
+  t=9: Available: P3(8), P2(a=5,b=2), P5(a=4,b=4). Shortest=P2 → run P2. Fin t=11.
+  t=11: Available: P3(8), P5(4). Shortest=P5 → run P5. Fin t=15.
+  t=15: Only P3 → run P3. Finishes t=23.
+
+  Gantt: |P4(0-3)|P1(3-9)|P2(9-11)|P5(11-15)|P3(15-23)|
+
+  P4: WT=0   P1: WT=1   P2: WT=4   P5: WT=7   P3: WT=14
+  Avg WT = (0+1+4+7+14)/5 = 5.2ms`,
+      explanation: "SRTF: at every arrival/completion, compare new burst with remaining time. Preempt if new is shorter. WT = Completion - Arrival - Burst.",
     },
     examTips: [
-      "SJF = OPTIMAL average waiting time (memorize this)",
-      "τ(n+1) = α·t(n) + (1-α)·τ(n). α=0.5 most common.",
-      "SRTF: compare new arrival with REMAINING time (not original burst)",
-      "SJF can starve long processes (solution: aging = increase priority over time)",
+      "SJF: optimal avg WT for non-preemptive. But needs burst prediction.",
+      "SRTF: preemptive SJF. Compare REMAINING time vs NEW arrival's burst.",
+      "SRTF WT formula: WT = Completion − Arrival − Burst",
+      "α=0.5 in exponential averaging = equal weight to recent and past history",
+      "SJF/SRTF: starvation possible. Aging = solution.",
     ],
     questions: [
-      { q: "Why is SJF considered optimal?", a: "SJF gives the minimum average waiting time for any given set of processes with the same arrival time. Moving a shorter burst before a longer one always reduces or maintains average waiting time. This can be proven mathematically — no other algorithm achieves a lower average waiting time than SJF for the same workload." },
-      { q: "Predict next burst: τ(n)=10, t(n)=6, α=0.5.", a: "τ(n+1) = 0.5 × 6 + 0.5 × 10 = 3 + 5 = 8ms." },
+      { q: "Why is SJF considered optimal?", a: "SJF gives the minimum average waiting time for any given set of processes. This can be proven mathematically: moving a shorter burst before a longer one always reduces or maintains the average waiting time. No other non-preemptive scheduling algorithm achieves a lower average WT for the same workload." },
+      { q: "Predict next CPU burst: τ(n)=10, t(n)=6, α=0.5.", a: "τ(n+1) = α × t(n) + (1-α) × τ(n) = 0.5 × 6 + 0.5 × 10 = 3 + 5 = 8ms." },
     ],
   },
 
   "priority-sched": {
     title: "Priority Scheduling", emoji: "👑",
-    tldr: "Each process has priority. Highest priority (lowest number) runs first. Problem: starvation. Solution: aging (increase priority over time).",
-    explanation: `Priority Scheduling: each process gets a priority number (integer). CPU is allocated to the process with the highest priority. Convention: LOWER number = HIGHER priority (priority 1 > priority 5).
+    tldr: "Lower number = higher priority. Problem: starvation (low-priority never runs). Solution: aging (increase priority over time).",
+    explanation: `Priority Scheduling: each process gets a priority integer. CPU allocated to the highest priority process. Convention: LOWER number = HIGHER priority (P=1 is higher than P=5).
 
 Can be preemptive or non-preemptive:
-Preemptive: if a new process arrives with higher priority than current, preempt immediately.
-Non-preemptive: new high-priority process waits until current process finishes or blocks.
+• Preemptive: if a higher-priority process arrives, immediately preempt the current
+• Non-preemptive: higher-priority process waits until current finishes or blocks
 
-SJF is a special case of priority scheduling where priority = inverse of predicted next CPU burst (shortest burst → highest priority).
+SJF is a special case: priority = 1 / burst_time (shortest burst → highest priority).
 
-Problem: Starvation (indefinite blocking). Low-priority processes may never execute if high-priority processes keep arriving. A process can wait indefinitely.
+Starvation (Indefinite Blocking): low-priority processes may NEVER execute if high-priority processes keep arriving. They can wait indefinitely in the ready queue.
 
-Solution: Aging. As time progresses, gradually increase the priority of waiting processes. Example: increase priority by 1 every 15 minutes. Eventually, even a low-priority process gets high enough priority to run.
-
-Example: P1(10ms, priority=3), P2(1ms, p=1), P3(2ms, p=4), P4(1ms, p=5), P5(5ms, p=2).
-Order: P2(1) → P5(2) → P1(3) → P3(4) → P4(5). Avg wait = 8.2ms.`,
+Solution — Aging: Gradually increase the priority of waiting processes as a function of their waiting time. Example: increase priority by 1 every 15 minutes of waiting. Eventually even a very low-priority process gets high enough priority to run.`,
     keyPoints: [
-      "Lower priority NUMBER = higher priority (P1 > P5)",
-      "Preemptive: higher-priority arrival preempts current. Non-preemptive: waits.",
+      "Lower priority NUMBER = higher priority (P=1 > P=5)",
+      "Preemptive: higher-priority arrival immediately preempts current",
+      "Non-preemptive: higher-priority process joins queue, waits for current to finish",
       "SJF = priority scheduling with priority = 1/burst_time",
       "Starvation: low-priority processes may NEVER execute",
-      "Aging: solution to starvation — increase priority with waiting time",
-      "Aging example: add 1 to priority every 15 minutes of waiting",
+      "Aging: increase priority with waiting time → prevents starvation",
     ],
     formula: {
-      code: `Priority Scheduling Example:
-  Process  Burst  Priority
-  P1       10     3
-  P2        1     1     ← highest priority
-  P3        2     4
-  P4        1     5     ← lowest priority
-  P5        5     2
-  
-  Order: P2→P5→P1→P3→P4
-  Gantt: |P2|P5    |P1          |P3  |P4|
-          0  1      6           16   18  19
-  
-  Waiting: P2=0, P5=1, P1=6, P3=16, P4=18
-  Avg wait = (0+1+6+16+18)/5 = 41/5 = 8.2ms
+      code: `Priority Scheduling Example (all arrive t=0):
+  P1(b=10,pri=3), P2(b=1,pri=1), P3(b=2,pri=4), P4(b=1,pri=5), P5(b=5,pri=2)
 
-Aging (starvation fix):
-  t=0:    P_lowpriority arrives at priority 40
-  t=15min: priority bumped to 39
-  t=30min: priority bumped to 38
+  Order (lowest number = highest priority): P2(1) → P5(2) → P1(3) → P3(4) → P4(5)
+
+  Gantt: |P2(0-1)|P5(1-6)|P1(6-16)|P3(16-18)|P4(18-19)|
+
+  P2: WT=0   P5: WT=1   P1: WT=6   P3: WT=16   P4: WT=18
+  Avg WT = (0+1+6+16+18)/5 = 41/5 = 8.2ms
+
+Aging Example (starvation fix):
+  t=0:    P_low arrives at priority 40
+  t=15min: bumped to priority 39
+  t=30min: bumped to priority 38
   ...
-  t=10hr: priority = 0 (highest!) → FINALLY gets CPU`,
-      explanation: "Lower number = higher priority. Aging prevents starvation by slowly promoting long-waiting processes.",
+  t=600min (10hrs): priority = 0 (highest!) → FINALLY runs
+  → No process waits forever!`,
+      explanation: "Lower number = higher priority. Aging prevents indefinite starvation by slowly promoting waiting processes.",
     },
     examTips: [
       "Lower number = higher priority. Priority 1 > priority 5.",
       "SJF is a special case of priority scheduling (priority = 1/burst)",
       "Starvation problem + aging solution — both always examinable together",
-      "Aging: increase priority as a function of wait time (prevent indefinite blocking)",
+      "Aging: increase priority as waiting time increases (prevent indefinite blocking)",
     ],
     questions: [
-      { q: "What is starvation in priority scheduling and how is it solved?", a: "Starvation: low-priority processes may wait indefinitely if high-priority processes keep arriving. They never get CPU time. Solution: Aging — as time passes, gradually increase the priority of waiting processes. Eventually, even a very low-priority process gets high enough priority to run." },
+      { q: "What is starvation in priority scheduling and how is it solved?", a: "Starvation: low-priority processes may wait indefinitely if high-priority processes keep arriving continuously. They never get CPU time, potentially waiting forever. Solution: Aging — as time passes, gradually increase the priority of waiting processes (e.g., boost priority by 1 every 15 minutes). Eventually, even a very low-priority process becomes the highest priority process and gets to run. No process waits indefinitely." },
     ],
   },
 
   "round-robin": {
     title: "Round Robin Scheduling", emoji: "🔃",
     tldr: "Preemptive FCFS with time quantum q. Each process gets ≤q time. Max wait = (n-1)×q. q too small → too many switches. q too large → like FCFS.",
-    explanation: `Round Robin (RR): designed for timesharing systems. Similar to FCFS but preemptive — each process gets a small unit of CPU time called a time quantum (or time slice), typically 10-100ms. The ready queue is treated as a circular queue. CPU scheduler goes around the queue, giving each process up to q time units.
+    explanation: `Round Robin (RR): designed for timesharing. Each process gets a small time quantum q (typically 10-100ms). Ready queue is circular. After using q time, process goes to the BACK of the queue. If it finishes before q expires, it releases CPU voluntarily.
 
-If process finishes within q: releases CPU voluntarily.
-If process doesn't finish within q: timer interrupt fires → process moved to END of ready queue.
-
-Performance:
-n processes, time quantum q: each process gets 1/n of CPU in chunks of ≤q units.
-Maximum wait = (n-1) × q (before getting CPU back).
-Example: 5 processes, q=20ms → each process gets up to 20ms every 100ms.
+Max wait time formula: (n-1) × q — each process waits at most (n-1) full quanta before it gets another turn.
 
 Effect of q size:
-q very large → same as FCFS (no preemption occurs).
-q very small → huge number of context switches (overhead dominates useful work).
-Rule of thumb: 80% of CPU bursts should be shorter than q.
-In practice: most modern systems use q = 10-100ms. Context switch ≈ 10μs (< 1% overhead).
+• q very large → same as FCFS (nobody gets preempted, all run to completion)
+• q very small → too many context switches (overhead dominates useful work!)
+• Rule of thumb: 80% of CPU bursts should be shorter than q
 
-RR Example: P1=24, P2=3, P3=3. q=4.
-Gantt: P1(4)→P2(3)→P3(3)→P1(4)→P1(4)→P1(4)→P1(4)→P1(4)
-Waits: P1=6, P2=4, P3=7. Avg = 5.67ms.`,
+RR has better response time than SJF but often worse turnaround time. No starvation — every process gets CPU in at most (n-1)×q time.
+
+Modern systems: q = 10-100ms. Context switch ≈ 10μs (< 1% overhead if q ≥ 10ms).`,
     keyPoints: [
       "RR: preemptive FCFS with time quantum q. Circular ready queue.",
       "Each process gets ≤ q time. If not done, goes to END of queue.",
@@ -1756,559 +2196,492 @@ Waits: P1=6, P2=4, P3=7. Avg = 5.67ms.`,
       "q too large = FCFS. q too small = too many context switches.",
       "80% of CPU bursts should be shorter than q (rule of thumb)",
       "Modern systems: q = 10-100ms. Context switch ≈ 10μs.",
-      "RR better response time than FCFS. Good for timesharing.",
-      "No starvation in RR (every process gets CPU eventually)",
+      "RR: no starvation. Good response time. Often worse TAT than SJF.",
     ],
     formula: {
       code: `RR Example: P1=24ms, P2=3ms, P3=3ms. q=4ms. All arrive t=0.
-  Gantt:
-  |P1(4)|P2(3)|P3(3)|P1(4)|P1(4)|P1(4)|P1(4)|P1(4)|
-   0     4    7    10    14    18    22    26    30
 
-  P2 finishes at t=7. P3 finishes at t=10. P1 finishes at t=30.
-  
-  Waiting times:
-  P1: ran at 0-4, 10-14, 14-18, 18-22, 22-26, 26-30
-      waited: 10-4=6ms  (time between 1st and 2nd burst)
-  P2: arrived t=0, got CPU at t=4 → waited 4ms
-  P3: arrived t=0, got CPU at t=7 → waited 7ms
-  Avg wait = (6+4+7)/3 = 17/3 = 5.67ms
+  t=0: P1 gets 4ms. rem=20. Queue: [P2, P3, P1]
+  t=4: P2 gets 3ms (DONE! < q). Queue: [P3, P1]
+  t=7: P3 gets 3ms (DONE! < q). Queue: [P1]
+  t=10: P1 gets 4ms. rem=16. Queue: [P1]
+  t=14: P1 gets 4ms. rem=12. ... (continues alone)
+  t=30: P1 finishes.
+
+  Gantt: |P1(4)|P2(3)|P3(3)|P1(4)|P1(4)|P1(4)|P1(4)|P1(4)|
+          0    4    7   10   14   18   22   26   30
+
+  P1: completion=30, WT = 30-24 = 6ms (ran from 0-4, then 10-30)
+  P2: completion=7,  WT = 7-3 = 4ms  (waited 0-4 = 4ms)
+  P3: completion=10, WT = 10-3 = 7ms (waited 0-7 = 7ms)
+  Avg WT = (6+4+7)/3 = 5.67ms
 
 Max wait formula:
-  n=5 processes, q=20ms
-  Max wait = (5-1) × 20 = 80ms before getting CPU again
+  n=5 processes, q=20ms → Max wait = (5-1)×20 = 80ms
 
 q size effect:
-  q=∞: same as FCFS (run to completion)
-  q=1ms: near-instantaneous switching = lots of overhead
-  q=10-100ms: practical sweet spot`,
-      explanation: "RR: fairness guaranteed (no starvation). Response time good. Turnaround may be worse than SJF.",
+  q = ∞:    FCFS (no preemption ever)
+  q = 1ms:  near-continuous switching = huge overhead
+  q = 10-100ms: practical sweet spot ✓`,
+      explanation: "RR: fairness guaranteed. Good response time. Turnaround may be worse than SJF but better than FCFS in interactive feel.",
     },
     examTips: [
       "Max wait = (n-1) × q — MEMORIZE this formula",
-      "RR turnaround: often worse than SJF but better response time",
+      "RR turnaround: often worse than SJF but response time much better",
       "q → ∞: behaves like FCFS. q → 0: processor sharing (overhead explosion).",
       "80% of bursts should be shorter than q (practical rule)",
       "RR = no starvation (every process gets CPU in at most (n-1)×q time)",
     ],
     questions: [
-      { q: "With n=4 processes and time quantum q=10ms, what is the maximum time a process waits before getting the CPU again?", a: "Max wait = (n-1) × q = (4-1) × 10 = 30ms. In the worst case, after using its quantum, a process must wait for all 3 other processes to each use their quantum before it gets another turn." },
-      { q: "What happens when the time quantum is set too small in Round Robin?", a: "Too many context switches occur. If q=1ms and context switch takes 1ms, then 50% of time is spent on context switching (overhead) and only 50% on actual work. The system overhead dominates useful computation. Response time appears fast but actual throughput plummets." },
+      { q: "With n=4 processes and time quantum q=10ms, what is the maximum wait time before a process gets the CPU again?", a: "Max wait = (n-1) × q = (4-1) × 10 = 30ms. After using its quantum, a process must wait for at most 3 other processes to each use their full quantum before it gets another turn." },
+      { q: "What happens when the time quantum is set too small in Round Robin?", a: "Too many context switches occur. If q=1ms and context switch takes 1ms, then 50% of time is spent on context switching (overhead) and only 50% on actual computation. The system overhead dominates useful work. Response time appears fast but actual throughput drops dramatically." },
     ],
   },
 
   "multilevel-q": {
-    title: "Multilevel & Feedback Queue Scheduling", emoji: "🏗️",
-    tldr: "MLQ: processes permanently assigned to queues. MLFQ: processes CAN MOVE between queues (aging). Best algorithm in practice.",
-    explanation: `Multilevel Queue (MLQ): ready queue partitioned into multiple separate queues based on process type. Each queue has its own scheduling algorithm. Scheduling must also be done between queues.
+    title: "Multilevel Queue & Feedback Queue", emoji: "📚",
+    tldr: "Multilevel Queue: permanent queues for different process types. MLFQ: processes CAN move between queues — allows aging and adaptation.",
+    explanation: `Multilevel Queue: Ready queue partitioned into multiple permanent sub-queues, each with its own scheduling algorithm.
 
-Typical queues (highest to lowest priority):
-1. System processes → RR
-2. Interactive (foreground) processes → RR  
-3. Interactive editing processes → RR
-4. Batch (background) processes → FCFS
-5. Student processes → FCFS
+Typical setup:
+• Foreground (interactive) processes → RR (good response time)
+• Background (batch) processes → FCFS (maximize throughput)
 
-Each queue has absolute priority over lower-priority queues. No batch process runs while any foreground process exists. Starvation possible for lower queues.
+Scheduling between queues:
+• Fixed priority: foreground always runs first (can starve background!)
+• Time slice: allocate fixed percentages (e.g., 80% foreground, 20% background)
 
-Time slicing between queues: e.g., 80% to foreground (RR), 20% to background (FCFS).
+Multilevel Feedback Queue (MLFQ) — the most flexible and general:
+Processes CAN MOVE BETWEEN QUEUES based on behavior. Allows aging (prevents starvation).
 
-Multilevel Feedback Queue (MLFQ): processes CAN MOVE between queues based on behavior. Aging implemented this way. Defined by: number of queues, scheduling per queue, upgrade criteria, downgrade criteria, entry queue rule.
+Classic 3-queue example:
+• Q0: RR with q=8ms (highest priority)
+• Q1: RR with q=16ms (medium priority)
+• Q2: FCFS (lowest priority)
 
-Classic example (3 queues):
-Q0: RR q=8ms. Q1: RR q=16ms. Q2: FCFS.
-New process → Q0. Gets 8ms. If doesn't finish → demoted to Q1 (gets 16ms). Still doesn't finish → demoted to Q2 (FCFS, runs until done).
-MLFQ = most general and most commonly used algorithm in practice.`,
+Rules:
+1. New job enters Q0
+2. If job uses full quantum in Q0 without finishing → demoted to Q1
+3. If job uses full quantum in Q1 without finishing → demoted to Q2
+4. Q0 has ABSOLUTE PRIORITY over Q1 and Q2. A Q0 arrival preempts even a running Q2 process.
+
+This naturally classifies processes: I/O-bound (short bursts → stays in Q0, good response), CPU-bound (long bursts → sinks to Q2 where FCFS is fine since they rarely interact).`,
     keyPoints: [
-      "MLQ: processes PERMANENTLY assigned to a queue. No movement.",
-      "Each queue has own algorithm (foreground=RR, background=FCFS)",
-      "MLQ: fixed priority between queues OR time slice (80/20%)",
-      "MLFQ: processes CAN MOVE between queues based on behavior",
-      "MLFQ: new process → highest queue. CPU-hungry → demoted down.",
-      "MLFQ 3 queues: Q0(RR,8ms) → Q1(RR,16ms) → Q2(FCFS)",
-      "MLFQ implements aging (long-waiting processes can move up)",
-      "MLFQ = most general scheduling algorithm. Used in practice.",
+      "Multilevel Queue: PERMANENT queues. Process assigned to one queue forever.",
+      "Different queues can have different scheduling algorithms",
+      "Between-queue scheduling: fixed priority OR time slice",
+      "Fixed priority multilevel queue: foreground can starve background",
+      "MLFQ: processes MOVE BETWEEN queues based on behavior",
+      "MLFQ Q0 (highest) → Q1 → Q2 (lowest). Demotion for using full quantum.",
+      "Q0 has absolute priority. Q0 arrival preempts any Q1/Q2 process.",
+      "MLFQ naturally adapts: I/O-bound stays high, CPU-bound sinks low",
     ],
     formula: {
-      code: `MLQ Structure:
-  Priority 1: [System processes] ── RR, q=4ms ──┐
-  Priority 2: [Interactive    ] ── RR, q=8ms ──┤ strict priority
-  Priority 3: [Batch          ] ── FCFS ────────┘
-  
-  No batch process runs while ANY interactive process exists.
-  
-  OR Time-slice: 80% CPU → foreground (RR)
-                 20% CPU → background (FCFS)
+      code: `MLFQ 3-Queue Example:
+  Q0: RR q=8ms  → Q1: RR q=16ms  → Q2: FCFS
 
-MLFQ Example (3 queues):
-  New process P arrives
-    ↓ enters Q0 (RR, q=8ms)
-  P uses 8ms, not done
-    ↓ DEMOTED to Q1 (RR, q=16ms)
-  P uses 16ms, still not done
-    ↓ DEMOTED to Q2 (FCFS, run to completion)
-  
-  Short interactive process: finishes in Q0 → fast response
-  Long CPU-bound process: ends up in Q2 → efficiency
-  
-  Q0 always preempts Q1.
-  Q1 always preempts Q2.
-  Process arrives in Q1 → preempts Q2 process immediately.`,
-      explanation: "MLFQ: short jobs stay in high-priority queues. Long CPU-hungry jobs fall to FCFS at bottom.",
+  New process enters Q0 (highest priority)
+  If uses full 8ms without finishing → moves to Q1
+  If uses full 16ms without finishing → moves to Q2
+  If Q0 arrivals: preempts EVERYTHING in Q1 and Q2
+
+MLFQ Solved Problem:
+  A process has burst=40ms. MLFQ: q=2 at Q0, incremented by 5 at each level.
+  Queue quanta: Q0(q=2), Q1(q=7), Q2(q=12), Q3(q=17), Q4(q=22)
+
+  Queue │ Quantum │ Burst Used │ Remaining │ Outcome
+  ──────────────────────────────────────────────────────
+    Q0  │    2   │      2     │    38     │ Interrupted → Q1
+    Q1  │    7   │      7     │    31     │ Interrupted → Q2
+    Q2  │   12   │     12     │    19     │ Interrupted → Q3
+    Q3  │   17   │     17     │     2     │ Interrupted → Q4
+    Q4  │   22   │      2     │     0     │ FINISHES in Q4!
+
+  Terminates in Q4. Interrupted 4 times (at end of Q0, Q1, Q2, Q3).
+
+RR Characteristics (used in Q0-Q3):
+  ✓ Fair time-sharing (preemptive, uses time quantum)
+  ✓ No starvation (every process gets CPU eventually)
+  ✓ Good response time for short CPU-burst processes
+  ✓ Higher overhead due to frequent context switches`,
+      explanation: "MLFQ naturally sorts: I/O-bound (short bursts) stays in high-priority queues. CPU-bound sinks to low-priority FCFS.",
     },
     examTips: [
-      "MLQ: permanent assignment. MLFQ: processes MOVE between queues.",
-      "MLFQ: new → high queue. Not finishing → demoted to lower queue.",
-      "MLFQ: Q0(8ms) → Q1(16ms) → Q2(FCFS) — this specific example is exam material",
-      "MLFQ defined by 5 parameters: #queues, algo per queue, upgrade/demote criteria, entry rule",
+      "Multilevel Queue: permanent assignment. MLFQ: can move between queues.",
+      "MLFQ Q0 has absolute priority over all lower queues.",
+      "Process demoted if it uses full quantum (CPU-bound behavior).",
+      "I/O-bound process: often finishes early → stays in Q0 → good response time.",
     ],
     questions: [
-      { q: "What is the key difference between MLQ and MLFQ?", a: "In MLQ (Multilevel Queue), processes are permanently assigned to a queue based on type (foreground/background) and never move. In MLFQ (Multilevel Feedback Queue), processes CAN move between queues based on their behavior — a CPU-hungry process gets demoted to lower priority, while a long-waiting process can be promoted (aging). MLFQ is more flexible and the most commonly used approach." },
+      { q: "What is the difference between Multilevel Queue and Multilevel Feedback Queue?", a: "Multilevel Queue: processes are permanently assigned to one queue based on their type (foreground vs background). They NEVER move between queues. Different queues use different algorithms. Risk: starvation of low-priority queues with fixed-priority scheduling.\n\nMultilevel Feedback Queue (MLFQ): processes CAN MOVE BETWEEN QUEUES based on their behavior. CPU-bound processes (use full quantum) are demoted to lower-priority queues. I/O-bound processes (short CPU bursts, release before quantum) stay in high-priority queues. Naturally adapts to process behavior and prevents starvation through aging." },
+      { q: "MLFQ solved problem: burst=40ms, Q0 starts at q=2, each level adds 5ms. In which queue does it terminate? How many interruptions?", a: "Queue quanta: Q0(2), Q1(7), Q2(12), Q3(17), Q4(22).\nQ0: uses 2ms, remaining 38ms → interrupted → goes to Q1\nQ1: uses 7ms, remaining 31ms → interrupted → goes to Q2\nQ2: uses 12ms, remaining 19ms → interrupted → goes to Q3\nQ3: uses 17ms, remaining 2ms → interrupted → goes to Q4\nQ4: uses 2ms, remaining 0ms → FINISHES in Q4!\n\nTerminates in Q4. Interrupted 4 times (once per queue Q0-Q3)." },
     ],
   },
 
   "multiproc-sched": {
-    title: "Multiple-Processor Scheduling", emoji: "🖧",
-    tldr: "SMP: each processor self-scheduling. AMP: one master schedules all. Common ready queue or per-CPU private queues.",
-    explanation: `With multiple CPUs, scheduling becomes more complex — but load sharing becomes possible.
+    title: "Multiprocessor Scheduling", emoji: "🖧",
+    tldr: "SMP: each CPU self-schedules from common or private ready queues. Asymmetric MP: master handles all scheduling (bottleneck).",
+    explanation: `Multiprocessor scheduling is more complex than single-CPU scheduling because multiple CPUs must be efficiently utilized.
 
-Asymmetric Multiprocessing (AMP) Scheduling: one master processor handles ALL scheduling decisions, I/O processing, and OS activities. Other processors execute only user code. Simple — only master accesses system data structures, no synchronization needed for scheduler.
+Asymmetric Multiprocessing (AMP): One master CPU handles all scheduling decisions and system activities. Other CPUs only execute user code. Simple but master becomes a bottleneck — doesn't scale well.
 
-Symmetric Multiprocessing (SMP) Scheduling: each processor is self-scheduling. Either: all processes in a single common ready queue (simple, but need synchronization/locking), OR each processor has its own private ready queue (complex, but no lock contention). All modern OSes support SMP.
+Symmetric Multiprocessing (SMP): Each processor self-schedules. All modern OSes. Two options:
+• Common ready queue: all CPUs share one queue. Requires locking (potential bottleneck but balanced load).
+• Private ready queues: each CPU has its own queue. No locking overhead but load imbalance possible.
 
-Scheduling approaches for SMP:
-1. Common ready queue: simple, load automatically balanced, but queue access needs locking.
-2. Per-processor private queues: each CPU has own queue, need load balancing mechanisms.
-
-Both approaches have tradeoffs — the common queue is simpler but has lock contention; private queues avoid contention but need explicit load balancing.`,
+Key challenges in SMP scheduling:
+1. Processor affinity (cache efficiency)
+2. Load balancing (fairness)
+3. NUMA (Non-Uniform Memory Access) awareness`,
     keyPoints: [
-      "AMP: one master handles all scheduling. Others run user code only.",
+      "Asymmetric MP: master handles all scheduling. Simple but bottleneck.",
       "SMP: each processor self-scheduling. All modern OSes use SMP.",
-      "SMP option 1: common ready queue (simple but needs locking)",
-      "SMP option 2: per-processor private queues (no lock contention, needs load balancing)",
-      "AMP: no data sharing problem. SMP: needs synchronization for shared queue.",
+      "Common ready queue: all CPUs share. Balanced but needs locking.",
+      "Private ready queues: no lock contention but possible imbalance.",
+      "Processor affinity: process prefers same CPU (cache still warm).",
+      "Load balancing: keep all CPUs equally busy.",
     ],
-    formula: {
-      code: `AMP Scheduling:
-  [Master CPU] ← handles all scheduler decisions
-  [CPU1, CPU2, CPU3] ← run user code, request work from master
-  Simple: no shared data structure contention
-
-SMP - Common Ready Queue:
-  ┌─────────────────────┐
-  │  Ready Queue        │  ← shared, needs mutex lock
-  └─────────────────────┘
-     ↓     ↓     ↓
-   CPU0  CPU1  CPU2
-  Any CPU pulls from queue. Auto-balanced but lock overhead.
-
-SMP - Private Queues:
-  CPU0: [P1][P2]    CPU1: [P3]    CPU2: [P4][P5][P6]
-  Fast (no locking) but CPU1 idle while CPU2 overloaded!
-  Need: load balancing (push/pull migration)`,
-      explanation: "Common queue = simple balance. Private queues = no contention but need explicit balancing.",
-    },
+    formula: null,
     examTips: [
-      "AMP: one master. SMP: all self-schedule. Modern OSes = SMP.",
-      "SMP common queue needs locking (bottleneck). Private queues need load balancing.",
-      "Both push and pull migration can happen simultaneously in SMP.",
+      "SMP = modern standard. AMP = outdated, master bottleneck.",
+      "Common queue = balanced load, lock overhead. Private = no lock, possible imbalance.",
+      "Processor affinity: cache stays warm = faster than migration.",
     ],
     questions: [
-      { q: "What are the two approaches for the ready queue in SMP scheduling?", a: "1. Common ready queue: all processors share one queue. Simple and automatically load-balanced, but accessing the queue requires locking which can become a bottleneck. 2. Per-processor private queues: each processor has its own queue. No lock contention but requires explicit load balancing (push/pull migration) to prevent some CPUs from being idle while others are overloaded." },
+      { q: "Why is processor affinity important in SMP scheduling?", a: "When a process runs on CPU 0, it populates CPU 0's cache with its data. If the process migrates to CPU 1, it must rebuild the cache from scratch (cache miss overhead). Processor affinity keeps the process on the same CPU so its warm cache improves performance significantly. Soft affinity = OS tries to maintain but may migrate. Hard affinity = system call to force specific CPU." },
     ],
   },
 
   "affinity-loadbal": {
-    title: "Processor Affinity & Load Balancing", emoji: "🧲",
-    tldr: "Affinity: keep process on same CPU (cache warm). Soft affinity = try. Hard affinity = force. Load balancing: push (periodic check) or pull (idle CPU steals).",
-    explanation: `Processor Affinity:
-When a process runs on CPU0, the data it accesses gets cached in CPU0's cache. If the process migrates to CPU1, CPU0's cache must be invalidated and CPU1's cache repopulated — expensive!
+    title: "Processor Affinity & Load Balancing", emoji: "⚖️",
+    tldr: "Affinity: keep process on same CPU for cache warmth. Load balancing: spread work evenly — push migration (overloaded pushes) or pull migration (idle pulls).",
+    explanation: `Processor Affinity: Keep a process running on the same processor to avoid the cost of cache invalidation.
 
-To avoid this: OSes try to keep a process on the same CPU (processor affinity). The process's data stays warm in that CPU's cache.
+When a process migrates from CPU A to CPU B:
+1. CPU B's cache has no data from this process
+2. Every memory access = cache miss (slow!)
+3. Must fetch all data from main memory
 
-Soft Affinity: OS tries to keep process on same processor but may migrate if necessary (e.g., for load balancing). No guarantee.
-Hard Affinity: process specifies a subset of CPUs it must run on via system call. OS guarantees no migration outside that set.
+Soft affinity: OS attempts to keep process on same CPU but can migrate if needed (Linux default).
+Hard affinity: Process specifies which CPUs it's allowed to run on via a system call (sched_setaffinity() in Linux). OS MUST respect this.
 
-Load Balancing:
-On SMP systems with per-CPU private queues, load balancing keeps work distributed evenly. Necessary to prevent idle CPUs while others are overloaded.
+Load Balancing: Keep workload evenly distributed across all processors to maximize utilization.
 
-Push Migration: a dedicated task periodically checks load on each processor. If imbalanced, it pushes processes from overloaded CPUs to idle/less-busy CPUs.
+Two migration strategies:
+• Push migration: a periodic task checks load on all processors. If one is overloaded, it PUSHES processes from the overloaded CPU to idle/lighter ones.
+• Pull migration: an idle processor actively PULLS processes from another CPU's ready queue.
 
-Pull Migration: when a CPU becomes idle, it pulls (steals) a waiting process from another busy CPU.
+Both can be used simultaneously (Linux does both).
 
-Push and pull migration are NOT mutually exclusive — both can operate simultaneously.`,
+NUMA (Non-Uniform Memory Access): In systems with multiple memory banks, some CPUs have faster access to certain memory regions. NUMA-aware scheduling allocates both memory AND the CPU close to it for even better performance.`,
     keyPoints: [
-      "Processor affinity: keep process on same CPU to preserve cache warmth",
-      "Cache migration cost: invalidate old cache + repopulate new cache (expensive)",
-      "Soft affinity: OS tries but can migrate (no guarantee)",
-      "Hard affinity: system call specifies which CPUs process may use (guaranteed)",
-      "Load balancing: distribute work evenly across all CPUs in SMP",
-      "Push migration: periodic task checks and pushes work from overloaded CPUs",
-      "Pull migration: idle CPU pulls tasks from busy CPUs",
-      "Push and pull can work simultaneously (not mutually exclusive)",
+      "Processor affinity: keep process on same CPU for cache efficiency",
+      "Soft affinity: OS tries, but may migrate. Hard affinity: must obey.",
+      "Load balancing: keep all CPUs equally busy",
+      "Push migration: overloaded CPU pushes excess to idle CPUs",
+      "Pull migration: idle CPU pulls processes from busy CPUs",
+      "Linux uses both push and pull migration",
+      "NUMA: CPU has faster access to 'nearby' memory banks",
     ],
-    formula: {
-      code: `Processor Affinity Example:
-  Process P running on CPU0
-    → P's data in CPU0 cache (L1/L2/L3)
-  Migrate P to CPU1:
-    → CPU0 cache: invalidate P's data (wasted!)
-    → CPU1 cache: reload P's data from RAM (slow!)
-  Keep P on CPU0 (affinity):
-    → Cache stays warm → fast memory access!
-
-Soft vs Hard Affinity:
-  Soft: OS "tries" to keep P on CPU0
-        But load balancer may move P to CPU1 if needed
-  Hard: sched_setaffinity(pid, cpumask={CPU0,CPU1})
-        P will ONLY run on CPU0 or CPU1, guaranteed
-
-Load Balancing Methods:
-  Push: every 200ms, checker task runs:
-        CPU0: 8 processes (overloaded)
-        CPU1: 0 processes (idle)
-        → push 4 processes from CPU0 to CPU1
-
-  Pull: CPU1 becomes idle
-        → steal 2 processes from CPU0's queue
-        → immediate response to idleness`,
-      explanation: "Affinity vs load balance = tension: affinity wants to stay put, load balance wants to move. OS balances both.",
-    },
+    formula: null,
     examTips: [
-      "Soft affinity: OS tries, no guarantee. Hard affinity: system call, guaranteed.",
-      "Cache warm = process stays on same CPU. Migration = cold cache = slow.",
-      "Push: checker pushes FROM overloaded. Pull: idle CPU pulls TO itself.",
-      "Push and pull can operate simultaneously (both at once is fine).",
+      "Processor affinity = cache warmth = performance. Migration = cache miss = slowdown.",
+      "Push vs pull migration: push = overloaded CPU acts. Pull = idle CPU acts.",
+      "Hard affinity: sched_setaffinity() in Linux — process controls which CPUs it runs on.",
     ],
     questions: [
-      { q: "What is the difference between soft and hard processor affinity?", a: "Soft affinity: the OS attempts to keep a process running on the same processor, but it is possible for the process to migrate between processors (e.g., if load balancing requires it). Hard affinity: the process uses a system call to specify a subset of processors it is allowed to run on. The OS guarantees the process will never be scheduled outside that subset." },
+      { q: "What is the difference between push and pull migration in load balancing?", a: "Push migration: a periodic kernel task examines load on all processors. When it finds an imbalance, it pushes processes from the overloaded CPU to idle or less loaded ones. The overloaded CPU is the initiator. Pull migration: when a CPU becomes idle, it looks at other CPUs' ready queues and pulls a process from the busiest one. The idle CPU is the initiator. Linux uses both strategies simultaneously for effective load balancing." },
     ],
   },
 
   "linux-cfs": {
-    title: "Linux CFS Scheduler", emoji: "🐧",
-    tldr: "CFS: proportional CPU time via nice values (-20 to +19). vruntime per task. Lowest vruntime = next to run. Red-black tree. O(log N).",
-    explanation: `Linux CFS (Completely Fair Scheduler) — default since kernel 2.6.23.
+    title: "Linux CFS & Windows Scheduling", emoji: "🐧",
+    tldr: "Linux CFS: uses red-black tree keyed by vruntime. Process with lowest vruntime runs next. Windows: 32-level priority, preemptive, foreground gets 3× boost.",
+    explanation: `Linux Scheduling — History:
+• Pre-2.5: original Unix scheduling. No SMP support, poor scalability.
+• 2.5: O(1) scheduler. SMP support. Poor interactive response.
+• 2.6.23+: CFS (Completely Fair Scheduler). Default today.
 
-CFS assigns proportional CPU time based on nice values (-20 = highest priority, +19 = lowest). Nice value controls how much CPU time each task gets relative to others.
+CFS Key Concepts:
+• Based on scheduling classes with different priorities
+• Allocates CPU proportionally based on nice value (−20 to +19; lower = higher priority)
+• Target latency: the interval in which every runnable task should run at least once
+• Virtual runtime (vruntime): tracks how much CPU time each task has received. Lower priority → vruntime grows FASTER (penalized for running). Scheduler always picks task with LOWEST vruntime.
+• Tasks stored in red-black tree keyed by vruntime. O(log N) to find next task.
+• I/O-bound tasks: sleep often → accumulate low vruntime → higher effective priority → better interactivity!
+• Real-time tasks: static priorities 0-99 (always above normal tasks)
 
-Key concept: virtual runtime (vruntime). Each task has a vruntime counter that increases as it runs. Tasks with lower priority (higher nice value) have a higher decay rate — their vruntime increases faster. Normal priority task: vruntime = actual run time.
-
-The scheduler ALWAYS picks the task with LOWEST vruntime (i.e., the task that has received the least CPU time relative to its fair share).
-
-Data structure: all runnable tasks stored in a red-black tree (balanced BST) keyed by vruntime. Leftmost node = task with lowest vruntime = next to run. Tree operations: O(log N). The leftmost node is cached → O(1) to find next task.
-
-I/O vs CPU bound fairness: I/O-bound task sleeps waiting for I/O → vruntime doesn't increase while sleeping → when it wakes up, it has a LOW vruntime → gets CPU priority over CPU-bound task that was running.
-
-Target latency: interval during which every runnable task should run at least once. CFS divides target latency proportionally.
-
-Linux historical schedulers:
-- Pre-2.5: standard UNIX scheduler, no SMP support
-- 2.5: O(1) scheduler (SMP support, good) but poor interactive response
-- 2.6.23+: CFS (current default)
-
-Real-time scheduling: POSIX.1b compliant. Static priorities 0-99. Nice -20 maps to global priority 100. Nice +19 maps to global priority 139.`,
+Windows Scheduling:
+• Priority-based preemptive. The dispatcher is the scheduling kernel component.
+• 32-level priority scheme: Variable class (1-15), Real-time class (16-31), Level 0 = memory management thread.
+• Thread runs until: preempted by higher priority, terminates, quantum ends, or blocking call.
+• Quantum expires → priority lowered (never below base priority).
+• Wait completes → priority boosted.
+• Foreground window process gets 3× priority boost (longer before preemption) — responsive UI!`,
     keyPoints: [
-      "CFS: Completely Fair Scheduler. Default in Linux since 2.6.23.",
-      "Nice values: -20 (highest priority) to +19 (lowest priority)",
-      "vruntime: virtual runtime per task. Lowest vruntime = next to run.",
-      "Lower priority → higher vruntime decay rate (increases faster)",
-      "Red-black tree: all runnable tasks sorted by vruntime. O(log N).",
-      "Leftmost node = lowest vruntime = next task. Cached → O(1) lookup.",
-      "I/O-bound tasks: vruntime low while sleeping → higher priority when they wake",
-      "Target latency: interval where every task runs at least once",
+      "Linux CFS: Completely Fair Scheduler. Default since kernel 2.6.23.",
+      "CFS: red-black tree keyed by vruntime. O(log N) to find next task.",
+      "vruntime: tracks CPU usage. Lowest vruntime process runs next.",
+      "Lower priority → vruntime grows FASTER. Natural fairness.",
+      "I/O-bound: sleeps often → low vruntime → naturally higher priority → responsive!",
+      "Nice value: -20 (highest) to +19 (lowest). Default = 0.",
+      "Windows: 32-level priority. Preemptive. Variable + real-time classes.",
+      "Windows: quantum expire → priority lowered. Wait complete → priority boosted.",
+      "Windows foreground process: 3× priority boost for UI responsiveness.",
     ],
     formula: {
-      code: `CFS vruntime concept:
-  Task A (nice=0, normal):     vruntime grows at 1:1 with real time
-  Task B (nice=+5, lower pri): vruntime grows FASTER (1.5:1 or more)
-  → B's vruntime overtakes A's → A runs more CPU time
+      code: `Linux CFS vruntime:
+  All processes start with vruntime = 0
+  After running for t ms:
+    normal priority: vruntime += t
+    higher priority (lower nice): vruntime += t × 0.8  (grows slower)
+    lower priority (higher nice):  vruntime += t × 1.2  (grows faster)
 
-  Next task = leftmost in red-black tree (lowest vruntime)
+  Red-Black Tree by vruntime:
+        [vrt=50]
+       /         \\
+  [vrt=20]    [vrt=80]
+  /
+[vrt=10]    ← LEFTMOST = runs next!
 
-Red-Black Tree (simplified):
-  vruntime: 10        ← leftmost = next to run
-            / \\
-          10   20
-               \\
-               30
+CFS Target Latency:
+  If target_latency = 20ms and 5 processes:
+  Each process runs every 20ms
+  Each gets 4ms per round = 20% CPU share
 
-I/O-bound vs CPU-bound with same nice value:
-  CPU-bound: runs constantly → vruntime grows fast
-  I/O-bound: sleeps for I/O → vruntime barely grows
-  When I/O-bound wakes: its vruntime << CPU-bound's
-  → I/O-bound PREEMPTS CPU-bound immediately!
-
-Linux priority range:
-  nice -20 → global priority 100  (high)
-  nice   0 → global priority 120  (normal)
-  nice +19 → global priority 139  (low)
-  Real-time: static priorities 0-99 (above all CFS tasks)`,
-      explanation: "CFS: fair via vruntime. I/O tasks get priority when waking because they missed CPU time while sleeping.",
+Windows Priority Classes (highest to lowest):
+  REALTIME → HIGH → ABOVE_NORMAL → NORMAL → BELOW_NORMAL → IDLE
+  Within each class: TIME_CRITICAL → HIGHEST → ... → LOWEST → IDLE
+  Effective priority = class × class_offset
+  
+  Foreground app: gets 3× longer quantum → snappy UI!`,
+      explanation: "CFS: always run the process with the lowest vruntime. Fairness guaranteed mathematically.",
     },
     examTips: [
-      "CFS: lowest vruntime = next to run (always!)",
-      "Nice -20 = highest priority, +19 = lowest. (confusingly: lower nice = higher priority)",
-      "Red-black tree: runnable tasks keyed by vruntime. O(log N) insert/delete.",
-      "I/O-bound wakes with low vruntime → immediately preempts CPU-bound tasks",
-      "nice -20 → global 100. nice +19 → global 139. Know these mappings.",
+      "CFS uses RED-BLACK TREE keyed by vruntime. Leftmost node = next to run.",
+      "I/O-bound in CFS: sleeps often → low vruntime → naturally prioritized!",
+      "Windows foreground: 3× priority boost (key exam fact)",
+      "Nice value: -20 = highest priority. +19 = lowest priority.",
     ],
     questions: [
-      { q: "How does CFS ensure fairness between I/O-bound and CPU-bound tasks with the same nice value?", a: "An I/O-bound task spends most of its time sleeping (waiting for I/O), so its vruntime increases very slowly. A CPU-bound task runs constantly, so its vruntime grows quickly. When the I/O-bound task wakes up, its vruntime is much lower than the CPU-bound task's. The scheduler always picks the lowest vruntime → the I/O-bound task preempts the CPU-bound task immediately, giving it priority." },
+      { q: "How does Linux CFS ensure fairness?", a: "CFS tracks each process's virtual runtime (vruntime) — how much CPU time it has received. It always schedules the process with the LOWEST vruntime (implemented as the leftmost node in a red-black tree). This ensures no process gets more CPU than its fair share. Higher-priority processes have their vruntime grow slower (they get more CPU before their vruntime catches up). I/O-bound processes that sleep frequently accumulate low vruntime and naturally receive higher effective priority, giving them excellent responsiveness." },
     ],
   },
 
   "windows-sched": {
-    title: "Windows Scheduling", emoji: "🪟",
-    tldr: "Windows: priority-based preemptive. Dispatcher picks highest-priority thread. 32-level scheme: variable (1-15) and real-time (16-31).",
-    explanation: `Windows uses a priority-based preemptive scheduling algorithm. The kernel component that handles scheduling is called the dispatcher. The highest-priority ready thread ALWAYS runs.
+    title: "Windows Thread Scheduling", emoji: "🪟",
+    tldr: "Windows: 32-level priority, preemptive. Quantum expires → priority lowered. Wait completes → priority boosted. Foreground gets 3× boost.",
+    explanation: `Windows Scheduling Details:
 
-A thread runs until:
-- A higher-priority thread preempts it, OR
-- It terminates, OR
-- Its time quantum ends, OR
-- It calls a blocking system call
+Priority Scheme (32 levels):
+• Level 0: memory management thread (zero page thread)
+• Levels 1-15: Variable class (user processes)
+• Levels 16-31: Real-time class (real-time processes)
 
-32-level priority scheme:
-- Priority 0: memory-management thread
-- Priorities 1-15: variable class (can change dynamically)
-- Priorities 16-31: real-time class (must be admin to set)
-- A queue exists for each priority level. If no runnable thread → idle thread runs.
+Priority Classes (in decreasing order): REALTIME, HIGH, ABOVE_NORMAL, NORMAL, BELOW_NORMAL, IDLE.
+Relative priorities within a class: TIME_CRITICAL, HIGHEST, ABOVE_NORMAL, NORMAL, BELOW_NORMAL, LOWEST, IDLE.
 
-Priority Classes (Windows API):
-REALTIME_PRIORITY_CLASS > HIGH_PRIORITY_CLASS > ABOVE_NORMAL > NORMAL > BELOW_NORMAL > IDLE_PRIORITY_CLASS.
+Priority Dynamics:
+• Quantum expires → priority lowered (never below base priority). This prevents CPU-bound threads from monopolizing.
+• I/O wait completes → priority BOOSTED above base. This gives I/O-bound threads better responsiveness.
+• Foreground window → thread gets 3× longer quantum (or 2× priority boost in some versions). Makes UI feel snappy.
 
-All except REALTIME are variable class.
-
-Relative priorities within a class:
-TIME_CRITICAL, HIGHEST, ABOVE_NORMAL, NORMAL, BELOW_NORMAL, LOWEST, IDLE.
-
-Base priority = NORMAL within the class. If quantum expires, priority lowered (never below base). If wait occurs, priority boosted depending on what was waited for.
-
-Foreground vs Background: Windows distinguishes them. Foreground process gets 3× priority boost — runs 3× longer before timesharing preemption.`,
+If no runnable thread → CPU runs the idle thread (busy loop or halt instruction).`,
     keyPoints: [
-      "Windows dispatcher = kernel scheduler. Highest-priority thread always runs.",
-      "32-level priorities: 0 (memory-mgmt), 1-15 (variable), 16-31 (real-time)",
-      "Variable class 1-15: priority can change. Real-time 16-31: static.",
-      "Queue per priority level. No runnable thread → idle thread.",
-      "Priority boost: after wait, priority raised based on wait type",
-      "Quantum expires → priority lowered (but never below base priority)",
-      "Foreground process: 3× priority boost over background",
-      "Priority classes: REALTIME > HIGH > ABOVE_NORMAL > NORMAL > BELOW_NORMAL > IDLE",
+      "32-level priority: 0=mem management, 1-15=variable, 16-31=real-time",
+      "Thread runs until: higher priority preempts, terminates, quantum ends, blocks",
+      "Quantum expire → priority lowered (never below base priority)",
+      "Wait completion → priority boosted (rewards I/O-bound behavior)",
+      "Foreground window → 3× quantum / priority boost for UI responsiveness",
+      "No runnable thread → idle thread runs",
     ],
-    formula: {
-      code: `Windows 32-level Priority Scheme:
-  31: Real-time (highest) ─┐
-  ...                      ├── Real-time class (16-31): admin required
-  16: Real-time (low)    ──┘
-  15: Variable (high)    ──┐
-  ...                      ├── Variable class (1-15): can change
-  1:  Variable (low)     ──┘
-  0:  Memory management thread
-
-Priority computation:
-  Process Priority Class + Thread Relative Priority = Numeric Priority
-
-Example: NORMAL class (base=8) + ABOVE_NORMAL relative = priority 9
-         HIGH class (base=13) + NORMAL relative = priority 13
-
-Boosts:
-  After keyboard I/O: large boost (foreground interactivity)
-  After disk I/O: moderate boost
-  After quantum expires: small decrease (never below base)
-  Foreground process: quantum × 3 (3× longer before preemption)`,
-      explanation: "Windows uses two separate concepts: priority class (process-level) + relative priority (thread-level) → final numeric priority.",
-    },
+    formula: null,
     examTips: [
-      "Windows scheduler = dispatcher. 32-level priority scheme.",
-      "1-15 = variable (can change). 16-31 = real-time (admin only). 0 = memory mgmt.",
-      "Quantum expires → priority DECREASES (never below base). Wait → priority INCREASES.",
-      "Foreground process = 3× quantum (priority boost for active window).",
+      "Windows: 32 levels. 1-15 variable. 16-31 real-time.",
+      "Quantum expire = priority goes DOWN. I/O wait complete = priority goes UP.",
+      "Foreground app = 3× boost. Makes Windows UI feel responsive.",
     ],
     questions: [
-      { q: "How does Windows handle priority in its 32-level scheme?", a: "Priority 0: memory management thread. 1-15: variable class — priority can be dynamically changed by boosts (after I/O waits) and decrements (after quantum expires, never below base). 16-31: real-time class — requires admin privileges, static priorities. The dispatcher always runs the highest-priority ready thread. If no runnable thread, the idle thread runs." },
+      { q: "How does Windows handle priority in its scheduling?", a: "Windows uses a 32-level priority scheme. When a thread's quantum expires, its priority is lowered (but never below its base priority) — this prevents CPU-bound threads from hogging the CPU forever. When a thread completes an I/O wait, its priority is boosted above base — this rewards I/O-bound (interactive) behavior with better responsiveness. The foreground window's threads get a 3× longer quantum or priority boost, making the active window feel more responsive to the user." },
     ],
   },
 
   "shell-intro": {
-    title: "Shell — Introduction & Types", emoji: "🐚",
-    tldr: "Shell = Linux command-line interpreter. Interface between user and kernel. Parses command [arg1] [arg2]. Searches PATH for executable.",
-    explanation: `The shell is the Linux command-line interpreter. It provides an interface between the user and the kernel. When a user enters a command (like ls), the shell executes it. The shell can also run applications, scripts, and user programs.
+    title: "Shell Basics & Environment", emoji: "🐚",
+    tldr: "Shell = command interpreter between user and kernel. bash = most popular. Commands search via $PATH. Environment variables inherited by children.",
+    explanation: `Shell = Linux command-line interpreter. The shell is a program that acts as an interface between the user and the kernel. It reads commands, interprets them, and asks the kernel to execute them.
 
-Syntax: command [arg1] [arg2] ... [argn]
-Brackets [] indicate optional arguments. Many commands work without arguments.
+When you type "ls -la", the shell:
+1. Reads the input
+2. Parses tokens (command = "ls", argument = "-la")
+3. Searches for "ls" in directories listed in $PATH
+4. Asks the kernel to create a new process and execute /bin/ls
 
-How shell works:
-1. User types command and presses Enter
-2. Shell parses the line: identifies command name, options, filenames
-3. Shell asks kernel to execute the command
-4. If a specific path given (./mycommand): runs that. Otherwise: searches directories in $PATH variable.
+Popular shells:
+• sh (Bourne shell): original Unix shell
+• csh/tcsh: C Shell — C-like syntax
+• ksh (Korn shell): extended Bourne shell
+• bash (Bourne Again Shell): most popular on Linux, combines best of sh and csh
+• zsh: popular alternative with many features (macOS default since Catalina)
 
-Various Shells available in Linux:
-- sh: Bourne Shell — the original shell
-- csh, tcsh: derivatives of Bourne shell
-- ksh: Korn shell (popular)
-- bash: Bourne Again SHell — most popular, developed by GNU. Default in most Linux distros.
+Check current shell: echo $SHELL
 
-Command to check current shell: echo $SHELL
-Command to see shell type: cat /etc/shells`,
+Environment variables: variables inherited by ALL child processes. When you start a terminal, the shell sets up these variables for you.
+Key ones: PATH (where to find executables), HOME (your home dir), USER (your username), SHELL (which shell you're using), PWD (current directory).
+
+Shell variables vs Environment variables:
+• Shell variables: local to current shell only. Set with: NAME="value"
+• Environment variables: inherited by child processes. Promote with: export NAME`,
     keyPoints: [
-      "Shell = command-line interpreter. Interface between user and kernel.",
-      "Syntax: command [arg1] [arg2]... (brackets = optional arguments)",
-      "Shell parses: command name + options + filenames",
-      "Shell searches $PATH variable for command executable",
-      "sh: original Bourne shell. bash: most popular (GNU, default Linux).",
-      "csh/tcsh: Bourne derivatives. ksh: Korn shell.",
-      "echo $SHELL: shows current shell. Typical value: /bin/bash",
-      "./mycommand: run specific file. No path: search $PATH directories.",
+      "Shell = interpreter between user and kernel. Reads + executes commands.",
+      "Commands found via $PATH (list of directories to search)",
+      "bash = most popular Linux shell (Bourne Again Shell)",
+      "Environment variables: inherited by child processes",
+      "Shell variables: local to current shell only",
+      "export NAME: promotes shell variable to environment variable",
+      "Key env vars: PATH, HOME, USER, SHELL, PWD, TERM",
+      "echo $SHELL: shows current shell. env or printenv: shows all env vars.",
     ],
     formula: {
-      code: `Shell command syntax:
-  command [option1] [option2] [filename]
-  
-  Examples:
-  ls                    → list current directory
-  ls -la /home          → list /home with details
-  cp file1.txt file2.txt → copy file
-  grep -i "error" log.txt → search in file
+      code: `Shell variable vs Environment variable:
+  # Shell variable (local only):
+  MYVAR="hello"
+  echo $MYVAR        # works in THIS shell
+  bash               # start child shell
+  echo $MYVAR        # EMPTY — not inherited!
 
-PATH-based search:
-  echo $PATH
-  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-  
-  When you type "ls":
-  1. Not starting with ./ → search PATH
-  2. Check /usr/local/sbin/ls → not found
-  3. Check /usr/local/bin/ls → not found
-  4. Check /usr/bin/ls → FOUND → execute it!
+  # Environment variable (inherited):
+  export MYVAR="hello"
+  bash               # start child shell  
+  echo $MYVAR        # "hello" — inherited! ✓
 
-Various Shells:
-  sh      → /bin/sh   (original, minimal)
-  bash    → /bin/bash (most common, feature-rich)
-  csh     → /bin/csh  (C-like syntax)
-  ksh     → /bin/ksh  (Korn shell)
-  
-  Check: echo $SHELL  → /bin/bash`,
-      explanation: "Shell acts as the middleman: user types → shell interprets → kernel executes. PATH determines where to look for commands.",
+  # Remove variable:
+  unset MYVAR
+
+  # Persistent (add to ~/.profile or ~/.bashrc):
+  export MYVAR="hello"
+
+Key environment variables:
+  PATH=/usr/bin:/bin:/usr/local/bin  ← where to find commands
+  HOME=/home/santosh                 ← home directory
+  USER=santosh                       ← username
+  SHELL=/bin/bash                    ← current shell
+  PWD=/home/santosh/projects         ← present working directory`,
+      explanation: "export = promote to environment variable. Without export, variable dies when shell exits.",
     },
     examTips: [
-      "Shell = interface between USER and KERNEL",
-      "bash = Bourne Again SHell. Most popular Linux shell. GNU project.",
-      "$PATH: ordered list of directories searched for commands",
-      "echo $SHELL shows current shell. cat /etc/shells shows all installed shells.",
+      "Shell variable: local only. export = makes it available to child processes.",
+      "$PATH: colon-separated list of directories where shell looks for commands.",
+      "bash = Bourne Again SHell. sh = original Bourne shell.",
+      "env or printenv: list all environment variables.",
     ],
     questions: [
-      { q: "What is the shell and what is its role?", a: "The shell is the Linux command-line interpreter. It provides an interface between the user and the kernel. When a user enters a command, the shell parses it (identifies command name, options, arguments), searches the $PATH for the executable, and asks the kernel to execute it. It can run commands, scripts, and user programs." },
+      { q: "What is the difference between a shell variable and an environment variable?", a: "Shell variable: local to the current shell session only. Created with NAME=value. Child processes do NOT inherit it. Environment variable: inherited by all child processes spawned from the current shell. Created with export NAME=value (or by exporting an existing shell variable with export NAME). Environment variables pass configuration down to programs you run, like PATH (where to find executables) or JAVA_HOME (where Java is installed)." },
     ],
   },
 
   "env-vars": {
-    title: "Environment Variables & Shell Variables", emoji: "📦",
-    tldr: "Environment vars: inherited by child processes. Shell vars: shell-only, NOT inherited. export = promote shell var → env var.",
-    explanation: `Environment Variables: defined for the current shell AND inherited by any child shells or processes. Used to pass information to spawned processes. By convention, UPPERCASE names (e.g., PATH, HOME, USER).
+    title: "Environment Variables & Shell Scripting", emoji: "📝",
+    tldr: "env vars: inherited by children. Shell scripting: automate tasks, combine commands, add logic. Shebang (#!) tells kernel which interpreter to use.",
+    explanation: `Shell scripting = writing files containing sequences of shell commands to automate tasks.
 
-Shell Variables: contained exclusively within the shell where they're set. NOT inherited by child shells. Used for ephemeral/temporary data (like tracking current directory).
+Shebang (#!): The first line of a shell script tells the kernel which interpreter to use.
+#!/bin/bash → uses bash
+#!/bin/sh → uses sh (POSIX-compatible, more portable)
+#!/usr/bin/env python3 → uses Python 3
 
-Common Environment Variables:
-- SHELL: current shell interpreter (/bin/bash)
-- TERM: terminal type to emulate
-- USER: current logged-in user
-- PWD: current working directory
-- OLDPWD: previous working directory (used by cd -)
-- PATH: directories searched for commands (colon-separated)
-- HOME: current user's home directory
+Key purposes of shell scripting (PYQ):
+1. Automation: automate repetitive tasks (backups, log rotation, deployment pipelines)
+2. System Administration: manage users, monitor disk space, check services, install packages
+3. Batch Processing: process multiple files sequentially (resize images, convert formats)
+4. Task Scheduling: combine with cron for periodic execution (daily reports, weekly backups)
+5. Environment Setup: configure development environments, set library paths, version management
 
-Common Shell Variables:
-- BASHOPTS: bash options used when started
-- BASH_VERSION: bash version (human-readable)
-- BASH_VERSINFO: bash version (machine-readable)
+Special variables:
+• $0: script name
+• $1, $2, ...: positional arguments
+• $#: number of arguments
+• $@: all arguments
+• $?: exit status of last command (0 = success, non-zero = error)
+• $$: PID of current shell
 
-Commands: env or printenv → list all environment variables.`,
+Exit codes: convention — 0 = success, 1+ = various errors. Always check $? after critical commands.`,
     keyPoints: [
-      "Environment variables: inherited by ALL child processes",
-      "Shell variables: local to current shell only, NOT inherited",
-      "By convention: UPPERCASE names for both types",
-      "SHELL: current shell. USER: logged in user. HOME: home dir. PWD: cwd.",
-      "PATH: directories searched for commands (colon-separated list)",
-      "OLDPWD: previous directory (enables cd - to switch back)",
-      "env / printenv: list environment variables",
-      "export: promote shell variable to environment variable",
+      "Shebang (#!/bin/bash): tells kernel which interpreter to use",
+      "$0=script name, $1-$N=arguments, $#=arg count, $@=all args, $?=last exit code",
+      "$?=0 means success. Non-zero means error.",
+      "5 purposes: Automation, Sysadmin, Batch processing, Scheduling, Environment setup",
+      "Shell scripts make repetitive operations consistent and error-free",
+      "export: make variable available to child processes",
+      "Scripts must be executable: chmod +x script.sh",
     ],
     formula: {
-      code: `Creating shell variables:
-  MY_VAR="hello"           # Create shell variable
-  echo $MY_VAR             # Access: prints "hello"
-  
-Spawning child shell:
-  bash                     # start new child shell
-  echo $MY_VAR             # prints nothing! (not inherited)
-  exit                     # return to parent shell
+      code: `Daily Backup Script (PYQ example):
+#!/bin/bash
+# backup.sh — Back up home directory daily
 
-Exporting (making it an env var):
-  export MY_VAR            # now child shells can see it
-  # OR in one step:
-  export MY_VAR="hello"
-  
-  bash                     # new child shell
-  echo $MY_VAR             # now prints "hello"!
+DATE=$(date +%Y%m%d)           # e.g., 20240315
+TARGET="/backup/home_\${DATE}.tar.gz"
 
-Removing a variable:
-  unset MY_VAR             # removes the variable
+tar -czf "$TARGET" "/home/$USER"
 
-Persistent env vars (survive login):
-  Edit ~/.profile or ~/.bashrc
-  Add: export MY_VAR="value"
-  
-Listing all env vars:
-  env                      # or: printenv
-  
-Key variables:
-  echo $HOME    → /home/santosh
-  echo $PATH    → /usr/bin:/bin:/usr/local/bin:...
-  echo $USER    → santosh
-  echo $PWD     → /home/santosh/projects
-  echo $SHELL   → /bin/bash`,
-      explanation: "Shell var = local (dies with shell). Export = env var = passed to children. edit .profile for persistence.",
+if [ $? -eq 0 ]; then
+    echo "Backup successful: $TARGET"
+else
+    echo "Backup FAILED!" >&2   # >&2 = send to stderr
+    exit 1
+fi
+
+# Schedule with cron (run at 2 AM daily):
+# 0 2 * * * /home/user/backup.sh
+
+Special variables demo:
+#!/bin/bash
+echo "Script name: $0"
+echo "First arg: $1"
+echo "All args: $@"
+echo "Arg count: $#"
+ls /nonexistent
+echo "ls exit code: $?"  # will print 2 (non-zero = error)`,
+      explanation: "$? is the exit code of the last command. 0=success. Always check after critical operations.",
     },
     examTips: [
-      "Environment var = inherited by children. Shell var = NOT inherited.",
-      "export = convert shell variable into environment variable",
-      "PATH = colon-separated. First match wins when searching for commands.",
-      "OLDPWD: previous directory. cd - = switch back to it.",
-      "unset removes a variable. echo $VAR accesses it.",
+      "Shell scripting purposes (PYQ): Automation, Sysadmin, Batch, Scheduling, Environment setup",
+      "$? = exit code. 0 = success. Non-zero = failure.",
+      "#!/bin/bash = shebang. Required as first line for the kernel to know interpreter.",
+      "Scripts need execute permission: chmod +x script.sh",
     ],
     questions: [
-      { q: "What is the difference between a shell variable and an environment variable?", a: "Shell variable: defined in current shell only. NOT inherited by child processes or shells. Lost when the shell exits. Environment variable: defined in current shell AND inherited by all child processes/shells. Used to pass configuration info to spawned processes. You convert a shell variable to an environment variable using export." },
+      { q: "What are the key purposes of shell scripting? Give an example script. (PYQ)", a: "5 key purposes:\n1. Automation — automate repetitive tasks (backups, log rotation)\n2. System Administration — manage users, monitor disk, check services\n3. Batch Processing — process multiple files sequentially\n4. Task Scheduling — combine with cron for periodic execution\n5. Environment Setup — configure development environments, set paths\n\nExample backup script:\n#!/bin/bash\nDATE=$(date +%Y%m%d)\nTARGET=\"/backup/home_${DATE}.tar.gz\"\ntar -czf \"$TARGET\" \"/home/$USER\"\nif [ $? -eq 0 ]; then echo 'Backup OK'; else echo 'FAILED' >&2; exit 1; fi\n\nSchedule with cron: 0 2 * * * /home/user/backup.sh" },
     ],
   },
 
   "shell-basics": {
-    title: "Shell Control Flow — if, loops, break/continue", emoji: "🔀",
-    tldr: "if [ condition ]; then ... fi. for/while loops. break exits loop. continue skips to next iteration. Nested loops OK.",
-    explanation: `Shell scripting allows control flow — the shell processes commands conditionally and repeatedly.
+    title: "Shell Control Flow — if, for, while", emoji: "🔀",
+    tldr: "if [ condition ]; fi. for i in list; do done. while [ condition ]; do done. break = exit loop. continue = skip iteration.",
+    explanation: `Shell scripts support full programming constructs: conditionals, loops, functions.
 
-if Statement:
-if [ condition ]; then
-    commands
-elif [ condition ]; then
-    commands
-else
-    commands
-fi
+if statement:
+Tests a condition. [ ] is actually the test command. Spaces inside brackets are MANDATORY.
+Common test operators:
+• -f file: file exists (and is regular file)
+• -d dir: directory exists
+• -z string: string is empty
+• -eq, -ne, -lt, -gt, -le, -ge: numeric comparisons
+• =, !=: string comparisons
 
-Test conditions: -f file (file exists), -d dir (directory exists), -z string (string empty), -eq (numeric equal), -ne (not equal), -lt (less than), -gt (greater than).
+for loop:
+Iterates over a list of values. List can be: explicit "1 2 3", a command $(ls), or a glob *.txt.
 
-Loops:
-for loop: iterate over list. for i in 1 2 3; do ... done
-while loop: repeat while condition true. while [ condition ]; do ... done
+while loop:
+Repeats while condition is true. Most commonly used with counters or until a condition changes.
 
-Nested loops: fully supported.
+break: exits the CURRENT loop entirely (no more iterations).
+continue: skips the REST of the current iteration, goes to next.
 
-Loop control:
-break: exit the CURRENT loop entirely
-continue: skip rest of CURRENT iteration, go to next
+In nested loops: break and continue affect only the INNERMOST loop they're in.
 
-Variables in loops: $i, $1, $2 (positional params), $# (arg count), $@ (all args), $? (exit status of last command).`,
+Note: Shell scripts use backticks \`\` or $() for command substitution (embed command output in a string).`,
     keyPoints: [
       "if [ condition ]; then ... elif ... else ... fi",
       "for i in list; do ... done",
@@ -2317,140 +2690,152 @@ Variables in loops: $i, $1, $2 (positional params), $# (arg count), $@ (all args
       "-f: file exists. -d: dir exists. -z: string empty. -eq: numeric equal.",
       "$?: exit status of last command (0 = success, non-zero = error)",
       "$#: number of arguments. $@: all arguments. $1,$2,...: positional params.",
-      "Nested loops work fine in shell",
+      "Spaces INSIDE [ ] are mandatory! [ -f file ] not [-f file]",
     ],
     formula: {
       code: `if statement:
   if [ -f "myfile.txt" ]; then
-      echo "file exists!"
+      echo "File exists!"
+  elif [ -d "mydir" ]; then
+      echo "It's a directory"
   else
-      echo "file not found"
+      echo "Not found"
   fi
 
 for loop:
+  # Iterate over explicit list:
   for i in 1 2 3 4 5; do
       echo "Count: $i"
   done
-  
-  # Range:
-  for i in $(seq 1 10); do
-      echo $i
+
+  # Iterate over files:
+  for file in *.txt; do
+      echo "Processing: $file"
   done
 
 while loop:
   count=1
   while [ $count -le 5 ]; do
       echo "Count: $count"
-      count=$((count + 1))
+      count=$((count + 1))   # arithmetic expression
   done
 
-Nested loop with break/continue:
-  for i in 1 2 3; do
-      for j in 1 2 3; do
-          if [ $j -eq 2 ]; then
-              continue    # skip j=2, not j=3
-          fi
-          if [ $i -eq 3 ]; then
-              break       # exit inner loop when i=3
-          fi
-          echo "$i $j"
-      done
+break and continue:
+  for i in 1 2 3 4 5; do
+      if [ $i -eq 3 ]; then
+          continue   # skip 3, keep going
+      fi
+      if [ $i -eq 5 ]; then
+          break      # stop at 5
+      fi
+      echo $i
   done
+  # Output: 1 2 4
 
 Test operators:
-  -f file    → file exists and is regular file
-  -d dir     → directory exists
-  -z str     → string is empty
-  -eq        → numeric equal
-  -ne        → not equal
-  -lt        → less than
-  -gt        → greater than`,
+  -f file  → file exists (regular file)
+  -d dir   → directory exists
+  -z str   → string is empty
+  -n str   → string is NOT empty
+  -eq      → numeric equal
+  -ne      → not equal
+  -lt      → less than
+  -gt      → greater than`,
       explanation: "break exits the INNER loop. continue skips the REST of the current iteration in the inner loop.",
     },
     examTips: [
-      "if uses [ ] (square brackets = test command). Spaces inside brackets are mandatory.",
+      "if uses [ ] (square brackets = test command). Spaces inside brackets are MANDATORY.",
       "fi = end of if. done = end of loop. These are REVERSED keywords.",
       "break: exits loop. continue: skips to next iteration.",
       "$? = exit code of last command. 0 = success.",
     ],
     questions: [
-      { q: "What is the difference between break and continue in shell loops?", a: "break: immediately exits the current loop entirely — no more iterations run. continue: skips the remaining commands in the current iteration and jumps to the next iteration of the loop. In nested loops, both break and continue affect only the innermost loop they're in." },
+      { q: "What is the difference between break and continue in shell loops?", a: "break: immediately exits the current loop entirely — no more iterations run at all. The program continues with the first statement after the loop's 'done' keyword.\n\ncontinue: skips the remaining commands in the CURRENT iteration only, then jumps to the NEXT iteration of the same loop. The loop itself continues.\n\nIn nested loops, both affect only the INNERMOST loop they appear in. To break out of an outer loop, you need additional logic (like a flag variable) or bash's 'break N' syntax where N specifies how many levels to break." },
     ],
   },
 
   "cron": {
     title: "cron — Job Scheduling", emoji: "⏰",
-    tldr: "cron = daemon that runs scheduled jobs. crontab syntax: min hour day month weekday command. crontab -e to edit. 5 time fields.",
-    explanation: `cron is a daemon in Unix/Linux that runs continuously in the background, waking up to handle periodic service requests. The daemon (crond) starts when the system boots.
+    tldr: "cron = daemon that runs scheduled jobs. 5 time fields: min hour day month weekday. crontab -e to edit. crontab -l to list.",
+    explanation: `cron is a daemon (background process started at boot) that executes scheduled tasks automatically. The crond daemon reads crontab (cron tables) — each user can have their own crontab file defining their scheduled jobs.
 
-cron reads crontab (cron tables) files — each user has their own crontab. You can schedule scripts or commands to run automatically at specified times/intervals.
+Commands:
+• crontab -l: list your scheduled jobs
+• crontab -e: edit your crontab (opens in nano or vim)
+• crontab -r: REMOVE your entire crontab (be careful!)
+• systemctl status cron: check if cron service is running
 
-crontab command:
-crontab -e: edit your crontab (add/remove/edit jobs)
-crontab -l: list current scheduled jobs
-crontab -r: remove your crontab
+Crontab syntax — 5 time fields + command:
+MIN HOUR DOM MON DOW COMMAND
 
-cron Syntax — 5 time fields + command:
-* * * * * command
-│ │ │ │ │
-│ │ │ │ └─ Day of week (0-7, 0 and 7 = Sunday)
-│ │ │ └─── Month (1-12)
-│ │ └───── Day of month (1-31)
-│ └─────── Hour (0-23)
-└───────── Minute (0-59)
+Special characters:
+• *: any value (every minute/hour/day/etc.)
+• */n: every n units (*/5 = every 5 minutes)
+• n: specific value (0 = midnight, 1 = 1am, etc.)
+• n-m: range (9-17 = hours 9 to 5pm)
+• n,m,p: list (1,3,5 = Mon, Wed, Fri)
 
-* = any/every value. */n = every n units. Specific number = at that time.
+Common use cases: daily backups, weekly reports, hourly monitoring, nightly database maintenance.
 
-Starting/checking cron:
-service crond start / service crond status`,
+Output: by default, cron emails output to the user. Redirect to file or /dev/null:
+0 * * * * /path/to/script.sh >> /var/log/script.log 2>&1`,
     keyPoints: [
       "cron = daemon, starts at boot, runs in background",
       "crond = the cron daemon process",
       "crontab = file containing scheduled jobs (one per user)",
       "crontab -e: edit. crontab -l: list. crontab -r: remove.",
       "Syntax: minute hour day-of-month month day-of-week command",
-      "* = every value. */n = every n units. 0 = specific value.",
-      "0-59 for minutes. 0-23 for hours. 1-31 for days. 1-12 for months. 0-7 for weekday.",
-      "* * * * * = every minute. 0 * * * * = every hour on the hour.",
+      "* = every value. */n = every n units. Range with -, list with comma.",
+      "Ranges: 0-59 minutes, 0-23 hours, 1-31 days, 1-12 months, 0-7 weekday.",
     ],
     formula: {
       code: `crontab syntax:
   MIN HOUR DOM MON DOW COMMAND
-  │    │    │   │   │
-  │    │    │   │   └── Day of week: 0=Sun,1=Mon,...,7=Sun
-  │    │    │   └────── Month: 1-12
-  │    │    └────────── Day of month: 1-31
-  │    └─────────────── Hour: 0-23
-  └──────────────────── Minute: 0-59
+   │    │   │   │   │
+   │    │   │   │   └── Day of week: 0=Sun,1=Mon,...,6=Sat,7=Sun
+   │    │   │   └────── Month: 1-12
+   │    │   └────────── Day of month: 1-31
+   │    └─────────────── Hour: 0-23
+   └──────────────────── Minute: 0-59
 
 cron examples:
-  * * * * * /path/to/script.sh       # every minute
-  0 * * * * /path/to/script.sh       # every hour (at :00)
-  0 0 * * * /path/to/backup.sh       # every day at midnight
-  0 2 * * 0 /path/to/weeklyjob.sh    # every Sunday at 2am
-  30 9 1 * * /path/to/monthly.sh     # 1st of each month at 9:30
-  */5 * * * * /path/to/monitor.sh    # every 5 minutes
-  0 9-17 * * 1-5 /path/to/work.sh   # every hour 9am-5pm, Mon-Fri
-  0 0 * * 1,3,5 /path/to/mwf.sh     # Mon, Wed, Fri at midnight
+  * * * * * /script.sh          # every minute
+  0 * * * * /script.sh          # every hour (at :00)
+  0 0 * * * /backup.sh          # every day at midnight
+  30 2 * * * /backup.sh         # every day at 2:30am
+  0 17 * * 1-5 /report.sh       # every weekday at 5pm
+  0 0 * * 1 /weekly.sh          # every Monday at midnight
+  */5 * * * * /monitor.sh       # every 5 minutes
+  0 9-17 * * 1-5 /work.sh       # every hour 9am-5pm Mon-Fri
+  0 0 1 * * /monthly.sh         # 1st of every month at midnight
 
-Common commands:
-  crontab -e           → edit (opens in vi/nano)
-  crontab -l           → list all jobs
-  crontab -r           → remove ALL your jobs
-  service crond start  → start cron daemon
-  service crond status → check if running`,
+Shell scripting PYQ example (backup + cron):
+  #!/bin/bash
+  # backup.sh
+  DATE=$(date +%Y%m%d)
+  TARGET="/backup/home_\${DATE}.tar.gz"
+  tar -czf "$TARGET" "/home/$USER"
+  if [ $? -eq 0 ]; then
+      echo "Backup successful: $TARGET"
+  else
+      echo "Backup FAILED!" >&2
+      exit 1
+  fi
+
+  # Add to crontab for daily 2am execution:
+  # 0 2 * * * /home/user/backup.sh >> /var/log/backup.log 2>&1`,
       explanation: "5 fields: min(0-59), hour(0-23), day(1-31), month(1-12), weekday(0-7). * = any. */n = every n.",
     },
     examTips: [
       "5 cron time fields: minute, hour, day-of-month, month, day-of-week — in that order",
-      "* = every. */5 = every 5. 0 = at the zero (e.g., hour 0 = midnight).",
-      "crontab -e to edit. crontab -l to list. crontab -r to remove.",
+      "* = every. */5 = every 5. 0 = at zero (hour 0 = midnight).",
+      "crontab -e to edit. crontab -l to list. crontab -r to REMOVE (dangerous!).",
       "crond = the daemon. crontab = the file/command. cron = the concept.",
       "0 * * * * = every hour at minute 0 (top of the hour)",
     ],
     questions: [
-      { q: "Write a crontab entry to run /scripts/backup.sh every day at 2:30am.", a: "30 2 * * * /scripts/backup.sh  (minute=30, hour=2, day-of-month=*, month=*, weekday=*)" },
-      { q: "What does this crontab entry do: */10 9-17 * * 1-5 /scripts/check.sh", a: "Runs /scripts/check.sh every 10 minutes, between 9am and 5pm, Monday through Friday. (*/10=every 10 min, 9-17=hours 9 to 17, *=any day, *=any month, 1-5=Mon-Fri)" },
+      { q: "Write a crontab entry to run /scripts/backup.sh every day at 2:30am.", a: "30 2 * * * /scripts/backup.sh\n(minute=30, hour=2, day-of-month=any, month=any, weekday=any)" },
+      { q: "What does this crontab entry do: */10 9-17 * * 1-5 /scripts/check.sh", a: "Runs /scripts/check.sh every 10 minutes (*/10), between 9am and 5pm (9-17), on any day of month (*), any month (*), Monday through Friday (1-5). So it runs 5 times per hour during business hours on weekdays." },
     ],
   },
-};
+};   
